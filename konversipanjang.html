@@ -1,0 +1,1610 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Konversi Satuan Panjang | Media Pembelajaran Interaktif</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,800;9..144,900&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+:root {
+  --bg: #f5efe0;
+  --bg-2: #ebe3d0;
+  --fg: #1a2e2a;
+  --fg-muted: #5a6b65;
+  --accent: #d97706;
+  --accent-2: #c2410c;
+  --accent-3: #f59e0b;
+  --teal: #0d7d6b;
+  --teal-2: #115e59;
+  --teal-3: #0f3a36;
+  --coral: #ea580c;
+  --card: #fefcf5;
+  --border: #d6cdb8;
+  --shadow: rgba(28, 25, 23, 0.08);
+  --success: #16a34a;
+  --success-bg: #f0fdf4;
+  --error: #dc2626;
+  --error-bg: #fef2f2;
+}
+* { font-family: 'Outfit', sans-serif; -webkit-font-smoothing: antialiased; box-sizing: border-box; }
+.font-display { font-family: 'Fraunces', serif; font-variation-settings: "opsz" 144; }
+body {
+  background: var(--bg);
+  color: var(--fg);
+  background-image: 
+    radial-gradient(circle at 10% 5%, rgba(217, 119, 6, 0.06) 0%, transparent 30%),
+    radial-gradient(circle at 90% 95%, rgba(13, 125, 107, 0.08) 0%, transparent 30%);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background-image: 
+    repeating-linear-gradient(45deg, rgba(217, 119, 6, 0.015) 0px, transparent 1px, transparent 4px),
+    repeating-linear-gradient(-45deg, rgba(13, 125, 107, 0.012) 0px, transparent 1px, transparent 4px);
+  z-index: 0;
+}
+.slide { display: none; animation: slideIn 0.7s cubic-bezier(0.16, 1, 0.3, 1); position: relative; z-index: 1; }
+.slide.active { display: block; }
+@keyframes slideIn { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes slideDown { from { opacity: 0; transform: translateY(-10px); max-height: 0; } to { opacity: 1; transform: translateY(0); max-height: 600px; } }
+@keyframes pulse { 0%, 100% { transform: scale(1); opacity: 0.6; } 50% { transform: scale(1.15); opacity: 0.9; } }
+@keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%);
+  color: white; padding: 14px 28px; border-radius: 12px; font-weight: 600;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 14px rgba(217, 119, 6, 0.35), inset 0 1px 0 rgba(255,255,255,0.2);
+  cursor: pointer; border: none; display: inline-flex; align-items: center; gap: 8px; font-size: 1rem;
+}
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(217, 119, 6, 0.45); }
+.btn-primary:active { transform: translateY(0); }
+.btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+.btn-secondary {
+  background: var(--card); color: var(--fg); padding: 12px 22px; border-radius: 12px;
+  font-weight: 600; border: 2px solid var(--border); cursor: pointer;
+  transition: all 0.2s ease; display: inline-flex; align-items: center; gap: 8px; font-size: 0.95rem;
+}
+.btn-secondary:hover { border-color: var(--accent); color: var(--accent); background: #fef3e2; }
+.btn-secondary:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.btn-ghost {
+  background: transparent; color: var(--fg-muted); padding: 8px 14px; border-radius: 8px;
+  font-weight: 500; border: 1px solid var(--border); cursor: pointer;
+  transition: all 0.2s ease; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 6px;
+}
+.btn-ghost:hover { background: var(--bg-2); color: var(--fg); border-color: var(--accent-3); }
+
+.nav-dot {
+  width: 10px; height: 10px; border-radius: 50%; background: var(--border);
+  cursor: pointer; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); border: none; padding: 0;
+}
+.nav-dot:hover { background: var(--accent-3); }
+.nav-dot.active { background: var(--accent); width: 32px; border-radius: 6px; }
+
+.card {
+  background: var(--card); border: 1px solid var(--border); border-radius: 16px;
+  box-shadow: 0 4px 14px var(--shadow); transition: all 0.3s ease;
+}
+
+.tangga-staircase {
+  display: flex; align-items: flex-end; justify-content: center;
+  gap: 6px; padding: 28px 16px;
+  background: linear-gradient(180deg, rgba(13, 125, 107, 0.05) 0%, rgba(217, 119, 6, 0.06) 100%);
+  border-radius: 20px; border: 2px dashed var(--border); position: relative; overflow: hidden;
+}
+.tangga-staircase::before {
+  content: ''; position: absolute; inset: 0;
+  background-image: linear-gradient(rgba(217, 119, 6, 0.04) 1px, transparent 1px);
+  background-size: 100% 20px; pointer-events: none;
+}
+.stair {
+  position: relative; display: flex; flex-direction: column; align-items: center;
+  z-index: 1; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.stair-block {
+  background: linear-gradient(180deg, var(--accent-3) 0%, var(--accent) 70%, var(--accent-2) 100%);
+  color: white; padding: 14px 8px; border-radius: 10px 10px 4px 4px;
+  text-align: center; min-width: 78px; position: relative;
+  box-shadow: 0 6px 16px rgba(217, 119, 6, 0.3), inset 0 1px 0 rgba(255,255,255,0.4);
+  border: 1px solid rgba(255,255,255,0.2);
+}
+.stair-block .unit-name { font-weight: 800; font-family: 'Fraunces', serif; font-size: 1.4rem; line-height: 1; }
+.stair-block .unit-full { font-size: 0.65rem; opacity: 0.9; margin-top: 4px; font-weight: 500; }
+.stair-block .unit-factor { font-size: 0.6rem; opacity: 0.75; margin-top: 2px; }
+.stair:nth-child(1) .stair-block { height: 200px; }
+.stair:nth-child(2) .stair-block { height: 175px; }
+.stair:nth-child(3) .stair-block { height: 150px; }
+.stair:nth-child(4) .stair-block { height: 125px; }
+.stair:nth-child(5) .stair-block { height: 100px; }
+.stair:nth-child(6) .stair-block { height: 75px; }
+.stair:nth-child(7) .stair-block { height: 50px; }
+.stair-step-label {
+  font-size: 0.7rem; color: var(--fg-muted); font-weight: 600;
+  margin-top: 8px; text-align: center;
+}
+.stair.highlighted .stair-block {
+  background: linear-gradient(180deg, #fbbf24 0%, var(--accent) 60%, var(--coral) 100%);
+  transform: translateY(-12px) scale(1.05);
+  box-shadow: 0 16px 32px rgba(234, 88, 12, 0.4), inset 0 1px 0 rgba(255,255,255,0.5);
+}
+
+.tangga-inputs {
+  display: flex; align-items: flex-end; justify-content: center;
+  gap: 4px; margin: 20px 0; flex-wrap: wrap;
+}
+.tangga-col, .comma-col {
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  justify-content: flex-end;
+}
+.col-label {
+  font-weight: 700; font-size: 0.95rem; color: var(--teal-2);
+  font-family: 'Fraunces', serif;
+}
+.col-input {
+  width: 56px; height: 56px; text-align: center;
+  font-size: 1.4rem; font-weight: 800; border: 2px solid var(--border);
+  border-radius: 12px; background: var(--card); color: var(--fg);
+  transition: all 0.2s ease; font-family: 'Fraunces', serif;
+}
+.col-input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 4px rgba(217, 119, 6, 0.15); transform: scale(1.05); }
+.col-input.disabled { background: var(--bg-2); color: var(--fg-muted); cursor: not-allowed; opacity: 0.4; }
+.col-input.correct { border-color: var(--success); background: var(--success-bg); color: #15803d; }
+.col-input.incorrect { border-color: var(--error); background: var(--error-bg); color: #b91c1c; animation: shake 0.4s; }
+.col-active .col-label { color: var(--accent); }
+.col-active .col-input { border-color: var(--accent-3); background: #fffaf0; }
+.col-target .col-label { color: var(--coral); }
+.col-target .col-input { border-color: var(--coral); background: #fff5f0; }
+
+.comma-toggle {
+  width: 36px; height: 56px; border-radius: 12px;
+  border: 2px dashed var(--border); background: var(--bg-2);
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  font-weight: 800; font-size: 1.6rem; color: var(--fg-muted);
+  transition: all 0.2s ease; font-family: 'Fraunces', serif;
+}
+.comma-toggle:hover { border-color: var(--accent); color: var(--accent); }
+.comma-toggle.active { background: var(--accent); color: white; border-style: solid; border-color: var(--accent); }
+.comma-toggle.correct { background: var(--success-bg); color: var(--success); border-color: var(--success); border-style: solid; }
+.comma-toggle.incorrect { background: var(--error-bg); color: var(--error); border-color: var(--error); border-style: solid; animation: shake 0.4s; }
+.comma-label { font-size: 0.7rem; color: var(--fg-muted); font-weight: 600; height: 14px; }
+
+.q-card {
+  background: var(--card); border: 1px solid var(--border); border-radius: 16px;
+  padding: 22px; box-shadow: 0 2px 8px var(--shadow); transition: all 0.3s ease;
+}
+.q-card:hover { box-shadow: 0 8px 20px var(--shadow); }
+.q-number {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 36px; height: 36px; border-radius: 10px;
+  background: linear-gradient(135deg, var(--teal) 0%, var(--teal-2) 100%);
+  color: white; font-weight: 700; font-family: 'Fraunces', serif;
+  font-size: 1rem; margin-right: 12px; flex-shrink: 0;
+}
+.q-text { font-size: 1.02rem; font-weight: 500; color: var(--fg); line-height: 1.6; }
+
+.option-btn {
+  background: var(--bg-2); border: 2px solid var(--border); border-radius: 10px;
+  padding: 12px 14px; text-align: left; transition: all 0.2s ease; cursor: pointer;
+  font-weight: 500; display: flex; align-items: center; gap: 12px; width: 100%;
+}
+.option-btn:hover { border-color: var(--accent); background: #fef3e2; transform: translateX(4px); }
+.option-btn.selected { background: #fef3e2; border-color: var(--accent); color: var(--accent-2); }
+.option-btn.correct { background: var(--success-bg); border-color: var(--success); color: #15803d; }
+.option-btn.incorrect { background: var(--error-bg); border-color: var(--error); color: #b91c1c; }
+.option-letter {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 28px; height: 28px; border-radius: 8px; background: var(--card);
+  font-weight: 700; font-size: 0.85rem; flex-shrink: 0;
+}
+.option-btn.selected .option-letter, .option-btn.correct .option-letter, .option-btn.incorrect .option-letter { background: rgba(255,255,255,0.6); }
+
+.input-answer {
+  border: 2px solid var(--border); border-radius: 10px; padding: 10px 14px;
+  font-size: 1rem; background: var(--card); transition: all 0.2s ease;
+  font-weight: 600; color: var(--fg); width: 100%; max-width: 220px;
+}
+.input-answer:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 4px rgba(217, 119, 6, 0.15); }
+.input-answer.correct { border-color: var(--success); background: var(--success-bg); color: #15803d; }
+.input-answer.incorrect { border-color: var(--error); background: var(--error-bg); color: #b91c1c; }
+
+.explanation-box {
+  background: linear-gradient(135deg, #fff7ed 0%, #fef3c7 100%);
+  border-left: 4px solid var(--accent); border-radius: 8px; padding: 14px 16px;
+  margin-top: 14px; font-size: 0.92rem; color: var(--fg); line-height: 1.6; display: none;
+}
+.explanation-box.show { display: block; animation: slideDown 0.4s ease-out; }
+.explanation-box .exp-title {
+  font-weight: 700; color: var(--accent-2); margin-bottom: 6px;
+  display: flex; align-items: center; gap: 6px;
+}
+
+.tab-btn {
+  padding: 10px 18px; border-radius: 10px; font-weight: 600; cursor: pointer;
+  transition: all 0.2s ease; border: 2px solid var(--border); background: var(--card);
+  color: var(--fg-muted); font-size: 0.88rem; white-space: nowrap;
+}
+.tab-btn:hover { border-color: var(--accent-3); color: var(--accent); }
+.tab-btn.active {
+  background: linear-gradient(135deg, var(--teal) 0%, var(--teal-2) 100%);
+  color: white; border-color: var(--teal-2); box-shadow: 0 4px 12px rgba(13, 125, 107, 0.25);
+}
+
+.cover-hero {
+  background: linear-gradient(135deg, var(--teal-3) 0%, var(--teal-2) 50%, #0a2c28 100%);
+  border-radius: 28px; padding: 56px 40px; position: relative; overflow: hidden; color: white;
+}
+.cover-hero::before {
+  content: ''; position: absolute; top: -30%; right: -10%; width: 70%; height: 200%;
+  background: radial-gradient(circle, rgba(217, 119, 6, 0.35) 0%, transparent 50%);
+  animation: pulse 6s ease-in-out infinite; pointer-events: none;
+}
+.cover-hero::after {
+  content: ''; position: absolute; bottom: -30%; left: -10%; width: 60%; height: 150%;
+  background: radial-gradient(circle, rgba(245, 158, 11, 0.25) 0%, transparent 50%);
+  animation: pulse 8s ease-in-out infinite reverse; pointer-events: none;
+}
+.cover-content { position: relative; z-index: 1; }
+
+.toast {
+  position: fixed; bottom: 100px; right: 30px;
+  background: var(--fg); color: white; padding: 14px 22px; border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.25); z-index: 1000;
+  transform: translateY(100px); opacity: 0; transition: all 0.3s ease;
+  font-weight: 500; display: flex; align-items: center; gap: 10px; max-width: 350px;
+}
+.toast.show { transform: translateY(0); opacity: 1; }
+.toast.success { background: linear-gradient(135deg, #15803d 0%, #16a34a 100%); }
+.toast.error { background: linear-gradient(135deg, #b91c1c 0%, #dc2626 100%); }
+.toast.info { background: linear-gradient(135deg, var(--teal-2) 0%, var(--teal) 100%); }
+
+.progress-bar { height: 6px; background: var(--bg-2); border-radius: 3px; overflow: hidden; }
+.progress-fill {
+  height: 100%; background: linear-gradient(90deg, var(--accent) 0%, var(--accent-2) 100%);
+  border-radius: 3px; transition: width 0.5s ease;
+}
+
+.reflection-input {
+  width: 100%; border: none; border-bottom: 2px solid var(--border); background: transparent;
+  padding: 12px 0; font-size: 1rem; color: var(--fg); transition: all 0.2s ease;
+  font-family: 'Outfit', sans-serif; resize: vertical; min-height: 60px;
+}
+.reflection-input:focus { outline: none; border-color: var(--accent); }
+.reflection-input::placeholder { color: var(--fg-muted); opacity: 0.6; }
+
+.numbered-item {
+  display: flex; align-items: flex-start; gap: 16px; padding: 22px;
+  background: var(--card); border-radius: 16px; border: 1px solid var(--border);
+  transition: all 0.3s ease;
+}
+.numbered-item:hover { border-color: var(--accent-3); transform: translateX(4px); box-shadow: 0 8px 20px var(--shadow); }
+.number-badge {
+  flex-shrink: 0; width: 44px; height: 44px; border-radius: 12px;
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%);
+  color: white; display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-family: 'Fraunces', serif; font-size: 1.25rem;
+  box-shadow: 0 4px 10px rgba(217, 119, 6, 0.3);
+}
+
+.hint-box {
+  background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+  border-left: 4px solid var(--teal); border-radius: 8px; padding: 12px 16px;
+  font-size: 0.9rem; color: var(--teal-3); display: flex; align-items: center; gap: 10px;
+}
+
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: var(--bg-2); border-radius: 5px; }
+::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 5px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent-2); }
+
+.float-ruler {
+  position: absolute; font-size: 5rem; font-weight: 800;
+  font-family: 'Fraunces', serif; color: rgba(255,255,255,0.06);
+  pointer-events: none; user-select: none;
+}
+
+.stagger-1 { animation: slideUp 0.6s ease-out 0.1s both; }
+.stagger-2 { animation: slideUp 0.6s ease-out 0.2s both; }
+.stagger-3 { animation: slideUp 0.6s ease-out 0.3s both; }
+.stagger-4 { animation: slideUp 0.6s ease-out 0.4s both; }
+.stagger-5 { animation: slideUp 0.6s ease-out 0.5s both; }
+
+.confetti { position: fixed; width: 10px; height: 10px; pointer-events: none; z-index: 9999; animation: confettiFall 3s linear forwards; }
+@keyframes confettiFall { 0% { transform: translateY(-100vh) rotate(0deg); opacity: 1; } 100% { transform: translateY(100vh) rotate(720deg); opacity: 0; } }
+
+@media (max-width: 768px) {
+  .col-input { width: 42px; height: 42px; font-size: 1rem; }
+  .comma-toggle { width: 28px; height: 42px; font-size: 1.2rem; }
+  .stair-block { min-width: 50px; padding: 10px 6px; }
+  .stair-block .unit-name { font-size: 1rem; }
+  .stair-block .unit-full { font-size: 0.55rem; }
+  .cover-hero { padding: 40px 24px; }
+  .tangga-inputs { gap: 2px; }
+  .col-label { font-size: 0.8rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- Top Navigation -->
+<nav class="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-[rgba(245,239,224,0.85)] border-b border-[var(--border)]">
+  <div class="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-600 to-orange-700 flex items-center justify-center text-white font-bold shadow-lg">
+        <i class="fa-solid fa-ruler-horizontal"></i>
+      </div>
+      <div>
+        <div class="font-display font-bold text-base leading-none">Konversi Satuan Panjang</div>
+        <div class="text-xs text-[var(--fg-muted)]">Media Pembelajaran Interaktif</div>
+      </div>
+    </div>
+    <div class="hidden md:flex items-center gap-2">
+      <button class="nav-dot active" data-slide="1" title="Cover"></button>
+      <button class="nav-dot" data-slide="2" title="Tujuan"></button>
+      <button class="nav-dot" data-slide="3" title="Tangga Konversi"></button>
+      <button class="nav-dot" data-slide="4" title="Latihan Soal"></button>
+      <button class="nav-dot" data-slide="5" title="Kesimpulan"></button>
+    </div>
+    <div class="text-sm font-semibold text-[var(--fg-muted)]">
+      <span id="currentSlide">1</span> / 5
+    </div>
+  </div>
+</nav>
+
+<main class="pt-24 pb-32 max-w-7xl mx-auto px-6">
+
+<!-- ============ SLIDE 1: COVER ============ -->
+<section class="slide active" data-slide="1">
+  <div class="cover-hero relative">
+    <div class="float-ruler" style="top: 30px; right: 60px;">km</div>
+    <div class="float-ruler" style="bottom: 50px; left: 60px;">mm</div>
+    <div class="float-ruler" style="top: 50%; right: 20%; font-size: 3rem;">m</div>
+    
+    <div class="cover-content max-w-4xl mx-auto text-center py-8">
+      <div class="inline-block mb-6 px-4 py-2 rounded-full bg-white/10 backdrop-blur border border-white/20 text-amber-200 text-xs font-semibold tracking-widest">
+        <i class="fa-solid fa-graduation-cap mr-2"></i>MEDIA PEMBELAJARAN INTERAKTIF
+      </div>
+      
+      <h1 class="font-display font-black text-5xl md:text-7xl leading-tight mb-6">
+        Konversi<br>
+        <span class="text-amber-400">Satuan Panjang</span>
+      </h1>
+      
+      <p class="text-base md:text-xl text-teal-100 mb-10 max-w-2xl mx-auto leading-relaxed">
+        Pahami cara mengubah satuan panjang dari kilometer hingga milimeter 
+        melalui tangga konversi interaktif dan 100 soal latihan terbimbing.
+      </p>
+      
+      <div class="flex flex-wrap items-center justify-center gap-4 mb-12">
+        <button onclick="goToSlide(2)" class="btn-primary text-lg">
+          <i class="fa-solid fa-play"></i>Mulai Belajar
+        </button>
+        <button onclick="goToSlide(3)" class="btn-secondary bg-white/10 border-white/20 text-white hover:bg-white/20 hover:text-white hover:border-amber-300">
+          <i class="fa-solid fa-stairs"></i>Lihat Tangga Konversi
+        </button>
+      </div>
+      
+      <div class="grid grid-cols-7 gap-2 max-w-3xl mx-auto">
+        <div class="text-center">
+          <div class="text-amber-400 font-display font-bold text-xl md:text-2xl mb-1">km</div>
+          <div class="h-14 md:h-20 bg-gradient-to-t from-amber-500/40 to-transparent rounded-t-lg border-x border-t border-amber-500/30"></div>
+        </div>
+        <div class="text-center">
+          <div class="text-amber-300 font-display font-bold text-lg md:text-xl mb-1">hm</div>
+          <div class="h-12 md:h-16 bg-gradient-to-t from-amber-500/40 to-transparent rounded-t-lg border-x border-t border-amber-500/30"></div>
+        </div>
+        <div class="text-center">
+          <div class="text-amber-300 font-display font-bold text-lg md:text-xl mb-1">dam</div>
+          <div class="h-10 md:h-14 bg-gradient-to-t from-amber-500/40 to-transparent rounded-t-lg border-x border-t border-amber-500/30"></div>
+        </div>
+        <div class="text-center">
+          <div class="text-amber-200 font-display font-bold text-lg md:text-xl mb-1">m</div>
+          <div class="h-8 md:h-12 bg-gradient-to-t from-amber-500/40 to-transparent rounded-t-lg border-x border-t border-amber-500/30"></div>
+        </div>
+        <div class="text-center">
+          <div class="text-amber-300 font-display font-bold text-lg md:text-xl mb-1">dm</div>
+          <div class="h-10 md:h-14 bg-gradient-to-t from-amber-500/40 to-transparent rounded-t-lg border-x border-t border-amber-500/30"></div>
+        </div>
+        <div class="text-center">
+          <div class="text-amber-300 font-display font-bold text-lg md:text-xl mb-1">cm</div>
+          <div class="h-12 md:h-16 bg-gradient-to-t from-amber-500/40 to-transparent rounded-t-lg border-x border-t border-amber-500/30"></div>
+        </div>
+        <div class="text-center">
+          <div class="text-amber-400 font-display font-bold text-xl md:text-2xl mb-1">mm</div>
+          <div class="h-14 md:h-20 bg-gradient-to-t from-amber-500/40 to-transparent rounded-t-lg border-x border-t border-amber-500/30"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
+    <div class="card p-6 text-center stagger-1">
+      <div class="text-3xl text-amber-600 mb-2"><i class="fa-solid fa-layer-group"></i></div>
+      <div class="font-display font-bold text-2xl">5</div>
+      <div class="text-sm text-[var(--fg-muted)]">Slide Materi</div>
+    </div>
+    <div class="card p-6 text-center stagger-2">
+      <div class="text-3xl text-amber-600 mb-2"><i class="fa-solid fa-list-check"></i></div>
+      <div class="font-display font-bold text-2xl">100</div>
+      <div class="text-sm text-[var(--fg-muted)]">Soal Latihan</div>
+    </div>
+    <div class="card p-6 text-center stagger-3">
+      <div class="text-3xl text-amber-600 mb-2"><i class="fa-solid fa-stairs"></i></div>
+      <div class="font-display font-bold text-2xl">7</div>
+      <div class="text-sm text-[var(--fg-muted)]">Satuan Panjang</div>
+    </div>
+    <div class="card p-6 text-center stagger-4">
+      <div class="text-3xl text-amber-600 mb-2"><i class="fa-solid fa-brain"></i></div>
+      <div class="font-display font-bold text-2xl">10</div>
+      <div class="text-sm text-[var(--fg-muted)]">Soal HOTS</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 2: TUJUAN PEMBELAJARAN ============ -->
+<section class="slide" data-slide="2">
+  <div class="text-center mb-12 stagger-1">
+    <div class="inline-block px-4 py-1.5 rounded-full bg-amber-100 text-amber-700 text-xs font-semibold tracking-widest mb-4">
+      SLIDE 02
+    </div>
+    <h2 class="font-display font-black text-4xl md:text-5xl mb-4">Tujuan Pembelajaran</h2>
+    <p class="text-[var(--fg-muted)] max-w-2xl mx-auto">
+      Setelah mempelajari materi ini, peserta didik diharapkan mampu mencapai kompetensi-kompetensi berikut.
+    </p>
+  </div>
+  
+  <div class="grid md:grid-cols-2 gap-4 mb-8">
+    <div class="numbered-item stagger-1">
+      <div class="number-badge">1</div>
+      <div>
+        <h3 class="font-display font-bold text-lg mb-1">Memahami Konsep Dasar</h3>
+        <p class="text-sm text-[var(--fg-muted)] leading-relaxed">
+          Peserta didik mampu memahami konsep dasar konversi satuan panjang dan hubungan antar satuan dalam sistem metrik.
+        </p>
+      </div>
+    </div>
+    
+    <div class="numbered-item stagger-2">
+      <div class="number-badge">2</div>
+      <div>
+        <h3 class="font-display font-bold text-lg mb-1">Mengenal Tangga Konversi</h3>
+        <p class="text-sm text-[var(--fg-muted)] leading-relaxed">
+          Peserta didik dapat mengidentifikasi urutan satuan panjang dari kilometer (km) hingga milimeter (mm) menggunakan tangga konversi.
+        </p>
+      </div>
+    </div>
+    
+    <div class="numbered-item stagger-3">
+      <div class="number-badge">3</div>
+      <div>
+        <h3 class="font-display font-bold text-lg mb-1">Melakukan Konversi Satuan</h3>
+        <p class="text-sm text-[var(--fg-muted)] leading-relaxed">
+          Peserta didik mampu mengonversi satuan panjang dengan benar, baik dari satuan besar ke kecil maupun sebaliknya.
+        </p>
+      </div>
+    </div>
+    
+    <div class="numbered-item stagger-4">
+      <div class="number-badge">4</div>
+      <div>
+        <h3 class="font-display font-bold text-lg mb-1">Menyelesaikan Operasi Hitung</h3>
+        <p class="text-sm text-[var(--fg-muted)] leading-relaxed">
+          Peserta didik dapat menyelesaikan operasi penjumlahan dan pengurangan dengan satuan panjang yang berbeda.
+        </p>
+      </div>
+    </div>
+    
+    <div class="numbered-item stagger-5">
+      <div class="number-badge">5</div>
+      <div>
+        <h3 class="font-display font-bold text-lg mb-1">Menerapkan dalam Soal Cerita</h3>
+        <p class="text-sm text-[var(--fg-muted)] leading-relaxed">
+          Peserta didik mampu menerapkan konversi satuan panjang dalam menyelesaikan soal cerita kontekstual sehari-hari.
+        </p>
+      </div>
+    </div>
+    
+    <div class="numbered-item stagger-5">
+      <div class="number-badge">6</div>
+      <div>
+        <h3 class="font-display font-bold text-lg mb-1">Menyelesaikan Soal HOTS</h3>
+        <p class="text-sm text-[var(--fg-muted)] leading-relaxed">
+          Peserta didik dapat menganalisis dan menyelesaikan soal Higher Order Thinking Skills (HOTS) terkait konversi satuan panjang.
+        </p>
+      </div>
+    </div>
+  </div>
+  
+  <div class="card p-6 md:p-8 stagger-5">
+    <div class="flex items-start gap-4">
+      <div class="w-12 h-12 rounded-xl bg-teal-100 text-teal-700 flex items-center justify-center flex-shrink-0">
+        <i class="fa-solid fa-lightbulb text-xl"></i>
+      </div>
+      <div>
+        <h3 class="font-display font-bold text-xl mb-2">Materi yang Akan Dipelajari</h3>
+        <p class="text-sm text-[var(--fg-muted)] mb-4">
+          Materi ini dirancang secara terstruktur dengan pendekatan <em>scaffolding</em>, dimulai dari pemahaman konsep, latihan terbimbing, hingga soal aplikasi dan HOTS.
+        </p>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
+          <div class="flex items-center gap-2"><i class="fa-solid fa-check text-green-600"></i>Tangga Konversi</div>
+          <div class="flex items-center gap-2"><i class="fa-solid fa-check text-green-600"></i>50 Latihan Terbimbing</div>
+          <div class="flex items-center gap-2"><i class="fa-solid fa-check text-green-600"></i>Soal Pilihan Ganda</div>
+          <div class="flex items-center gap-2"><i class="fa-solid fa-check text-green-600"></i>Soal Isian</div>
+          <div class="flex items-center gap-2"><i class="fa-solid fa-check text-green-600"></i>Operasi Hitung</div>
+          <div class="flex items-center gap-2"><i class="fa-solid fa-check text-green-600"></i>Soal Cerita</div>
+          <div class="flex items-center gap-2"><i class="fa-solid fa-check text-green-600"></i>Soal HOTS</div>
+          <div class="flex items-center gap-2"><i class="fa-solid fa-check text-green-600"></i>Refleksi Diri</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 3: TANGGA KONVERSI ============ -->
+<section class="slide" data-slide="3">
+  <div class="text-center mb-8 stagger-1">
+    <div class="inline-block px-4 py-1.5 rounded-full bg-amber-100 text-amber-700 text-xs font-semibold tracking-widest mb-4">
+      SLIDE 03
+    </div>
+    <h2 class="font-display font-black text-4xl md:text-5xl mb-3">Tangga Konversi Satuan Panjang</h2>
+    <p class="text-[var(--fg-muted)] max-w-2xl mx-auto">
+      Pelajari tangga konversi, pahami cara kerjanya, lalu latih dengan 50 soal interaktif.
+    </p>
+  </div>
+  
+  <!-- Visual Tangga -->
+  <div class="card p-6 mb-6 stagger-2">
+    <h3 class="font-display font-bold text-xl mb-2 text-center">Tangga Konversi Panjang</h3>
+    <p class="text-sm text-[var(--fg-muted)] text-center mb-4">
+      Satuan dari yang terbesar (km) hingga terkecil (mm). Setiap turun satu tingkat = <strong>×10</strong>, setiap naik satu tingkat = <strong>÷10</strong>.
+    </p>
+    <div class="tangga-staircase">
+      <div class="stair" data-unit="km">
+        <div class="stair-block">
+          <div class="unit-name">km</div>
+          <div class="unit-full">kilometer</div>
+          <div class="unit-factor">1.000 m</div>
+        </div>
+        <div class="stair-step-label">Tingkat 1</div>
+      </div>
+      <div class="stair" data-unit="hm">
+        <div class="stair-block">
+          <div class="unit-name">hm</div>
+          <div class="unit-full">hektometer</div>
+          <div class="unit-factor">100 m</div>
+        </div>
+        <div class="stair-step-label">Tingkat 2</div>
+      </div>
+      <div class="stair" data-unit="dam">
+        <div class="stair-block">
+          <div class="unit-name">dam</div>
+          <div class="unit-full">dekameter</div>
+          <div class="unit-factor">10 m</div>
+        </div>
+        <div class="stair-step-label">Tingkat 3</div>
+      </div>
+      <div class="stair" data-unit="m">
+        <div class="stair-block">
+          <div class="unit-name">m</div>
+          <div class="unit-full">meter</div>
+          <div class="unit-factor">satuan dasar</div>
+        </div>
+        <div class="stair-step-label">Tingkat 4</div>
+      </div>
+      <div class="stair" data-unit="dm">
+        <div class="stair-block">
+          <div class="unit-name">dm</div>
+          <div class="unit-full">desimeter</div>
+          <div class="unit-factor">0,1 m</div>
+        </div>
+        <div class="stair-step-label">Tingkat 5</div>
+      </div>
+      <div class="stair" data-unit="cm">
+        <div class="stair-block">
+          <div class="unit-name">cm</div>
+          <div class="unit-full">centimeter</div>
+          <div class="unit-factor">0,01 m</div>
+        </div>
+        <div class="stair-step-label">Tingkat 6</div>
+      </div>
+      <div class="stair" data-unit="mm">
+        <div class="stair-block">
+          <div class="unit-name">mm</div>
+          <div class="unit-full">milimeter</div>
+          <div class="unit-factor">0,001 m</div>
+        </div>
+        <div class="stair-step-label">Tingkat 7</div>
+      </div>
+    </div>
+    <div class="flex items-center justify-center gap-4 mt-4 text-sm flex-wrap">
+      <div class="flex items-center gap-2 px-3 py-1.5 rounded-full bg-amber-100 text-amber-700">
+        <i class="fa-solid fa-arrow-down"></i> Turun: Kalikan 10
+      </div>
+      <div class="flex items-center gap-2 px-3 py-1.5 rounded-full bg-teal-100 text-teal-700">
+        <i class="fa-solid fa-arrow-up"></i> Naik: Bagi 10
+      </div>
+    </div>
+  </div>
+  
+  <!-- Petunjuk -->
+  <div class="card p-6 mb-6 stagger-3">
+    <h3 class="font-display font-bold text-xl mb-4 flex items-center gap-2">
+      <i class="fa-solid fa-circle-info text-amber-600"></i>
+      Cara Mengisi Kolom
+    </h3>
+    <div class="grid md:grid-cols-2 gap-4 mb-4">
+      <div class="bg-amber-50 rounded-xl p-4 border border-amber-200">
+        <h4 class="font-bold text-amber-800 mb-2 flex items-center gap-2">
+          <i class="fa-solid fa-arrow-down"></i> Konversi Turun (Besar → Kecil)
+        </h4>
+        <ol class="text-sm text-[var(--fg-muted)] space-y-1 list-decimal list-inside">
+          <li>Tulis angka pada kolom satuan asal</li>
+          <li>Isi angka <strong>0</strong> di kolom bawahnya sampai satuan tujuan</li>
+          <li>Tidak perlu gunakan koma</li>
+          <li>Hasil dibaca dari satuan asal sampai tujuan</li>
+        </ol>
+        <div class="mt-2 text-xs text-amber-700 bg-amber-100 rounded p-2">
+          <strong>Contoh:</strong> 3 km = ... m → km=3, hm=0, dam=0, m=0 → <strong>3.000 m</strong>
+        </div>
+      </div>
+      <div class="bg-teal-50 rounded-xl p-4 border border-teal-200">
+        <h4 class="font-bold text-teal-800 mb-2 flex items-center gap-2">
+          <i class="fa-solid fa-arrow-up"></i> Konversi Naik (Kecil → Besar)
+        </h4>
+        <ol class="text-sm text-[var(--fg-muted)] space-y-1 list-decimal list-inside">
+          <li>Tulis angka dari belakang (kolom asal) ke depan</li>
+          <li>Isi <strong>0</strong> pada kolom depan yang kosong</li>
+          <li>Klik salah satu <strong>toggle koma</strong> di sela kolom</li>
+          <li>Letakkan koma TEPAT setelah kolom tujuan</li>
+        </ol>
+        <div class="mt-2 text-xs text-teal-700 bg-teal-100 rounded p-2">
+          <strong>Contoh:</strong> 5 cm = ... m → m=0, dm=0, cm=5, koma setelah m → <strong>0,05 m</strong>
+        </div>
+      </div>
+    </div>
+    <div class="hint-box">
+      <i class="fa-solid fa-lightbulb"></i>
+      <span><strong>Toggle Koma:</strong> Untuk konversi naik, koma wajib diletakkan tepat setelah kolom satuan tujuan agar pembacaan hasil desimalnya benar.</span>
+    </div>
+  </div>
+  
+  <!-- Latihan Terbimbing -->
+  <div class="card p-6 md:p-8 stagger-4">
+    <div class="flex items-center justify-between mb-4 flex-wrap gap-2">
+      <div>
+        <h3 class="font-display font-bold text-2xl">Latihan Terbimbing</h3>
+        <p class="text-sm text-[var(--fg-muted)]">Isi kolom-kolom berikut dengan benar!</p>
+      </div>
+      <div class="text-right">
+        <div class="text-sm font-semibold" id="tanggaProgress">Soal 1 dari 50</div>
+        <div class="text-xs text-[var(--fg-muted)]">Skor: <span id="tanggaScore">0</span>/50</div>
+      </div>
+    </div>
+    
+    <div class="progress-bar mb-6">
+      <div class="progress-fill" id="tanggaProgressFill" style="width: 2%"></div>
+    </div>
+    
+    <div class="bg-gradient-to-br from-amber-50 to-orange-50 rounded-2xl p-6 mb-4 border-2 border-amber-200">
+      <div class="flex items-center justify-between mb-4 flex-wrap gap-2">
+        <div class="text-2xl font-display font-bold text-[var(--fg)]" id="tanggaQuestion">2 km = ... hm</div>
+        <div class="hint-box" id="tanggaHintBox" style="display: inline-flex;">
+          <i class="fa-solid fa-lightbulb"></i>
+          <span id="tanggaHint">Turun 1 tingkat, tidak perlu koma.</span>
+        </div>
+      </div>
+      
+      <div class="tangga-inputs" id="tanggaInputs"></div>
+      
+      <div class="explanation-box" id="tanggaExplanation">
+        <div class="exp-title"><i class="fa-solid fa-circle-info"></i> Pembahasan</div>
+        <div id="tanggaExpContent"></div>
+      </div>
+    </div>
+    
+    <div class="flex flex-wrap items-center justify-between gap-3">
+      <div class="flex flex-wrap items-center gap-2">
+        <button onclick="checkTangga()" class="btn-primary">
+          <i class="fa-solid fa-check"></i>Periksa Jawaban
+        </button>
+        <button onclick="showTanggaAnswer()" class="btn-secondary">
+          <i class="fa-solid fa-eye"></i>Tunjukkan Jawaban
+        </button>
+        <button onclick="resetTangga()" class="btn-ghost">
+          <i class="fa-solid fa-rotate-left"></i>Reset
+        </button>
+      </div>
+      <div class="flex items-center gap-2">
+        <button onclick="prevTanggaProblem()" class="btn-ghost" id="tanggaPrevBtn">
+          <i class="fa-solid fa-arrow-left"></i>Sebelumnya
+        </button>
+        <button onclick="nextTanggaProblem()" class="btn-primary" id="tanggaNextBtn">
+          Berikutnya<i class="fa-solid fa-arrow-right"></i>
+        </button>
+      </div>
+    </div>
+    
+    <!-- Quick Navigation -->
+    <div class="mt-6 pt-6 border-t border-[var(--border)]">
+      <div class="text-xs font-semibold text-[var(--fg-muted)] mb-2">Loncat ke soal:</div>
+      <div class="flex flex-wrap gap-1" id="tanggaQuickNav"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 4: SOAL LATIHAN ============ -->
+<section class="slide" data-slide="4">
+  <div class="text-center mb-8 stagger-1">
+    <div class="inline-block px-4 py-1.5 rounded-full bg-amber-100 text-amber-700 text-xs font-semibold tracking-widest mb-4">
+      SLIDE 04
+    </div>
+    <h2 class="font-display font-black text-4xl md:text-5xl mb-3">Latihan Soal</h2>
+    <p class="text-[var(--fg-muted)] max-w-2xl mx-auto">
+      50 soal dengan 5 tipe berbeda: Pilihan Ganda, Isian, Operasi Hitung, Soal Cerita, dan HOTS.
+    </p>
+  </div>
+  
+  <!-- Score Display -->
+  <div class="card p-4 mb-6 stagger-2">
+    <div class="flex items-center justify-between flex-wrap gap-3">
+      <div class="flex items-center gap-4">
+        <div>
+          <div class="text-xs text-[var(--fg-muted)]">Skor Benar</div>
+          <div class="font-display font-bold text-2xl text-green-600"><span id="scoreCorrect">0</span></div>
+        </div>
+        <div class="w-px h-10 bg-[var(--border)]"></div>
+        <div>
+          <div class="text-xs text-[var(--fg-muted)]">Total Dijawab</div>
+          <div class="font-display font-bold text-2xl text-amber-600"><span id="scoreAnswered">0</span></div>
+        </div>
+        <div class="w-px h-10 bg-[var(--border)]"></div>
+        <div>
+          <div class="text-xs text-[var(--fg-muted)]">Total Soal</div>
+          <div class="font-display font-bold text-2xl text-teal-600">50</div>
+        </div>
+      </div>
+      <div class="flex-1 max-w-xs">
+        <div class="text-xs text-[var(--fg-muted)] mb-1">Progress</div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="overallProgress" style="width: 0%"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Tab Navigation -->
+  <div class="flex flex-wrap gap-2 mb-6 stagger-3">
+    <button class="tab-btn active" data-tab="pg">
+      <i class="fa-solid fa-list-ul mr-1"></i>Pilihan Ganda (10)
+    </button>
+    <button class="tab-btn" data-tab="isian">
+      <i class="fa-solid fa-pen-to-square mr-1"></i>Isian (10)
+    </button>
+    <button class="tab-btn" data-tab="hitung">
+      <i class="fa-solid fa-calculator mr-1"></i>Operasi Hitung (10)
+    </button>
+    <button class="tab-btn" data-tab="cerita">
+      <i class="fa-solid fa-book-open mr-1"></i>Soal Cerita (10)
+    </button>
+    <button class="tab-btn" data-tab="hots">
+      <i class="fa-solid fa-brain mr-1"></i>HOTS (10)
+    </button>
+  </div>
+  
+  <!-- Questions Container -->
+  <div id="questionsContainer"></div>
+</section>
+
+<!-- ============ SLIDE 5: KESIMPULAN & REFLEKSI ============ -->
+<section class="slide" data-slide="5">
+  <div class="text-center mb-10 stagger-1">
+    <div class="inline-block px-4 py-1.5 rounded-full bg-amber-100 text-amber-700 text-xs font-semibold tracking-widest mb-4">
+      SLIDE 05
+    </div>
+    <h2 class="font-display font-black text-4xl md:text-5xl mb-3">Kesimpulan & Refleksi</h2>
+    <p class="text-[var(--fg-muted)] max-w-2xl mx-auto">
+      Mari rangkum apa yang telah kita pelajari dan lakukan refleksi diri.
+    </p>
+  </div>
+  
+  <!-- Kesimpulan -->
+  <div class="mb-10">
+    <h3 class="font-display font-bold text-2xl mb-4 flex items-center gap-2 stagger-1">
+      <i class="fa-solid fa-flag-checkered text-amber-600"></i>Kesimpulan
+    </h3>
+    <div class="grid md:grid-cols-2 gap-4">
+      <div class="card p-5 stagger-2">
+        <div class="w-10 h-10 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center mb-3">
+          <i class="fa-solid fa-stairs"></i>
+        </div>
+        <h4 class="font-display font-bold text-lg mb-2">7 Satuan Panjang</h4>
+        <p class="text-sm text-[var(--fg-muted)] leading-relaxed">
+          Satuan panjang dalam sistem metrik terdiri dari 7 tingkat: <strong>km, hm, dam, m, dm, cm, mm</strong>. Meter (m) adalah satuan dasar.
+        </p>
+      </div>
+      
+      <div class="card p-5 stagger-2">
+        <div class="w-10 h-10 rounded-xl bg-teal-100 text-teal-700 flex items-center justify-center mb-3">
+          <i class="fa-solid fa-arrow-down"></i>
+        </div>
+        <h4 class="font-display font-bold text-lg mb-2">Turun Tangga = ×10</h4>
+        <p class="text-sm text-[var(--fg-muted)] leading-relaxed">
+          Setiap turun satu tingkat, kalikan dengan 10. Dari km ke mm (6 tingkat) = kali 1.000.000.
+        </p>
+      </div>
+      
+      <div class="card p-5 stagger-3">
+        <div class="w-10 h-10 rounded-xl bg-orange-100 text-orange-700 flex items-center justify-center mb-3">
+          <i class="fa-solid fa-arrow-up"></i>
+        </div>
+        <h4 class="font-display font-bold text-lg mb-2">Naik Tangga = ÷10</h4>
+        <p class="text-sm text-[var(--fg-muted)] leading-relaxed">
+          Setiap naik satu tingkat, bagi dengan 10. Dari mm ke km (6 tingkat) = bagi 1.000.000.
+        </p>
+      </div>
+      
+      <div class="card p-5 stagger-3">
+        <div class="w-10 h-10 rounded-xl bg-rose-100 text-rose-700 flex items-center justify-center mb-3">
+          <i class="fa-solid fa-equals"></i>
+        </div>
+        <h4 class="font-display font-bold text-lg mb-2">Samakan Satuan Dulu</h4>
+        <p class="text-sm text-[var(--fg-muted)] leading-relaxed">
+          Pada operasi hitung dengan satuan berbeda, selalu samakan ke satuan terkecil terlebih dahulu sebelum menjumlahkan atau mengurangkan.
+        </p>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Refleksi -->
+  <div class="mb-10">
+    <h3 class="font-display font-bold text-2xl mb-4 flex items-center gap-2 stagger-3">
+      <i class="fa-solid fa-comments text-teal-600"></i>Refleksi Diri
+    </h3>
+    <div class="card p-6 md:p-8 stagger-4">
+      <p class="text-sm text-[var(--fg-muted)] mb-6">
+        Jawablah pertanyaan refleksi berikut dengan jujur untuk mengevaluasi pemahamanmu.
+      </p>
+      
+      <div class="space-y-6">
+        <div>
+          <label class="block text-sm font-semibold mb-2 text-[var(--fg)]">
+            <i class="fa-solid fa-circle-check text-green-600 mr-2"></i>
+            1. Konsep apa yang paling kamu pahami dari materi konversi satuan panjang?
+          </label>
+          <textarea class="reflection-input" placeholder="Tuliskan jawabanmu di sini..." rows="2"></textarea>
+        </div>
+        
+        <div>
+          <label class="block text-sm font-semibold mb-2 text-[var(--fg)]">
+            <i class="fa-solid fa-triangle-exclamation text-amber-600 mr-2"></i>
+            2. Bagian mana yang masih kamu rasa sulit atau perlu dipelajari lagi?
+          </label>
+          <textarea class="reflection-input" placeholder="Tuliskan jawabanmu di sini..." rows="2"></textarea>
+        </div>
+        
+        <div>
+          <label class="block text-sm font-semibold mb-2 text-[var(--fg)]">
+            <i class="fa-solid fa-lightbulb text-amber-600 mr-2"></i>
+            3. Strategi apa yang akan kamu lakukan untuk memperdalam pemahamanmu?
+          </label>
+          <textarea class="reflection-input" placeholder="Tuliskan jawabanmu di sini..." rows="2"></textarea>
+        </div>
+        
+        <div>
+          <label class="block text-sm font-semibold mb-2 text-[var(--fg)]">
+            <i class="fa-solid fa-star text-amber-600 mr-2"></i>
+            4. Bagaimana kamu akan menerapkan konversi satuan panjang dalam kehidupan sehari-hari?
+          </label>
+          <textarea class="reflection-input" placeholder="Tuliskan jawabanmu di sini..." rows="2"></textarea>
+        </div>
+      </div>
+      
+      <div class="mt-6 flex justify-end">
+        <button onclick="saveReflection()" class="btn-primary">
+          <i class="fa-solid fa-paper-plane"></i>Simpan Refleksi
+        </button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Thank You -->
+  <div class="cover-hero text-center relative stagger-5">
+    <div class="cover-content py-8">
+      <div class="inline-block mb-4 px-4 py-2 rounded-full bg-white/10 backdrop-blur border border-white/20 text-amber-200 text-xs font-semibold tracking-widest">
+        <i class="fa-solid fa-check-circle mr-2"></i>MATERI SELESAI
+      </div>
+      <h2 class="font-display font-black text-4xl md:text-6xl mb-4">
+        Thank You<br>
+        <span class="text-amber-400">For Today</span>
+      </h2>
+      <p class="text-base md:text-lg text-teal-100 mb-6 max-w-xl mx-auto">
+        Terima kasih telah mengikuti pembelajaran ini dengan sungguh-sungguh. 
+        Teruslah berlatih, karena latihan membuatmu semakin mahir!
+      </p>
+      <div class="flex flex-wrap items-center justify-center gap-3">
+        <button onclick="goToSlide(1)" class="btn-secondary bg-white/10 border-white/20 text-white hover:bg-white/20 hover:text-white hover:border-amber-300">
+          <i class="fa-solid fa-rotate-left"></i>Ulang dari Awal
+        </button>
+        <button onclick="goToSlide(4)" class="btn-primary">
+          <i class="fa-solid fa-list-check"></i>Kerjakan Soal Lagi
+        </button>
+      </div>
+      <div class="mt-8 text-amber-300 text-sm italic font-display">
+        "Pembelajaran adalah perjalanan, bukan destinasi."
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- Bottom Navigation -->
+<div class="fixed bottom-0 left-0 right-0 z-40 backdrop-blur-md bg-[rgba(245,239,224,0.92)] border-t border-[var(--border)]">
+  <div class="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between">
+    <button id="prevBtn" onclick="prevSlide()" class="btn-secondary" disabled>
+      <i class="fa-solid fa-arrow-left"></i>Sebelumnya
+    </button>
+    <div class="text-sm font-semibold hidden md:block">
+      <span id="currentSlideBottom">1</span> dari 5
+    </div>
+    <button id="nextBtn" onclick="nextSlide()" class="btn-primary">
+      Selanjutnya<i class="fa-solid fa-arrow-right"></i>
+    </button>
+  </div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script>
+// ============ SLIDE NAVIGATION ============
+let currentSlide = 1;
+const totalSlides = 5;
+
+function goToSlide(n) {
+  if (n < 1 || n > totalSlides) return;
+  document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
+  document.querySelector(`.slide[data-slide="${n}"]`).classList.add('active');
+  document.querySelectorAll('.nav-dot').forEach(d => d.classList.remove('active'));
+  document.querySelector(`.nav-dot[data-slide="${n}"]`).classList.add('active');
+  document.getElementById('currentSlide').textContent = n;
+  document.getElementById('currentSlideBottom').textContent = n;
+  document.getElementById('prevBtn').disabled = n === 1;
+  document.getElementById('nextBtn').disabled = n === totalSlides;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  currentSlide = n;
+}
+
+function nextSlide() { if (currentSlide < totalSlides) goToSlide(currentSlide + 1); }
+function prevSlide() { if (currentSlide > 1) goToSlide(currentSlide - 1); }
+
+document.querySelectorAll('.nav-dot').forEach(dot => {
+  dot.addEventListener('click', () => goToSlide(parseInt(dot.dataset.slide)));
+});
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'ArrowRight') nextSlide();
+  else if (e.key === 'ArrowLeft') prevSlide();
+});
+
+// ============ TOAST ============
+function showToast(message, type = 'info') {
+  const toast = document.getElementById('toast');
+  const icons = { success: 'check-circle', error: 'circle-xmark', info: 'circle-info' };
+  toast.className = `toast ${type}`;
+  toast.innerHTML = `<i class="fa-solid fa-${icons[type]}"></i><span>${message}</span>`;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 3000);
+}
+
+// ============ TANGGA KONVERSI ============
+const units = ['km', 'hm', 'dam', 'm', 'dm', 'cm', 'mm'];
+
+// 50 soal: 25 turun, 25 naik (seimbang)
+const tanggaProblems = [
+  // === KONVERSI TURUN (25 soal) ===
+  { q: '2 km = ... hm', cols: { km: '2', hm: '0' }, expectedComma: -1, hint: 'Turun 1 tingkat, tidak perlu koma.' },
+  { q: '5 hm = ... dam', cols: { hm: '5', dam: '0' }, expectedComma: -1, hint: 'Turun 1 tingkat, tidak perlu koma.' },
+  { q: '7 dam = ... m', cols: { dam: '7', m: '0' }, expectedComma: -1, hint: 'Turun 1 tingkat, tidak perlu koma.' },
+  { q: '3 m = ... dm', cols: { m: '3', dm: '0' }, expectedComma: -1, hint: 'Turun 1 tingkat, tidak perlu koma.' },
+  { q: '8 dm = ... cm', cols: { dm: '8', cm: '0' }, expectedComma: -1, hint: 'Turun 1 tingkat, tidak perlu koma.' },
+  { q: '4 cm = ... mm', cols: { cm: '4', mm: '0' }, expectedComma: -1, hint: 'Turun 1 tingkat, tidak perlu koma.' },
+  { q: '3 km = ... dam', cols: { km: '3', hm: '0', dam: '0' }, expectedComma: -1, hint: 'Turun 2 tingkat, tidak perlu koma.' },
+  { q: '5 hm = ... m', cols: { hm: '5', dam: '0', m: '0' }, expectedComma: -1, hint: 'Turun 2 tingkat, tidak perlu koma.' },
+  { q: '4 dam = ... dm', cols: { dam: '4', m: '0', dm: '0' }, expectedComma: -1, hint: 'Turun 2 tingkat, tidak perlu koma.' },
+  { q: '6 m = ... cm', cols: { m: '6', dm: '0', cm: '0' }, expectedComma: -1, hint: 'Turun 2 tingkat, tidak perlu koma.' },
+  { q: '7 dm = ... mm', cols: { dm: '7', cm: '0', mm: '0' }, expectedComma: -1, hint: 'Turun 2 tingkat, tidak perlu koma.' },
+  { q: '2 km = ... m', cols: { km: '2', hm: '0', dam: '0', m: '0' }, expectedComma: -1, hint: 'Turun 3 tingkat, tidak perlu koma.' },
+  { q: '8 hm = ... dm', cols: { hm: '8', dam: '0', m: '0', dm: '0' }, expectedComma: -1, hint: 'Turun 3 tingkat, tidak perlu koma.' },
+  { q: '4 dam = ... cm', cols: { dam: '4', m: '0', dm: '0', cm: '0' }, expectedComma: -1, hint: 'Turun 3 tingkat, tidak perlu koma.' },
+  { q: '5 m = ... mm', cols: { m: '5', dm: '0', cm: '0', mm: '0' }, expectedComma: -1, hint: 'Turun 3 tingkat, tidak perlu koma.' },
+  { q: '5 km = ... dm', cols: { km: '5', hm: '0', dam: '0', m: '0', dm: '0' }, expectedComma: -1, hint: 'Turun 4 tingkat, tidak perlu koma.' },
+  { q: '3 hm = ... cm', cols: { hm: '3', dam: '0', m: '0', dm: '0', cm: '0' }, expectedComma: -1, hint: 'Turun 4 tingkat, tidak perlu koma.' },
+  { q: '7 dam = ... mm', cols: { dam: '7', m: '0', dm: '0', cm: '0', mm: '0' }, expectedComma: -1, hint: 'Turun 4 tingkat, tidak perlu koma.' },
+  { q: '4 km = ... cm', cols: { km: '4', hm: '0', dam: '0', m: '0', dm: '0', cm: '0' }, expectedComma: -1, hint: 'Turun 5 tingkat, tidak perlu koma.' },
+  { q: '6 hm = ... mm', cols: { hm: '6', dam: '0', m: '0', dm: '0', cm: '0', mm: '0' }, expectedComma: -1, hint: 'Turun 5 tingkat, tidak perlu koma.' },
+  { q: '3 km = ... mm', cols: { km: '3', hm: '0', dam: '0', m: '0', dm: '0', cm: '0', mm: '0' }, expectedComma: -1, hint: 'Turun 6 tingkat, tidak perlu koma.' },
+  { q: '9 km = ... hm', cols: { km: '9', hm: '0' }, expectedComma: -1, hint: 'Turun 1 tingkat, tidak perlu koma.' },
+  { q: '1 dam = ... m', cols: { dam: '1', m: '0' }, expectedComma: -1, hint: 'Turun 1 tingkat, tidak perlu koma.' },
+  { q: '8 hm = ... dam', cols: { hm: '8', dam: '0' }, expectedComma: -1, hint: 'Turun 1 tingkat, tidak perlu koma.' },
+  { q: '6 m = ... cm', cols: { m: '6', dm: '0', cm: '0' }, expectedComma: -1, hint: 'Turun 2 tingkat, tidak perlu koma.' },
+
+  // === KONVERSI NAIK (25 soal) ===
+  { q: '30 hm = ... km', cols: { km: '3', hm: '0' }, expectedComma: 0, hint: 'Naik 1 tingkat. Koma setelah kolom km.' },
+  { q: '45 dam = ... hm', cols: { hm: '4', dam: '5' }, expectedComma: 1, hint: 'Naik 1 tingkat. Koma setelah kolom hm.' },
+  { q: '70 m = ... dam', cols: { dam: '7', m: '0' }, expectedComma: 2, hint: 'Naik 1 tingkat. Koma setelah kolom dam.' },
+  { q: '25 dm = ... m', cols: { m: '2', dm: '5' }, expectedComma: 3, hint: 'Naik 1 tingkat. Koma setelah kolom m.' },
+  { q: '80 cm = ... dm', cols: { dm: '8', cm: '0' }, expectedComma: 4, hint: 'Naik 1 tingkat. Koma setelah kolom dm.' },
+  { q: '35 mm = ... cm', cols: { cm: '3', mm: '5' }, expectedComma: 5, hint: 'Naik 1 tingkat. Koma setelah kolom cm.' },
+  { q: '300 dam = ... km', cols: { km: '3', hm: '0', dam: '0' }, expectedComma: 0, hint: 'Naik 2 tingkat. Koma setelah kolom km.' },
+  { q: '450 m = ... hm', cols: { hm: '4', dam: '5', m: '0' }, expectedComma: 1, hint: 'Naik 2 tingkat. Koma setelah kolom hm.' },
+  { q: '700 dm = ... dam', cols: { dam: '7', m: '0', dm: '0' }, expectedComma: 2, hint: 'Naik 2 tingkat. Koma setelah kolom dam.' },
+  { q: '250 cm = ... m', cols: { m: '2', dm: '5', cm: '0' }, expectedComma: 3, hint: 'Naik 2 tingkat. Koma setelah kolom m.' },
+  { q: '800 mm = ... dm', cols: { dm: '8', cm: '0', mm: '0' }, expectedComma: 4, hint: 'Naik 2 tingkat. Koma setelah kolom dm.' },
+  { q: '2000 m = ... km', cols: { km: '2', hm: '0', dam: '0', m: '0' }, expectedComma: 0, hint: 'Naik 3 tingkat. Koma setelah kolom km.' },
+  { q: '3500 dm = ... hm', cols: { hm: '3', dam: '5', m: '0', dm: '0' }, expectedComma: 1, hint: 'Naik 3 tingkat. Koma setelah kolom hm.' },
+  { q: '4000 cm = ... dam', cols: { dam: '4', m: '0', dm: '0', cm: '0' }, expectedComma: 2, hint: 'Naik 3 tingkat. Koma setelah kolom dam.' },
+  { q: '2500 mm = ... m', cols: { m: '2', dm: '5', cm: '0', mm: '0' }, expectedComma: 3, hint: 'Naik 3 tingkat. Koma setelah kolom m.' },
+  { q: '50000 dm = ... km', cols: { km: '5', hm: '0', dam: '0', m: '0', dm: '0' }, expectedComma: 0, hint: 'Naik 4 tingkat. Koma setelah kolom km.' },
+  { q: '35000 cm = ... hm', cols: { hm: '3', dam: '5', m: '0', dm: '0', cm: '0' }, expectedComma: 1, hint: 'Naik 4 tingkat. Koma setelah kolom hm.' },
+  { q: '70000 mm = ... dam', cols: { dam: '7', m: '0', dm: '0', cm: '0', mm: '0' }, expectedComma: 2, hint: 'Naik 4 tingkat. Koma setelah kolom dam.' },
+  { q: '400000 cm = ... km', cols: { km: '4', hm: '0', dam: '0', m: '0', dm: '0', cm: '0' }, expectedComma: 0, hint: 'Naik 5 tingkat. Koma setelah kolom km.' },
+  { q: '650000 mm = ... hm', cols: { hm: '6', dam: '5', m: '0', dm: '0', cm: '0', mm: '0' }, expectedComma: 1, hint: 'Naik 5 tingkat. Koma setelah kolom hm.' },
+  { q: '5 cm = ... m', cols: { m: '0', dm: '0', cm: '5' }, expectedComma: 3, hint: 'Naik 2 tingkat. Tambah 0 di depan. Koma setelah m.' },
+  { q: '75 dm = ... m', cols: { m: '7', dm: '5' }, expectedComma: 3, hint: 'Naik 1 tingkat. Koma setelah kolom m.' },
+  { q: '90 m = ... dam', cols: { dam: '9', m: '0' }, expectedComma: 2, hint: 'Naik 1 tingkat. Koma setelah kolom dam.' },
+  { q: '65 cm = ... dm', cols: { dm: '6', cm: '5' }, expectedComma: 4, hint: 'Naik 1 tingkat. Koma setelah kolom dm.' },
+  { q: '8 mm = ... cm', cols: { cm: '0', mm: '8' }, expectedComma: 5, hint: 'Naik 1 tingkat. Tambah 0 di depan. Koma setelah cm.' },
+];
+
+let currentTanggaProblem = 0;
+let tanggaScore = 0;
+let tanggaAnswered = new Set();
+
+function parseTanggaQuestion(question) {
+  const match = question.match(/^([\d.]+)\s*(\w+)\s*=\s*\.\.\.\s*(\w+)/);
+  if (match) {
+    return { value: match[1], sourceUnit: match[2], targetUnit: match[3] };
+  }
+  return null;
+}
+
+function getTanggaResult(problem) {
+  let intPart = '';
+  let decPart = '';
+  
+  const filledUnits = Object.keys(problem.cols);
+  const indices = filledUnits.map(u => units.indexOf(u)).sort((a, b) => a - b);
+  
+  for (const idx of indices) {
+    const u = units[idx];
+    const val = problem.cols[u];
+    if (idx <= problem.expectedComma) {
+      intPart += val;
+    } else {
+      decPart += val;
+    }
+  }
+  
+  if (problem.expectedComma === -1) {
+    return intPart;
+  }
+  
+  intPart = intPart.replace(/^0+/, '');
+  if (intPart === '') intPart = '0';
+  
+  decPart = decPart.replace(/0+$/, '');
+  
+  if (decPart) {
+    return intPart + ',' + decPart;
+  } else {
+    return intPart;
+  }
+}
+
+function getTanggaExplanationText(problem) {
+  const parsed = parseTanggaQuestion(problem.q);
+  if (!parsed) return problem.hint;
+  
+  const { value, sourceUnit, targetUnit } = parsed;
+  const sourceIdx = units.indexOf(sourceUnit);
+  const targetIdx = units.indexOf(targetUnit);
+  const result = getTanggaResult(problem);
+  const filledUnits = Object.keys(problem.cols);
+  const colsStr = filledUnits.map(u => `${u}=${problem.cols[u]}`).join(', ');
+  
+  if (problem.expectedComma === -1) {
+    const steps = targetIdx - sourceIdx;
+    const multiplier = Math.pow(10, steps);
+    return `<strong>Turun ${steps} tingkat</strong> dari ${sourceUnit} ke ${targetUnit} = kali ${multiplier.toLocaleString('id-ID')}.<br>` +
+           `Tulis angka ${value} di kolom ${sourceUnit}, isi 0 sampai ${targetUnit}: ${colsStr}.<br>` +
+           `<strong>Tidak perlu koma</strong> (karena turun). Baca hasil: <strong>${result} ${targetUnit}</strong>.`;
+  } else {
+    const steps = sourceIdx - targetIdx;
+    const divisor = Math.pow(10, steps);
+    const commaPos = problem.expectedComma;
+    const commaAfter = units[commaPos];
+    
+    let exp = `<strong>Naik ${steps} tingkat</strong> dari ${sourceUnit} ke ${targetUnit} = bagi ${divisor.toLocaleString('id-ID')}.<br>`;
+    exp += `Tulis angka ${value} berakhir di kolom ${sourceUnit}, isi 0 di depan jika perlu: ${colsStr}.<br>`;
+    exp += `Letakkan <strong>koma setelah kolom ${commaAfter}</strong>.<br>`;
+    exp += `Baca hasil: <strong>${result} ${targetUnit}</strong>.`;
+    return exp;
+  }
+}
+
+function renderTanggaProblem() {
+  const problem = tanggaProblems[currentTanggaProblem];
+  document.getElementById('tanggaQuestion').textContent = problem.q;
+  document.getElementById('tanggaHint').textContent = problem.hint;
+  document.getElementById('tanggaProgress').textContent = `Soal ${currentTanggaProblem + 1} dari ${tanggaProblems.length}`;
+  document.getElementById('tanggaProgressFill').style.width = `${((currentTanggaProblem + 1) / tanggaProblems.length) * 100}%`;
+  document.getElementById('tanggaScore').textContent = tanggaScore;
+  
+  document.querySelectorAll('.stair').forEach(s => s.classList.remove('highlighted'));
+  Object.keys(problem.cols).forEach(unit => {
+    const stair = document.querySelector(`.stair[data-unit="${unit}"]`);
+    if (stair) stair.classList.add('highlighted');
+  });
+  
+  const parsed = parseTanggaQuestion(problem.q);
+  const targetUnit = parsed ? parsed.targetUnit : null;
+  
+  const container = document.getElementById('tanggaInputs');
+  container.innerHTML = '';
+  
+  units.forEach((unit, idx) => {
+    const isActive = problem.cols.hasOwnProperty(unit);
+    const isTarget = unit === targetUnit;
+    
+    const col = document.createElement('div');
+    col.className = `tangga-col ${isActive ? 'col-active' : ''} ${isTarget ? 'col-target' : ''}`;
+    col.innerHTML = `
+      <div class="col-label">${unit}${isTarget ? ' ←' : ''}</div>
+      <input type="text" class="col-input ${!isActive ? 'disabled' : ''}" 
+             data-unit="${unit}" ${!isActive ? 'disabled' : ''} 
+             maxlength="1" placeholder="${isActive ? '?' : '—'}" inputmode="numeric">
+    `;
+    container.appendChild(col);
+    
+    if (idx < 6) {
+      const commaCol = document.createElement('div');
+      commaCol.className = 'comma-col';
+      commaCol.innerHTML = `
+        <div class="comma-label">koma</div>
+        <button class="comma-toggle" data-comma-idx="${idx}" onclick="toggleComma(this)" title="Klik untuk aktifkan koma">,</button>
+      `;
+      container.appendChild(commaCol);
+    }
+  });
+  
+  document.getElementById('tanggaExplanation').classList.remove('show');
+  document.getElementById('tanggaPrevBtn').disabled = currentTanggaProblem === 0;
+  document.getElementById('tanggaNextBtn').disabled = currentTanggaProblem === tanggaProblems.length - 1;
+  
+  updateTanggaQuickNav();
+  
+  setTimeout(() => {
+    const firstActive = container.querySelector('.col-input:not(.disabled)');
+    if (firstActive) firstActive.focus();
+  }, 100);
+}
+
+function toggleComma(btn) {
+  const allToggles = document.querySelectorAll('.comma-toggle');
+  allToggles.forEach(t => {
+    if (t !== btn) t.classList.remove('active');
+    t.classList.remove('correct', 'incorrect');
+  });
+  btn.classList.toggle('active');
+}
+
+function updateTanggaQuickNav() {
+  const nav = document.getElementById('tanggaQuickNav');
+  nav.innerHTML = '';
+  for (let i = 0; i < tanggaProblems.length; i++) {
+    const btn = document.createElement('button');
+    btn.className = 'w-7 h-7 rounded text-xs font-semibold transition-all';
+    if (i === currentTanggaProblem) {
+      btn.className += ' bg-amber-600 text-white';
+    } else if (tanggaAnswered.has(i)) {
+      btn.className += ' bg-green-100 text-green-700 border border-green-300';
+    } else {
+      btn.className += ' bg-[var(--bg-2)] text-[var(--fg-muted)] hover:bg-amber-100';
+    }
+    if (tanggaProblems[i].expectedComma !== -1 && i !== currentTanggaProblem) {
+      btn.textContent = (i + 1) + '↑';
+      btn.style.fontSize = '0.6rem';
+    } else {
+      btn.textContent = i + 1;
+    }
+    btn.onclick = () => { currentTanggaProblem = i; renderTanggaProblem(); };
+    nav.appendChild(btn);
+  }
+}
+
+function checkTangga() {
+  const problem = tanggaProblems[currentTanggaProblem];
+  let allCorrect = true;
+  let allFilled = true;
+  
+  Object.keys(problem.cols).forEach(unit => {
+    const input = document.querySelector(`.col-input[data-unit="${unit}"]`);
+    if (!input) return;
+    const value = input.value.trim();
+    const expected = problem.cols[unit];
+    input.classList.remove('correct', 'incorrect');
+    if (value === '') {
+      allFilled = false;
+      allCorrect = false;
+    } else if (value === expected) {
+      input.classList.add('correct');
+    } else {
+      input.classList.add('incorrect');
+      allCorrect = false;
+    }
+  });
+  
+  let activeCommaIdx = -1;
+  const allToggles = document.querySelectorAll('.comma-toggle');
+  allToggles.forEach(t => {
+    t.classList.remove('correct', 'incorrect');
+    if (t.classList.contains('active')) {
+      activeCommaIdx = parseInt(t.dataset.commaIdx);
+    }
+  });
+  
+  if (activeCommaIdx !== problem.expectedComma) {
+    allToggles.forEach(t => {
+      const idx = parseInt(t.dataset.commaIdx);
+      if (idx === activeCommaIdx && activeCommaIdx !== -1) {
+        t.classList.add('incorrect');
+      }
+    });
+    allCorrect = false;
+  } else {
+    const correctToggle = document.querySelector(`.comma-toggle[data-comma-idx="${problem.expectedComma}"]`);
+    if (correctToggle) correctToggle.classList.add('correct');
+  }
+  
+  if (!allFilled) {
+    showToast('Isi semua kolom aktif terlebih dahulu!', 'error');
+    return;
+  }
+  
+  if (allCorrect) {
+    if (!tanggaAnswered.has(currentTanggaProblem)) {
+      tanggaAnswered.add(currentTanggaProblem);
+      tanggaScore++;
+      document.getElementById('tanggaScore').textContent = tanggaScore;
+    }
+    showToast('Jawaban benar! Kerja bagus!', 'success');
+    const exp = document.getElementById('tanggaExplanation');
+    const result = getTanggaResult(problem);
+    document.getElementById('tanggaExpContent').innerHTML = 
+      `${problem.q.replace('...', '<strong>' + result + '</strong>')}<br><br>${getTanggaExplanationText(problem)}`;
+    exp.classList.add('show');
+    updateTanggaQuickNav();
+    if (tanggaScore === 50) celebrate();
+  } else {
+    showToast('Beberapa kolom masih salah. Periksa lagi!', 'error');
+  }
+}
+
+function showTanggaAnswer() {
+  const problem = tanggaProblems[currentTanggaProblem];
+  
+  Object.keys(problem.cols).forEach(unit => {
+    const input = document.querySelector(`.col-input[data-unit="${unit}"]`);
+    if (input) {
+      input.value = problem.cols[unit];
+      input.classList.remove('incorrect');
+      input.classList.add('correct');
+    }
+  });
+  
+  const allToggles = document.querySelectorAll('.comma-toggle');
+  allToggles.forEach(t => {
+    t.classList.remove('active', 'incorrect');
+    const idx = parseInt(t.dataset.commaIdx);
+    if (idx === problem.expectedComma) {
+      t.classList.add('active', 'correct');
+    } else {
+      t.classList.remove('active');
+    }
+  });
+  
+  const exp = document.getElementById('tanggaExplanation');
+  const result = getTanggaResult(problem);
+  document.getElementById('tanggaExpContent').innerHTML = 
+    `${problem.q.replace('...', '<strong>' + result + '</strong>')}<br><br>${getTanggaExplanationText(problem)}`;
+  exp.classList.add('show');
+  showToast('Jawaban ditampilkan. Pelajari baik-baik!', 'info');
+}
+
+function resetTangga() {
+  document.querySelectorAll('.col-input:not(.disabled)').forEach(input => {
+    input.value = '';
+    input.classList.remove('correct', 'incorrect');
+  });
+  document.querySelectorAll('.comma-toggle').forEach(t => {
+    t.classList.remove('active', 'correct', 'incorrect');
+  });
+  document.getElementById('tanggaExplanation').classList.remove('show');
+}
+
+function nextTanggaProblem() {
+  if (currentTanggaProblem < tanggaProblems.length - 1) {
+    currentTanggaProblem++;
+    renderTanggaProblem();
+  }
+}
+
+function prevTanggaProblem() {
+  if (currentTanggaProblem > 0) {
+    currentTanggaProblem--;
+    renderTanggaProblem();
+  }
+}
+
+// ============ SLIDE 4: QUESTIONS ============
+const questionsData = {
+  pg: [
+    { q: 'Berapa meter dalam 1 kilometer?', options: ['10 m', '100 m', '1.000 m', '10.000 m'], answer: 2, explanation: '1 km = 1.000 m. Dari km ke m turun 3 tingkat (km → hm → dam → m), maka dikalikan 10³ = 1.000.' },
+    { q: 'Konversi 1 meter ke sentimeter adalah...', options: ['10 cm', '100 cm', '1.000 cm', '10.000 cm'], answer: 1, explanation: '1 m = 100 cm. Dari m ke cm turun 2 tingkat (m → dm → cm), maka dikalikan 10² = 100.' },
+    { q: 'Hasil dari 5 km = ... m adalah', options: ['50 m', '500 m', '5.000 m', '50.000 m'], answer: 2, explanation: '5 km turun 3 tingkat ke m = 5 × 1.000 = 5.000 m.' },
+    { q: '250 cm = ... m. Hasil yang tepat adalah', options: ['2,5 m', '25 m', '0,25 m', '250 m'], answer: 0, explanation: '250 cm naik 2 tingkat ke m = 250 ÷ 100 = 2,5 m.' },
+    { q: '1,5 km = ... m', options: ['15 m', '150 m', '1.500 m', '15.000 m'], answer: 2, explanation: '1,5 km turun 3 tingkat = 1,5 × 1.000 = 1.500 m.' },
+    { q: '7.500 m = ... km', options: ['0,75 km', '7,5 km', '75 km', '750 km'], answer: 1, explanation: '7.500 m naik 3 tingkat = 7.500 ÷ 1.000 = 7,5 km.' },
+    { q: 'Berapa milimeter dalam 1 desimeter?', options: ['1 mm', '10 mm', '100 mm', '1.000 mm'], answer: 2, explanation: '1 dm = 100 mm. Dari dm ke mm turun 2 tingkat (dm → cm → mm), dikali 10² = 100.' },
+    { q: '0,5 m = ... mm', options: ['5 mm', '50 mm', '500 mm', '5.000 mm'], answer: 2, explanation: '0,5 m turun 3 tingkat ke mm = 0,5 × 1.000 = 500 mm.' },
+    { q: 'Hasil konversi 3,2 km = ... m', options: ['32 m', '320 m', '3.200 m', '32.000 m'], answer: 2, explanation: '3,2 km turun 3 tingkat = 3,2 × 1.000 = 3.200 m.' },
+    { q: '12.500 mm = ... m', options: ['1,25 m', '12,5 m', '125 m', '1.250 m'], answer: 1, explanation: '12.500 mm naik 3 tingkat = 12.500 ÷ 1.000 = 12,5 m.' },
+  ],
+  isian: [
+    { q: '8 km = ... m', answer: '8000', unit: 'm', explanation: '8 km turun 3 tingkat = 8 × 1.000 = 8.000 m.' },
+    { q: '450 cm = ... m', answer: '4.5', unit: 'm', explanation: '450 cm naik 2 tingkat = 450 ÷ 100 = 4,5 m.' },
+    { q: '1,2 m = ... mm', answer: '1200', unit: 'mm', explanation: '1,2 m turun 3 tingkat = 1,2 × 1.000 = 1.200 mm.' },
+    { q: '25 mm = ... cm', answer: '2.5', unit: 'cm', explanation: '25 mm naik 1 tingkat = 25 ÷ 10 = 2,5 cm.' },
+    { q: '3 hm = ... dam', answer: '300', unit: 'dam', explanation: '3 hm turun 2 tingkat = 3 × 100 = 300 dam.' },
+    { q: '6.000 mm = ... m', answer: '6', unit: 'm', explanation: '6.000 mm naik 3 tingkat = 6.000 ÷ 1.000 = 6 m.' },
+    { q: '0,25 km = ... m', answer: '250', unit: 'm', explanation: '0,25 km turun 3 tingkat = 0,25 × 1.000 = 250 m.' },
+    { q: '12,5 dm = ... cm', answer: '125', unit: 'cm', explanation: '12,5 dm turun 1 tingkat = 12,5 × 10 = 125 cm.' },
+    { q: '9.500 m = ... km', answer: '9.5', unit: 'km', explanation: '9.500 m naik 3 tingkat = 9.500 ÷ 1.000 = 9,5 km.' },
+    { q: '7,5 cm = ... mm', answer: '75', unit: 'mm', explanation: '7,5 cm turun 1 tingkat = 7,5 × 10 = 75 mm.' },
+  ],
+  hitung: [
+    { q: '2 km + 500 m = ... m', answer: '2500', unit: 'm', explanation: 'Samakan ke meter: 2 km = 2.000 m. Lalu: 2.000 + 500 = 2.500 m.' },
+    { q: '3 m − 150 cm = ... cm', answer: '150', unit: 'cm', explanation: 'Samakan ke cm: 3 m = 300 cm. Lalu: 300 − 150 = 150 cm.' },
+    { q: '1,5 km + 750 m = ... km', answer: '2.25', unit: 'km', explanation: 'Samakan ke km: 750 m = 0,75 km. Lalu: 1,5 + 0,75 = 2,25 km.' },
+    { q: '5 dm − 25 cm = ... cm', answer: '25', unit: 'cm', explanation: 'Samakan ke cm: 5 dm = 50 cm. Lalu: 50 − 25 = 25 cm.' },
+    { q: '2 m + 50 cm + 8 mm = ... mm', answer: '2508', unit: 'mm', explanation: 'Samakan ke mm: 2 m = 2.000 mm, 50 cm = 500 mm. Lalu: 2.000 + 500 + 8 = 2.508 mm.' },
+    { q: '1 km − 300 m = ... m', answer: '700', unit: 'm', explanation: 'Samakan ke m: 1 km = 1.000 m. Lalu: 1.000 − 300 = 700 m.' },
+    { q: '4,5 m + 250 cm = ... m', answer: '7', unit: 'm', explanation: 'Samakan ke m: 250 cm = 2,5 m. Lalu: 4,5 + 2,5 = 7 m.' },
+    { q: '10 dm − 45 cm = ... mm', answer: '550', unit: 'mm', explanation: 'Samakan ke mm: 10 dm = 1.000 mm, 45 cm = 450 mm. Lalu: 1.000 − 450 = 550 mm.' },
+    { q: '3 hm + 5 dam = ... m', answer: '350', unit: 'm', explanation: 'Samakan ke m: 3 hm = 300 m, 5 dam = 50 m. Lalu: 300 + 50 = 350 m.' },
+    { q: '2,5 km − 1 km 200 m = ... m', answer: '1300', unit: 'm', explanation: 'Samakan ke m: 2,5 km = 2.500 m, 1 km 200 m = 1.200 m. Lalu: 2.500 − 1.200 = 1.300 m.' },
+  ],
+  cerita: [
+    { q: 'Andi bersepeda sejauh 3 km, lalu berjalan kaki 500 m. Berapa meter total jarak yang ditempuh Andi?', answer: '3500', unit: 'm', explanation: '3 km = 3.000 m. Total: 3.000 + 500 = 3.500 m.' },
+    { q: 'Sebuah papan sepanjang 2,5 m dipotong 75 cm. Berapa cm sisa papan?', answer: '175', unit: 'cm', explanation: '2,5 m = 250 cm. Sisa: 250 − 75 = 175 cm.' },
+    { q: 'Tinggi badan Rina 1,5 m dan Dina 145 cm. Berapa cm selisih tinggi mereka?', answer: '5', unit: 'cm', explanation: 'Rina: 1,5 m = 150 cm. Selisih: 150 − 145 = 5 cm (Rina lebih tinggi).' },
+    { q: 'Sebuah kolam renang berukuran panjang 50 m. Berapa km panjang kolam tersebut?', answer: '0.05', unit: 'km', explanation: '50 m = 50 ÷ 1.000 = 0,05 km.' },
+    { q: 'Pak Budi membeli tali sepanjang 5 km. Ia menggunakan 2,5 km untuk membuat pagar. Berapa meter tali yang tersisa?', answer: '2500', unit: 'm', explanation: 'Sisa: 5 − 2,5 = 2,5 km = 2.500 m.' },
+    { q: 'Lebar sungai 250 m. Berapa dam lebar sungai tersebut?', answer: '25', unit: 'dam', explanation: '250 m = 250 ÷ 10 = 25 dam.' },
+    { q: 'Sebuah penggaris sepanjang 30 cm. Berapa mm panjang penggaris tersebut?', answer: '300', unit: 'mm', explanation: '30 cm = 30 × 10 = 300 mm.' },
+    { q: 'Jarak rumah ke sekolah 1,2 km. Andi berjalan kaki dengan kecepatan 60 m/menit. Berapa menit waktu yang diperlukan?', answer: '20', unit: 'menit', explanation: '1,2 km = 1.200 m. Waktu = 1.200 ÷ 60 = 20 menit.' },
+    { q: 'Sebuah kertas berukuran panjang 40 cm dan lebar 25 cm. Berapa dm keliling kertas tersebut?', answer: '13', unit: 'dm', explanation: 'Keliling = 2 × (40 + 25) = 130 cm = 13 dm.' },
+    { q: 'Tinggi gedung 4.500 cm. Berapa meter tinggi gedung tersebut?', answer: '45', unit: 'm', explanation: '4.500 cm = 4.500 ÷ 100 = 45 m.' },
+  ],
+  hots: [
+    { q: 'Sebatang logam sepanjang 2,5 m dimasukkan ke dalam tabung setinggi 180 cm. Berapa cm logam yang tidak masuk ke dalam tabung?', answer: '70', unit: 'cm', explanation: 'Logam: 2,5 m = 250 cm. Sisa: 250 − 180 = 70 cm.' },
+    { q: 'Andi memiliki kawat sepanjang 5 m. Ia memotong menjadi 4 bagian sama panjang. Berapa cm panjang setiap potongan?', answer: '125', unit: 'cm', explanation: '5 m = 500 cm. Setiap potongan: 500 ÷ 4 = 125 cm.' },
+    { q: 'Kolam berbentuk persegi panjang berukuran 2,5 m × 1,8 m. Berapa mm keliling kolam?', answer: '8600', unit: 'mm', explanation: 'Keliling = 2 × (2,5 + 1,8) = 8,6 m = 8.600 mm.' },
+    { q: 'Tali sepanjang 12 m dipotong-potong dengan setiap potongan 25 cm. Berapa banyak potongan yang dihasilkan?', answer: '48', unit: 'potong', explanation: '12 m = 1.200 cm. Banyak potongan: 1.200 ÷ 25 = 48 potongan.' },
+    { q: 'Sebuah mobil menempuh jarak 60 km/jam. Berapa meter jarak yang ditempuh dalam 15 menit?', answer: '15000', unit: 'm', explanation: '60 km/jam = 60.000 m/60 menit = 1.000 m/menit. Dalam 15 menit: 1.000 × 15 = 15.000 m.' },
+    { q: 'Tinggi pohon 8,5 m. Setiap bulan pohon bertumbuh 25 cm. Berapa meter tinggi pohon setelah 6 bulan?', answer: '10', unit: 'm', explanation: 'Tumbuh: 6 × 25 = 150 cm = 1,5 m. Tinggi akhir: 8,5 + 1,5 = 10 m.' },
+    { q: 'Sebuah lapangan berbentuk persegi dengan sisi 50 m. Berapa km keliling lapangan tersebut?', answer: '0.2', unit: 'km', explanation: 'Keliling persegi = 4 × 50 = 200 m = 0,2 km.' },
+    { q: 'Sebuah tongkat berwarna merah-putih dengan panjang total 1,2 m. Bagian merah 30 cm lebih panjang dari bagian putih. Berapa cm panjang bagian merah?', answer: '75', unit: 'cm', explanation: 'Misal putih x cm, merah (x + 30) cm. Total: x + x + 30 = 120, sehingga 2x = 90, x = 45. Merah: 45 + 30 = 75 cm.' },
+    { q: 'Andi naik bus sejauh 15 km, kemudian naik kereta 8,5 km, lalu berjalan kaki 500 m. Berapa meter total perjalanan Andi?', answer: '24000', unit: 'm', explanation: '15 km = 15.000 m, 8,5 km = 8.500 m, 500 m. Total: 15.000 + 8.500 + 500 = 24.000 m.' },
+    { q: 'Sebuah rel kereta sepanjang 1 km. Setiap batang rel panjangnya 25 m. Berapa batang rel yang dibutuhkan?', answer: '40', unit: 'batang', explanation: '1 km = 1.000 m. Banyak batang: 1.000 ÷ 25 = 40 batang.' },
+  ]
+};
+
+let currentTab = 'pg';
+let answeredQuestions = new Set();
+
+function renderQuestions(type) {
+  currentTab = type;
+  const container = document.getElementById('questionsContainer');
+  const questions = questionsData[type];
+  
+  container.innerHTML = questions.map((q, i) => {
+    let inputHTML = '';
+    if (type === 'pg') {
+      inputHTML = `
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-2 mt-3">
+          ${q.options.map((opt, j) => `
+            <button class="option-btn" data-q-type="${type}" data-q-index="${i}" data-option="${j}" onclick="selectOption('${type}', ${i}, ${j})">
+              <span class="option-letter">${String.fromCharCode(65 + j)}</span>
+              <span>${opt}</span>
+            </button>
+          `).join('')}
+        </div>
+      `;
+    } else {
+      inputHTML = `
+        <div class="flex items-center gap-3 mt-3 flex-wrap">
+          <input type="text" class="input-answer" id="input-${type}-${i}" placeholder="Ketik jawaban..." onkeypress="if(event.key==='Enter') checkQ('${type}', ${i})">
+          <span class="text-sm text-[var(--fg-muted)] font-medium">${q.unit || ''}</span>
+        </div>
+      `;
+    }
+    
+    return `
+      <div class="q-card mb-3" id="qcard-${type}-${i}">
+        <div class="flex items-start gap-3 mb-2">
+          <span class="q-number">${i + 1}</span>
+          <p class="q-text flex-1">${q.q}</p>
+        </div>
+        ${inputHTML}
+        <div class="flex items-center gap-2 mt-4 flex-wrap">
+          <button onclick="checkQ('${type}', ${i})" class="btn-primary text-sm" style="padding: 8px 16px;">
+            <i class="fa-solid fa-check"></i>Periksa
+          </button>
+          <button onclick="toggleExplanation('${type}', ${i})" class="btn-ghost">
+            <i class="fa-solid fa-lightbulb"></i>Pembahasan
+          </button>
+        </div>
+        <div class="explanation-box" id="exp-${type}-${i}">
+          <div class="exp-title"><i class="fa-solid fa-circle-info"></i> Pembahasan</div>
+          <div>${q.explanation}</div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function selectOption(type, qIndex, optIndex) {
+  const buttons = document.querySelectorAll(`.option-btn[data-q-type="${type}"][data-q-index="${qIndex}"]`);
+  buttons.forEach(b => b.classList.remove('selected'));
+  buttons[optIndex].classList.add('selected');
+  buttons[optIndex].dataset.selected = 'true';
+  buttons.forEach((b, i) => {
+    if (i !== optIndex) delete b.dataset.selected;
+  });
+}
+
+function normalizeAnswer(input) {
+  let s = input.trim().replace(/\s/g, '');
+  s = s.replace(/,/g, '.');
+  const dots = (s.match(/\./g) || []).length;
+  if (dots > 1) {
+    s = s.replace(/\./g, '');
+  } else if (dots === 1) {
+    const parts = s.split('.');
+    if (parts[1] && parts[1].length === 3 && /^\d+$/.test(parts[0]) && /^\d+$/.test(parts[1])) {
+      s = parts[0] + parts[1];
+    }
+  }
+  return s;
+}
+
+function checkQ(type, qIndex) {
+  const q = questionsData[type][qIndex];
+  const card = document.getElementById(`qcard-${type}-${qIndex}`);
+  const expBox = document.getElementById(`exp-${type}-${qIndex}`);
+  let isCorrect = false;
+  
+  card.querySelectorAll('.option-btn').forEach(b => b.classList.remove('correct', 'incorrect'));
+  const inputAns = card.querySelector('.input-answer');
+  if (inputAns) inputAns.classList.remove('correct', 'incorrect');
+  
+  if (type === 'pg') {
+    const selected = card.querySelector('.option-btn[data-selected="true"]');
+    if (!selected) {
+      showToast('Pilih jawaban terlebih dahulu!', 'error');
+      return;
+    }
+    const selectedIdx = parseInt(selected.dataset.option);
+    if (selectedIdx === q.answer) {
+      selected.classList.add('correct');
+      isCorrect = true;
+    } else {
+      selected.classList.add('incorrect');
+      const correctBtn = card.querySelector(`.option-btn[data-option="${q.answer}"]`);
+      if (correctBtn) correctBtn.classList.add('correct');
+    }
+  } else {
+    const input = document.getElementById(`input-${type}-${qIndex}`);
+    if (!input.value.trim()) {
+      showToast('Isi jawaban terlebih dahulu!', 'error');
+      input.focus();
+      return;
+    }
+    const userAnswer = normalizeAnswer(input.value);
+    const correctAnswer = normalizeAnswer(q.answer);
+    const userNum = parseFloat(userAnswer);
+    const correctNum = parseFloat(correctAnswer);
+    
+    if (!isNaN(userNum) && !isNaN(correctNum) && Math.abs(userNum - correctNum) < 0.001) {
+      input.classList.add('correct');
+      isCorrect = true;
+    } else {
+      input.classList.add('incorrect');
+    }
+  }
+  
+  expBox.classList.add('show');
+  
+  const qKey = `${type}-${qIndex}`;
+  if (isCorrect) {
+    if (!answeredQuestions.has(qKey)) {
+      answeredQuestions.add(qKey);
+    }
+    showToast('Jawaban benar! Mantap!', 'success');
+  } else {
+    showToast('Jawaban kurang tepat. Pelajari pembahasannya!', 'error');
+  }
+  
+  updateScore();
+}
+
+function toggleExplanation(type, qIndex) {
+  const expBox = document.getElementById(`exp-${type}-${qIndex}`);
+  expBox.classList.toggle('show');
+}
+
+function updateScore() {
+  document.getElementById('scoreCorrect').textContent = answeredQuestions.size;
+  document.getElementById('scoreAnswered').textContent = answeredQuestions.size;
+  document.getElementById('overallProgress').style.width = `${(answeredQuestions.size / 50) * 100}%`;
+  if (answeredQuestions.size === 50) celebrate();
+}
+
+function celebrate() {
+  const colors = ['#d97706', '#16a34a', '#0d7d6b', '#ea580c', '#f59e0b'];
+  for (let i = 0; i < 60; i++) {
+    setTimeout(() => {
+      const confetti = document.createElement('div');
+      confetti.className = 'confetti';
+      confetti.style.left = Math.random() * 100 + 'vw';
+      confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+      confetti.style.animationDelay = Math.random() * 2 + 's';
+      confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+      document.body.appendChild(confetti);
+      setTimeout(() => confetti.remove(), 3000);
+    }, i * 50);
+  }
+  showToast('🎉 Luar biasa! Semua soal selesai!', 'success');
+}
+
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderQuestions(btn.dataset.tab);
+  });
+});
+
+function saveReflection() {
+  showToast('Refleksi tersimpan! Terima kasih atas partisipasimu.', 'success');
+  goToSlide(5);
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  renderTanggaProblem();
+  renderQuestions('pg');
+});
+</script>
+</body>
+</html>
