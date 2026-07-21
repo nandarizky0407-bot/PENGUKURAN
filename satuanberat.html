@@ -1,0 +1,2370 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Petualangan Mengukur Berat</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --coral: #FF6B6B;
+  --yellow: #FFD93D;
+  --teal: #4ECDC4;
+  --mint: #95E1D3;
+  --orange: #FF9F43;
+  --pink: #FF8FAB;
+  --purple: #A29BFE;
+  --green: #6BCB77;
+  --dark: #2D3436;
+  --gray: #636E72;
+  --cream: #FFF8E7;
+  --white: #FFFFFF;
+  --shadow-sm: 0 4px 12px rgba(0,0,0,0.08);
+  --shadow: 0 8px 24px rgba(0,0,0,0.12);
+  --shadow-lg: 0 16px 40px rgba(0,0,0,0.18);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Nunito', sans-serif;
+  background: linear-gradient(135deg, #FFF8E7 0%, #FFE5D9 50%, #FFD6E0 100%);
+  color: var(--dark);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+.bg-deco {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+.bg-deco span {
+  position: absolute;
+  font-size: 2.5rem;
+  opacity: 0.15;
+  animation: floatBg 20s infinite ease-in-out;
+}
+@keyframes floatBg {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-40px) rotate(20deg); }
+}
+
+.nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(12px);
+  padding: 12px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 100;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.nav-logo {
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 700;
+  font-size: 1.3rem;
+  color: var(--coral);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.nav-dots {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.nav-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #E0E0E0;
+  cursor: pointer;
+  transition: all 0.3s;
+  border: none;
+  padding: 0;
+}
+.nav-dot.active {
+  background: var(--coral);
+  transform: scale(1.4);
+  box-shadow: 0 0 0 4px rgba(255,107,107,0.2);
+}
+.nav-dot:hover { background: var(--orange); transform: scale(1.2); }
+.nav-dot:hover.active { background: var(--coral); }
+
+.nav-students {
+  font-size: 0.85rem;
+  color: var(--dark);
+  font-weight: 700;
+  background: var(--yellow);
+  padding: 6px 12px;
+  border-radius: 20px;
+  box-shadow: var(--shadow-sm);
+}
+
+.slide {
+  display: none;
+  min-height: 100vh;
+  padding: 90px 24px 40px;
+  position: relative;
+  z-index: 1;
+}
+.slide.active {
+  display: block;
+  animation: slideUp 0.5s ease;
+}
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.container { max-width: 1100px; margin: 0 auto; }
+
+/* === COVER === */
+.cover {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 130px);
+  text-align: center;
+}
+.cover-title {
+  font-family: 'Fredoka', sans-serif;
+  font-size: clamp(2.2rem, 5.5vw, 4rem);
+  font-weight: 700;
+  color: var(--coral);
+  margin-bottom: 16px;
+  text-shadow: 3px 3px 0 var(--yellow), 6px 6px 0 rgba(0,0,0,0.08);
+  line-height: 1.1;
+}
+.cover-subtitle {
+  font-size: 1.2rem;
+  color: var(--dark);
+  margin-bottom: 30px;
+  font-weight: 600;
+}
+.cover-scale {
+  width: 100%;
+  max-width: 200px;
+  margin: 0 auto 24px;
+  animation: tilt 3s ease-in-out infinite;
+}
+@keyframes tilt {
+  0%, 100% { transform: rotate(-5deg); }
+  50% { transform: rotate(5deg); }
+}
+.cover-inputs {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.input-group {
+  background: white;
+  padding: 20px;
+  border-radius: 20px;
+  box-shadow: var(--shadow);
+  width: 260px;
+  border: 3px solid var(--teal);
+}
+.input-group:nth-child(2) { border-color: var(--orange); }
+.input-label {
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 600;
+  font-size: 1.1rem;
+  margin-bottom: 8px;
+  display: block;
+  color: var(--dark);
+}
+.input-group input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid #DDD;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 600;
+  transition: all 0.3s;
+}
+.input-group input:focus {
+  outline: none;
+  border-color: var(--coral);
+  box-shadow: 0 0 0 3px rgba(255,107,107,0.2);
+}
+
+.btn {
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 600;
+  font-size: 1.05rem;
+  padding: 12px 28px;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: var(--shadow);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: white;
+  background: var(--coral);
+}
+.btn:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
+.btn:active { transform: translateY(0); }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+.btn-yellow { background: var(--yellow); color: var(--dark); }
+.btn-teal { background: var(--teal); }
+.btn-orange { background: var(--orange); }
+.btn-green { background: var(--green); }
+.btn-purple { background: var(--purple); }
+.btn-pink { background: var(--pink); }
+.btn-large { font-size: 1.3rem; padding: 16px 36px; }
+.btn-sm { font-size: 0.9rem; padding: 8px 18px; }
+
+/* === Section Title === */
+.section-title {
+  font-family: 'Fredoka', sans-serif;
+  font-size: clamp(1.8rem, 4vw, 2.4rem);
+  font-weight: 700;
+  color: var(--coral);
+  text-align: center;
+  margin-bottom: 12px;
+}
+.section-subtitle {
+  font-size: 1.05rem;
+  text-align: center;
+  color: var(--gray);
+  margin-bottom: 24px;
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.greeting {
+  background: white;
+  padding: 14px 24px;
+  border-radius: 20px;
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 20px;
+  text-align: center;
+  font-size: 1.05rem;
+  font-weight: 700;
+  border-left: 6px solid var(--coral);
+}
+
+.concept-card {
+  background: white;
+  padding: 24px;
+  border-radius: 24px;
+  box-shadow: var(--shadow);
+  margin-bottom: 20px;
+}
+.concept-card h3 {
+  font-family: 'Fredoka', sans-serif;
+  font-size: 1.4rem;
+  color: var(--coral);
+  margin-bottom: 10px;
+}
+.concept-card p {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--dark);
+}
+
+.unit-buttons {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  margin: 24px 0;
+  flex-wrap: wrap;
+}
+.unit-btn {
+  padding: 24px 32px;
+  border-radius: 24px;
+  border: none;
+  cursor: pointer;
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 600;
+  font-size: 1.2rem;
+  color: white;
+  transition: all 0.3s;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  min-width: 220px;
+}
+.unit-btn .icon { font-size: 2.6rem; }
+.unit-btn:hover { transform: translateY(-5px) scale(1.03); box-shadow: var(--shadow-lg); }
+.unit-btn.tidak-baku { background: linear-gradient(135deg, var(--teal), var(--mint)); }
+.unit-btn.baku { background: linear-gradient(135deg, var(--orange), var(--yellow)); color: var(--dark); }
+.unit-btn.active { transform: scale(1.05); box-shadow: var(--shadow-lg); outline: 4px solid var(--coral); }
+
+.subsection {
+  display: none;
+  background: white;
+  padding: 24px;
+  border-radius: 24px;
+  box-shadow: var(--shadow);
+  margin-top: 16px;
+  animation: slideUp 0.4s ease;
+}
+.subsection.active { display: block; }
+.subsection h3 {
+  font-family: 'Fredoka', sans-serif;
+  font-size: 1.5rem;
+  color: var(--coral);
+  margin-bottom: 12px;
+  border-bottom: 3px dashed var(--yellow);
+  padding-bottom: 8px;
+}
+.subsection h4 {
+  font-family: 'Fredoka', sans-serif;
+  font-size: 1.15rem;
+  color: var(--teal-dark);
+  margin: 16px 0 8px;
+}
+.subsection p { line-height: 1.7; margin-bottom: 8px; }
+
+/* === TANGGA === */
+.tangga-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 40px;
+  margin: 20px 0;
+}
+.tangga, .tangga-extra {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+.tangga-step {
+  background: linear-gradient(135deg, var(--orange), var(--yellow));
+  color: var(--dark);
+  padding: 12px 20px;
+  border-radius: 12px;
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 600;
+  font-size: 1rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: var(--shadow-sm);
+  border: 2px solid var(--dark);
+  width: 200px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+.tangga-step:hover { transform: scale(1.03); z-index: 5; }
+.tangga-step.active {
+  background: linear-gradient(135deg, var(--coral), var(--pink));
+  color: white;
+  transform: scale(1.05);
+}
+.tangga-step .unit-label { font-size: 1.2rem; font-weight: 700; }
+.tangga-step .unit-name { font-size: 0.8rem; font-weight: 500; opacity: 0.8; }
+
+.tangga-mini .step {
+  background: white;
+  border: 2px solid var(--coral);
+  color: var(--dark);
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.25s;
+  width: 140px;
+}
+.tangga-mini .step:hover { background: var(--yellow); transform: scale(1.04); }
+.tangga-mini .step.from { background: var(--coral); color: white; }
+.tangga-mini .step.to { background: var(--teal); color: white; }
+
+.tangga-arrows {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 360px;
+  margin: 12px auto;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+.tangga-arrows div {
+  background: var(--mint);
+  padding: 6px 14px;
+  border-radius: 20px;
+  color: var(--dark);
+}
+
+/* === TOOLS === */
+.tools-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 16px;
+  margin: 16px 0;
+}
+.tool-card {
+  background: var(--cream);
+  border-radius: 16px;
+  padding: 12px;
+  text-align: center;
+  border: 3px solid var(--yellow);
+  transition: all 0.3s;
+}
+.tool-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--coral);
+  box-shadow: var(--shadow);
+}
+.tool-card img {
+  width: 100%;
+  height: 110px;
+  object-fit: contain;
+  border-radius: 10px;
+  background: white;
+  margin-bottom: 8px;
+}
+.tool-card .tool-name {
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 600;
+  color: var(--dark);
+  font-size: 0.95rem;
+}
+.tool-card .tool-desc {
+  font-size: 0.78rem;
+  color: var(--gray);
+  margin-top: 4px;
+}
+
+/* === EXAMPLES === */
+.examples-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+  margin: 12px 0;
+}
+.example-item {
+  background: var(--cream);
+  padding: 12px;
+  border-radius: 12px;
+  text-align: center;
+  border: 2px solid var(--yellow);
+  transition: transform 0.3s;
+}
+.example-item:hover { transform: scale(1.04); }
+.example-item .emoji { font-size: 2.2rem; display: block; margin-bottom: 4px; }
+.example-item .text { font-weight: 700; font-size: 0.9rem; }
+
+/* === PRACTICE / PROBLEM === */
+.problem-card {
+  background: white;
+  border-radius: 24px;
+  padding: 24px;
+  box-shadow: var(--shadow);
+  margin-bottom: 16px;
+}
+.problem-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.problem-number {
+  background: var(--coral);
+  color: white;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 600;
+}
+.problem-progress {
+  color: var(--gray);
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+.problem-question {
+  font-size: 1.05rem;
+  margin-bottom: 14px;
+  font-weight: 600;
+}
+.problem-image {
+  background: var(--cream);
+  padding: 16px;
+  border-radius: 16px;
+  margin-bottom: 14px;
+  text-align: center;
+}
+.problem-input {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.problem-input input {
+  flex: 1;
+  min-width: 100px;
+  padding: 10px 14px;
+  border: 2px solid #DDD;
+  border-radius: 12px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  font-family: 'Nunito', sans-serif;
+}
+.problem-input input:focus { outline: none; border-color: var(--coral); }
+.problem-input .unit-text {
+  font-weight: 700;
+  color: var(--coral);
+  font-size: 1.05rem;
+}
+
+.feedback {
+  margin-top: 12px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  font-weight: 700;
+  display: none;
+  font-size: 0.95rem;
+}
+.feedback.show { display: block; }
+.feedback.correct { background: #D4EDDA; color: #155724; border: 2px solid #6BCB77; }
+.feedback.wrong { background: #F8D7DA; color: #721C24; border: 2px solid var(--coral); }
+
+.problem-nav {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 16px;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.practice-btn-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+  gap: 10px;
+  margin-bottom: 20px;
+}
+.practice-btn {
+  padding: 10px;
+  border-radius: 12px;
+  background: var(--cream);
+  border: 2px solid var(--yellow);
+  cursor: pointer;
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 600;
+  color: var(--dark);
+  transition: all 0.3s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 0.85rem;
+  gap: 4px;
+}
+.practice-btn:hover { background: white; border-color: var(--coral); transform: translateY(-2px); }
+.practice-btn.active { background: var(--coral); color: white; border-color: var(--dark); }
+.practice-btn .btn-emoji { font-size: 1.6rem; }
+
+/* === FLASHCARD === */
+.flashcard {
+  background: white;
+  border-radius: 24px;
+  padding: 24px;
+  box-shadow: var(--shadow);
+  text-align: center;
+  max-width: 700px;
+  margin: 0 auto;
+}
+.flashcard-image {
+  width: 200px;
+  height: 200px;
+  margin: 0 auto 16px;
+  border-radius: 16px;
+  background: var(--cream);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border: 3px solid var(--yellow);
+}
+.flashcard-image img { max-width: 95%; max-height: 95%; object-fit: contain; }
+.flashcard-image .big-emoji { font-size: 5rem; }
+.flashcard-scenario {
+  background: var(--cream);
+  padding: 14px;
+  border-radius: 12px;
+  margin-bottom: 16px;
+  font-style: italic;
+  color: var(--dark);
+  border-left: 4px solid var(--teal);
+}
+.flashcard-options {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.flashcard-option {
+  padding: 12px;
+  border-radius: 12px;
+  background: var(--cream);
+  border: 2px solid #DDD;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s;
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.95rem;
+}
+.flashcard-option:hover:not(:disabled) { border-color: var(--coral); background: white; transform: translateY(-2px); }
+.flashcard-option:disabled { cursor: not-allowed; }
+.flashcard-option.correct { background: #D4EDDA; border-color: var(--green); color: #155724; }
+.flashcard-option.wrong { background: #F8D7DA; border-color: var(--coral); color: #721C24; }
+
+.score-display {
+  background: var(--yellow);
+  padding: 10px 22px;
+  border-radius: 50px;
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  display: inline-block;
+  margin: 12px 0;
+  box-shadow: var(--shadow-sm);
+}
+
+/* === QUIZ === */
+.quiz-tabs {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+.quiz-tab {
+  padding: 12px 22px;
+  border-radius: 50px;
+  border: none;
+  background: white;
+  cursor: pointer;
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 600;
+  font-size: 1rem;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.3s;
+}
+.quiz-tab.active { background: var(--coral); color: white; transform: scale(1.05); }
+.quiz-content { display: none; }
+.quiz-content.active { display: block; }
+
+.objects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 10px;
+  margin: 16px 0;
+}
+.object-checkbox {
+  background: var(--cream);
+  border: 2px solid #DDD;
+  border-radius: 12px;
+  padding: 10px;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  user-select: none;
+}
+.object-checkbox .obj-icon { font-size: 2.2rem; }
+.object-checkbox .obj-name { font-size: 0.8rem; font-weight: 700; text-align: center; }
+.object-checkbox:hover { border-color: var(--orange); transform: translateY(-2px); }
+.object-checkbox.checked {
+  background: var(--mint);
+  border-color: var(--teal);
+  transform: scale(1.02);
+}
+.object-checkbox.locked { cursor: not-allowed; opacity: 0.85; }
+.object-checkbox.locked:hover { transform: none; }
+.object-checkbox.correct { background: #D4EDDA; border-color: var(--green); }
+.object-checkbox.wrong { background: #F8D7DA; border-color: var(--coral); }
+
+.comparison-card {
+  background: white;
+  border-radius: 24px;
+  padding: 24px;
+  box-shadow: var(--shadow);
+  text-align: center;
+}
+.comparison-objects {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin: 20px 0;
+  flex-wrap: wrap;
+}
+.comparison-object {
+  background: var(--cream);
+  padding: 16px;
+  border-radius: 16px;
+  min-width: 160px;
+  border: 3px solid var(--teal);
+}
+.comparison-object.b { border-color: var(--orange); }
+.comparison-object .obj-emoji { font-size: 3.5rem; }
+.comparison-object .obj-name {
+  font-family: 'Fredoka', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 6px 0;
+}
+.comparison-object .obj-size {
+  background: var(--yellow);
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-weight: 700;
+  display: inline-block;
+  font-size: 0.95rem;
+}
+.comparison-options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: 500px;
+  margin: 0 auto;
+}
+.comparison-option {
+  padding: 12px 18px;
+  border-radius: 12px;
+  background: var(--cream);
+  border: 2px solid #DDD;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s;
+  text-align: left;
+  font-family: 'Nunito', sans-serif;
+}
+.comparison-option:hover:not(:disabled) { border-color: var(--coral); transform: translateX(4px); }
+.comparison-option:disabled { cursor: not-allowed; }
+.comparison-option.correct { background: #D4EDDA; border-color: var(--green); }
+.comparison-option.wrong { background: #F8D7DA; border-color: var(--coral); }
+
+/* === MEMORY === */
+.memory-info {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+.info-card {
+  background: white;
+  padding: 10px 20px;
+  border-radius: 50px;
+  box-shadow: var(--shadow-sm);
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+.info-card span { color: var(--coral); font-size: 1.2rem; }
+
+.memory-players {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  margin: 16px 0;
+  flex-wrap: wrap;
+}
+.player-card {
+  background: white;
+  padding: 14px 28px;
+  border-radius: 20px;
+  box-shadow: var(--shadow-sm);
+  text-align: center;
+  border: 4px solid #DDD;
+  transition: all 0.3s;
+  min-width: 160px;
+  position: relative;
+}
+.player-card.active {
+  border-color: var(--coral);
+  transform: scale(1.08);
+  box-shadow: var(--shadow);
+  background: linear-gradient(135deg, #FFF8E7, #FFE5D9);
+}
+.player-card.active::before {
+  content: '👉';
+  position: absolute;
+  top: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 1.5rem;
+  animation: bounce 1s infinite;
+}
+.player-card .player-label {
+  font-size: 0.75rem;
+  color: var(--gray);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.player-card .player-name {
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--dark);
+  margin: 2px 0;
+  max-width: 140px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.player-card .player-score {
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 700;
+  font-size: 2rem;
+  color: var(--coral);
+  line-height: 1;
+}
+.player-card.active .player-score { color: var(--orange); }
+.vs-badge {
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 700;
+  font-size: 1.3rem;
+  color: var(--dark);
+  background: var(--yellow);
+  padding: 6px 14px;
+  border-radius: 50px;
+  box-shadow: var(--shadow-sm);
+}
+
+.memory-timer {
+  color: white;
+  padding: 14px 24px;
+  border-radius: 20px;
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 700;
+  font-size: 1.15rem;
+  text-align: center;
+  margin: 0 auto 16px;
+  max-width: 500px;
+  box-shadow: var(--shadow);
+  transition: background 0.3s;
+}
+
+.memory-grid {
+  display: grid;
+  gap: 10px;
+  max-width: 700px;
+  margin: 0 auto;
+}
+.memory-grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
+.memory-grid.cols-4 { grid-template-columns: repeat(4, 1fr); }
+.memory-grid.cols-5 { grid-template-columns: repeat(5, 1fr); }
+
+.memory-card {
+  aspect-ratio: 1;
+  perspective: 1000px;
+  cursor: pointer;
+}
+.memory-card-inner {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+}
+.memory-card.flipped .memory-card-inner,
+.memory-card.matched .memory-card-inner {
+  transform: rotateY(180deg);
+}
+.memory-card.matched { pointer-events: none; }
+.memory-card-front, .memory-card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 700;
+  font-size: 0.95rem;
+  text-align: center;
+  padding: 6px;
+}
+.memory-card-front {
+  background: linear-gradient(135deg, var(--coral), var(--orange));
+  color: white;
+  font-size: 2.4rem;
+}
+.memory-card-back {
+  background: white;
+  color: var(--dark);
+  border: 3px solid var(--coral);
+  transform: rotateY(180deg);
+}
+.memory-card.matched .memory-card-back {
+  background: linear-gradient(135deg, var(--mint), var(--teal));
+  color: white;
+  border-color: var(--green);
+  animation: matchPulse 0.5s;
+}
+@keyframes matchPulse {
+  0% { transform: rotateY(180deg) scale(1); }
+  50% { transform: rotateY(180deg) scale(1.1); }
+  100% { transform: rotateY(180deg) scale(1); }
+}
+
+.memory-float-score {
+  position: absolute;
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 700;
+  font-size: 1.5rem;
+  color: var(--green);
+  pointer-events: none;
+  animation: floatUp 1.5s ease-out forwards;
+  z-index: 50;
+}
+@keyframes floatUp {
+  0% { transform: translateY(0); opacity: 1; }
+  100% { transform: translateY(-60px); opacity: 0; }
+}
+
+/* === REFLECTION === */
+.reflection-card {
+  background: white;
+  padding: 20px;
+  border-radius: 20px;
+  box-shadow: var(--shadow);
+  margin-bottom: 14px;
+  border-left: 6px solid var(--teal);
+}
+.reflection-card:nth-child(2) { border-left-color: var(--coral); }
+.reflection-card:nth-child(3) { border-left-color: var(--orange); }
+.reflection-card:nth-child(4) { border-left-color: var(--purple); }
+.reflection-card h4 {
+  font-family: 'Fredoka', sans-serif;
+  color: var(--coral);
+  margin-bottom: 6px;
+  font-size: 1.1rem;
+}
+.reflection-card p { color: var(--dark); line-height: 1.6; }
+
+.thank-you {
+  text-align: center;
+  padding: 36px 24px;
+  background: white;
+  border-radius: 30px;
+  box-shadow: var(--shadow);
+  margin-top: 20px;
+  background: linear-gradient(135deg, white, var(--cream));
+}
+.thank-you h2 {
+  font-family: 'Fredoka', sans-serif;
+  font-size: 2.2rem;
+  color: var(--coral);
+  margin-bottom: 12px;
+}
+.thank-you .heart {
+  font-size: 3rem;
+  display: inline-block;
+  animation: pulse 1.5s infinite;
+}
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+}
+.thank-you p { font-size: 1.1rem; margin: 8px 0; }
+
+.final-score {
+  background: var(--yellow);
+  padding: 14px 24px;
+  border-radius: 20px;
+  margin: 20px auto;
+  display: inline-block;
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 700;
+  font-size: 1.2rem;
+  box-shadow: var(--shadow-sm);
+}
+
+/* === ANIMATIONS === */
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+.bounce { animation: bounce 2s infinite; }
+
+.confetti {
+  position: fixed;
+  width: 10px;
+  height: 10px;
+  pointer-events: none;
+  z-index: 1000;
+  animation: confettiFall 3s linear forwards;
+}
+@keyframes confettiFall {
+  0% { transform: translateY(-100vh) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+}
+
+.reading-guide {
+  background: linear-gradient(135deg, var(--mint), var(--teal));
+  padding: 16px;
+  border-radius: 16px;
+  margin: 14px 0;
+  color: var(--dark);
+}
+.reading-guide h4 {
+  font-family: 'Fredoka', sans-serif;
+  margin-bottom: 6px;
+  font-size: 1.1rem;
+}
+.reading-guide ol { margin-left: 20px; line-height: 1.7; }
+
+.illustration-box {
+  background: var(--cream);
+  border-radius: 16px;
+  padding: 16px;
+  margin: 14px 0;
+  text-align: center;
+  border: 3px dashed var(--coral);
+}
+
+@media (max-width: 768px) {
+  .nav { padding: 10px 14px; }
+  .nav-logo { font-size: 1.1rem; }
+  .nav-students { display: none; }
+  .cover-inputs { flex-direction: column; align-items: center; }
+  .input-group { width: 100%; max-width: 320px; }
+  .flashcard-options { grid-template-columns: 1fr; }
+  .memory-grid { grid-template-columns: repeat(3, 1fr) !important; }
+  .tools-grid { grid-template-columns: repeat(2, 1fr); }
+  .slide { padding: 80px 14px 30px; }
+  .player-card { min-width: 120px; padding: 10px 16px; }
+  .player-card .player-score { font-size: 1.5rem; }
+  .memory-players { gap: 8px; }
+  .vs-badge { font-size: 1rem; padding: 4px 10px; }
+  .tangga-step { width: 160px; font-size: 0.9rem; }
+}
+</style>
+</head>
+<body>
+
+<div class="bg-deco">
+  <span style="top: 10%; left: 5%;">⚖️</span>
+  <span style="top: 25%; right: 8%; animation-delay: 2s;">⬇️</span>
+  <span style="top: 50%; left: 12%; animation-delay: 4s;">📦</span>
+  <span style="top: 70%; right: 15%; animation-delay: 6s;">⚖️</span>
+  <span style="top: 85%; left: 20%; animation-delay: 8s;">⬇️</span>
+  <span style="top: 15%; right: 25%; animation-delay: 10s;">📦</span>
+  <span style="top: 40%; right: 5%; animation-delay: 12s;">⚖️</span>
+  <span style="top: 60%; left: 8%; animation-delay: 5s;">⬇️</span>
+</div>
+
+<nav class="nav">
+  <div class="nav-logo">⚖️ Petualangan Berat</div>
+  <div class="nav-dots" id="navDots"></div>
+  <div class="nav-students" id="navStudents"></div>
+</nav>
+
+<!-- SLIDE 1: COVER -->
+<section class="slide active" id="slide1">
+  <div class="container">
+    <div class="cover">
+      <div class="cover-scale">
+        <svg viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg">
+          <rect x="90" y="100" width="20" height="40" fill="#8B4513" stroke="#2D3436" stroke-width="3"/>
+          <rect x="60" y="140" width="80" height="10" fill="#8B4513" stroke="#2D3436" stroke-width="3" rx="4"/>
+          <line x1="100" y1="100" x2="100" y2="30" stroke="#2D3436" stroke-width="4"/>
+          <line x1="40" y1="40" x2="160" y2="40" stroke="#2D3436" stroke-width="4" stroke-linecap="round"/>
+          <line x1="40" y1="40" x2="40" y2="70" stroke="#2D3436" stroke-width="2"/>
+          <line x1="160" y1="40" x2="160" y2="70" stroke="#2D3436" stroke-width="2"/>
+          <path d="M 20 70 L 60 70 L 50 90 L 30 90 Z" fill="#FF6B6B" stroke="#2D3436" stroke-width="2"/>
+          <path d="M 140 70 L 180 70 L 170 90 L 150 90 Z" fill="#4ECDC4" stroke="#2D3436" stroke-width="2"/>
+          <text x="40" y="85" font-size="14" text-anchor="middle">🍎</text>
+          <text x="160" y="85" font-size="14" text-anchor="middle">🪨</text>
+        </svg>
+      </div>
+      <h1 class="cover-title">Petualangan<br>Mengukur Berat!</h1>
+      <p class="cover-subtitle">🎵 Ayo kita cari tahu seberapa berat segala sesuatu di sekitar kita! 🎵</p>
+      
+      <div class="cover-inputs">
+        <div class="input-group">
+          <label class="input-label">👤 Siswa 1</label>
+          <input type="text" id="student1" placeholder="Tulis namamu di sini..." value="">
+        </div>
+        <div class="input-group">
+          <label class="input-label">👤 Siswa 2</label>
+          <input type="text" id="student2" placeholder="Tulis namamu di sini..." value="">
+        </div>
+      </div>
+      
+      <button class="btn btn-large" onclick="startAdventure()">🚀 Mulai Petualangan!</button>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 2: MATERIAL -->
+<section class="slide" id="slide2">
+  <div class="container">
+    <h2 class="section-title">📦 Apa itu Berat?</h2>
+    <p class="section-subtitle">Berat adalah ukuran seberapa berat atau ringan suatu benda. Kita bisa mengukurnya dengan satuan baku dan tidak baku!</p>
+    
+    <div class="greeting" id="greeting2"></div>
+    
+    <div class="concept-card">
+      <h3>⚖️ Pengertian Berat</h3>
+      <p>Berat adalah besaran yang menunjukkan seberapa berat suatu benda. Misalnya, berat badan kita, berat sebuah buku, atau berat sebuah semangka. Untuk mengukur berat, kita bisa menggunakan satuan <strong>baku</strong> (yang sudah standar) dan satuan <strong>tidak baku</strong> (yang belum standar).</p>
+    </div>
+
+    <div class="unit-buttons">
+      <button class="unit-btn tidak-baku" id="btnTidakBaku" onclick="showSubSection('tidakBaku')">
+        <span class="icon">✋</span><span>Satuan Tidak Baku</span>
+      </button>
+      <button class="unit-btn baku" id="btnBaku" onclick="showSubSection('baku')">
+        <span class="icon">⚖️</span><span>Satuan Baku</span>
+      </button>
+    </div>
+
+    <div class="subsection" id="subTidakBaku">
+      <h3>✋ Satuan Tidak Baku</h3>
+      <p>Satuan tidak baku adalah satuan yang ukurannya <strong>belum standar</strong> dan bisa berbeda-beda. Contohnya: buah apel, batu, kelereng, atau buku.</p>
+      
+      <h4>Contoh Satuan Tidak Baku:</h4>
+      <div class="examples-grid">
+        <div class="example-item"><span class="emoji">🍎</span><span class="text">Apel</span></div>
+        <div class="example-item"><span class="emoji">🪨</span><span class="text">Batu</span></div>
+        <div class="example-item"><span class="emoji">📘</span><span class="text">Buku</span></div>
+        <div class="example-item"><span class="emoji">⚪</span><span class="text">Kelereng</span></div>
+      </div>
+
+      <h4>🎬 Ilustrasi: Menimbang dengan Neraca Sederhana</h4>
+      <div class="illustration-box">
+        <svg viewBox="0 0 500 250" xmlns="http://www.w3.org/2000/svg" style="max-width: 100%;">
+          <rect x="240" y="150" width="20" height="80" fill="#8B4513" stroke="#2D3436" stroke-width="3"/>
+          <rect x="180" y="225" width="140" height="15" fill="#8B4513" stroke="#2D3436" stroke-width="3" rx="4"/>
+          <line x1="250" y1="150" x2="250" y2="50" stroke="#2D3436" stroke-width="4"/>
+          <line x1="100" y1="60" x2="400" y2="60" stroke="#2D3436" stroke-width="4" stroke-linecap="round">
+            <animateTransform attributeName="transform" type="rotate" values="-10 250 60; 10 250 60; -10 250 60" dur="2s" repeatCount="indefinite"/>
+          </line>
+          <line x1="100" y1="60" x2="100" y2="100" stroke="#2D3436" stroke-width="2">
+            <animateTransform attributeName="transform" type="rotate" values="-10 250 60; 10 250 60; -10 250 60" dur="2s" repeatCount="indefinite"/>
+          </line>
+          <line x1="400" y1="60" x2="400" y2="100" stroke="#2D3436" stroke-width="2">
+            <animateTransform attributeName="transform" type="rotate" values="-10 250 60; 10 250 60; -10 250 60" dur="2s" repeatCount="indefinite"/>
+          </line>
+          <path d="M 60 100 L 140 100 L 120 140 L 80 140 Z" fill="#FFD93D" stroke="#2D3436" stroke-width="2">
+            <animateTransform attributeName="transform" type="rotate" values="-10 250 60; 10 250 60; -10 250 60" dur="2s" repeatCount="indefinite"/>
+          </path>
+          <path d="M 360 100 L 440 100 L 420 140 L 380 140 Z" fill="#95E1D3" stroke="#2D3436" stroke-width="2">
+            <animateTransform attributeName="transform" type="rotate" values="-10 250 60; 10 250 60; -10 250 60" dur="2s" repeatCount="indefinite"/>
+          </path>
+          <text x="100" y="125" font-size="20" text-anchor="middle">📦</text>
+          <text x="400" y="130" font-size="16" text-anchor="middle">🍎🍎🍎</text>
+        </svg>
+        <p style="margin-top: 10px; font-weight: 700; color: var(--coral);">👆 Lihat! Kotak cardboard seberat 3 buah apel. Tapi kalau apelnya beda ukuran, hasilnya bisa beda! 🤔</p>
+      </div>
+      <h4>🔧 Alat Ukur Tidak Baku</h4>
+      <p>Alat ukurnya biasanya <strong>neraca sederhana</strong> (buat sendiri) yang membandingkan benda dengan benda lain.</p>
+    </div>
+
+    <div class="subsection" id="subBaku">
+      <h3>⚖️ Satuan Baku</h3>
+      <p>Satuan baku sudah <strong>ditetapkan resmi</strong> dan sama di seluruh dunia. Satuan baku berat menggunakan satuan <strong>gram (g)</strong> dengan turunannya.</p>
+
+      <h4>🪜 Tangga Satuan Baku Berat</h4>
+      <div class="tangga-container">
+        <div class="tangga-mini" id="tanggaBaku"></div>
+        <div class="tangga-mini" id="tanggaExtra">
+          <div class="step" style="border-color: var(--purple); color: var(--purple);" data-info="1 ton = 1.000 kg (Truk, Gajah)">ton</div>
+          <div class="step" style="border-color: var(--purple); color: var(--purple);" data-info="1 kuintal = 100 kg (Karung Beras)">kuintal</div>
+          <div class="step" style="border-color: var(--pink); color: var(--pink);" data-info="1 kg = 10 ons (Beras, Gula)">ons</div>
+          <div class="step" style="border-color: var(--pink); color: var(--pink);" data-info="1 kg = 2 pon (Bayi, Ayam)">pon / pound</div>
+        </div>
+      </div>
+      
+      <div id="tanggaInfo" style="background: var(--cream); padding: 14px; border-radius: 12px; margin-top: 12px; min-height: 60px; border: 2px dashed var(--coral);">
+        <p style="text-align: center; color: var(--gray);">👆 Klik salah satu anak tangga untuk melihat contoh penggunaannya!</p>
+      </div>
+
+      <h4>🔧 Macam-macam Alat Ukur Baku</h4>
+      <div class="tools-grid" id="toolsGrid"></div>
+
+      <h4>📖 Cara Membaca Alat Ukur</h4>
+      <div class="reading-guide">
+        <h4>📝 Timbangan Digital:</h4>
+        <ol>
+          <li>Nyalakan timbangan dan pastikan angka menunjukkan 0</li>
+          <li>Letakkan benda di atasnya</li>
+          <li>Baca angka yang muncul di layar</li>
+          <li>Perhatikan satuan yang tertera (biasanya gram atau kg)</li>
+        </ol>
+      </div>
+      <div class="reading-guide" style="background: linear-gradient(135deg, #FFD93D, #FF9F43);">
+        <h4>📝 Timbangan Duduk / Kodok (Analog):</h4>
+        <ol>
+          <li>Letakkan benda di wadah atas</li>
+          <li>Pindahkan anak timbangan (anting) ke angka yang sesuai</li>
+          <li>Pastikan batang timbangan seimbang (mendatar)</li>
+          <li>Jumlahkan semua angka dari anak timbangan</li>
+        </ol>
+      </div>
+    </div>
+
+    <h3 class="section-title" style="margin-top: 30px;">✏️ Latihan Soal: Baca Hasil Timbangan!</h3>
+    <p class="section-subtitle">Tutor: Klik salah satu tombol benda di bawah untuk menimbangnya. Siswa: Amati jarum timbangan, lalu tulis berat bendanya!</p>
+    
+    <div class="problem-card" id="practiceCard">
+      <div id="practiceButtons" class="practice-btn-grid"></div>
+      <div class="problem-image" id="practiceImage"></div>
+      <div class="problem-input">
+        <input type="number" id="practiceAnswer" placeholder="Tulis berat benda..." step="1">
+        <span class="unit-text">gram</span>
+        <button class="btn btn-sm" onclick="checkPractice()">Cek Jawaban</button>
+      </div>
+      <div class="feedback" id="practiceFeedback"></div>
+      <div class="problem-nav">
+        <span class="score-display" id="practiceScore">Skor: 0/20</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 3: FLASHCARDS -->
+<section class="slide" id="slide3">
+  <div class="container">
+    <h2 class="section-title">🎮 IT'S GAME TIME!</h2>
+    <p class="section-subtitle">🎯 Tebak Alat Ukur! Pilih jawaban yang benar dari gambar atau permasalahan berikut!</p>
+    
+    <div class="greeting" id="greeting3"></div>
+    <div style="text-align: center;">
+      <span class="score-display">⭐ Skor: <span id="flashScore">0</span> / 30</span>
+    </div>
+
+    <div class="flashcard" id="flashcard">
+      <div class="problem-header">
+        <span class="problem-number" id="flashNum">Kartu 1</span>
+        <span class="problem-progress" id="flashProgress">1 / 30</span>
+      </div>
+      <div class="flashcard-image" id="flashImage"></div>
+      <div class="flashcard-scenario" id="flashScenario" style="display:none;"></div>
+      <div class="flashcard-question" id="flashQuestion"></div>
+      <div class="flashcard-options" id="flashOptions"></div>
+      <div class="feedback" id="flashFeedback"></div>
+      <div class="problem-nav">
+        <button class="btn btn-sm btn-yellow" onclick="prevFlash()">← Sebelumnya</button>
+        <button class="btn btn-sm btn-teal" onclick="nextFlash()">Selanjutnya →</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 4: KONVERSI -->
+<section class="slide" id="slide4">
+  <div class="container">
+    <h2 class="section-title">🪜 Konversi Satuan Baku</h2>
+    <p class="section-subtitle">Pelajari tangga satuan, lalu kerjakan soal konversi di bawahnya!</p>
+    
+    <div class="greeting" id="greeting4"></div>
+
+    <div class="concept-card">
+      <h3>🪜 Tangga Konversi Satuan Berat</h3>
+      <p>Klik dua anak tangga untuk melihat cara konversinya!</p>
+      <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 30px;">
+        <div class="tangga-mini" id="tanggaKonv"></div>
+        <div class="tangga-mini" id="tanggaKonvExtra">
+          <div class="step" style="border-color: var(--purple); color: var(--purple);" data-unit="ton">ton</div>
+          <div class="step" style="border-color: var(--purple); color: var(--purple);" data-unit="kuintal">kuintal</div>
+          <div class="step" style="border-color: var(--pink); color: var(--pink);" data-unit="ons">ons</div>
+          <div class="step" style="border-color: var(--pink); color: var(--pink);" data-unit="pon">pon</div>
+        </div>
+      </div>
+      <div class="tangga-arrows">
+        <div>⬇️ Turun: × 10</div>
+        <div>⬆️ Naik: ÷ 10</div>
+      </div>
+      <div id="konvInfo" style="background: var(--cream); padding: 14px; border-radius: 12px; margin-top: 12px; min-height: 50px; text-align: center; border: 2px dashed var(--coral);">
+        <p style="color: var(--gray);">👆 Klik dua anak tangga kiri untuk melihat konversi metrik!</p>
+      </div>
+    </div>
+
+    <h3 class="section-title" style="margin-top: 24px;">📝 Latihan Konversi (30 Soal)</h3>
+    
+    <div class="problem-card" id="convCard">
+      <div class="problem-header">
+        <span class="problem-number" id="convNum">Soal 1</span>
+        <span class="problem-progress" id="convProgress">1 / 30</span>
+      </div>
+      <div class="problem-question" id="convQuestion"></div>
+      <div class="problem-input">
+        <input type="number" id="convAnswer" placeholder="Tulis jawaban..." step="0.001">
+        <button class="btn btn-sm" onclick="checkConversion()">Cek Jawaban</button>
+      </div>
+      <div class="feedback" id="convFeedback"></div>
+      <div class="problem-nav">
+        <button class="btn btn-sm btn-yellow" onclick="prevConversion()">← Sebelumnya</button>
+        <span class="score-display">⭐ Skor: <span id="convScore">0</span> / 30</span>
+        <button class="btn btn-sm btn-teal" onclick="nextConversion()">Selanjutnya →</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 5: KUIS -->
+<section class="slide" id="slide5">
+  <div class="container">
+    <h2 class="section-title">🧠 KUIS TIME!</h2>
+    <p class="section-subtitle">Ayo uji kemampuanmu dengan dua jenis kuis seru berikut ini!</p>
+    
+    <div class="greeting" id="greeting5"></div>
+
+    <div class="quiz-tabs">
+      <button class="quiz-tab active" onclick="switchQuiz(1)">📌 Kuis 1: Alat & Benda</button>
+      <button class="quiz-tab" onclick="switchQuiz(2)">⚖️ Kuis 2: Bandingkan Berat</button>
+    </div>
+
+    <div class="quiz-content active" id="quiz1Content">
+      <div class="problem-card">
+        <div class="problem-header">
+          <span class="problem-number" id="q1Num">Soal 1</span>
+          <span class="problem-progress" id="q1Progress">1 / 10</span>
+        </div>
+        <div class="problem-question" id="q1Question"></div>
+        <div class="objects-grid" id="q1Objects"></div>
+        <div class="feedback" id="q1Feedback"></div>
+        <div class="problem-nav">
+          <button class="btn btn-sm btn-yellow" onclick="prevQuiz1()">← Sebelumnya</button>
+          <button class="btn btn-sm" onclick="checkQuiz1()">✅ Cek Jawaban</button>
+          <span class="score-display">⭐ <span id="q1Score">0</span> / 10</span>
+          <button class="btn btn-sm btn-teal" onclick="nextQuiz1()">Selanjutnya →</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="quiz-content" id="quiz2Content">
+      <div class="comparison-card">
+        <div class="problem-header">
+          <span class="problem-number" id="q2Num">Soal 1</span>
+          <span class="problem-progress" id="q2Progress">1 / 10</span>
+        </div>
+        <div class="problem-question" id="q2Question"></div>
+        <div class="comparison-objects" id="q2Objects"></div>
+        <div class="comparison-options" id="q2Options"></div>
+        <div class="feedback" id="q2Feedback"></div>
+        <div class="problem-nav">
+          <button class="btn btn-sm btn-yellow" onclick="prevQuiz2()">← Sebelumnya</button>
+          <span class="score-display">⭐ <span id="q2Score">0</span> / 10</span>
+          <button class="btn btn-sm btn-teal" onclick="nextQuiz2()">Selanjutnya →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 6: MEMORY GAME -->
+<section class="slide" id="slide6">
+  <div class="container">
+    <h2 class="section-title">🃏 GAME TIME: Memory Match!</h2>
+    <p class="section-subtitle">Berpasangan mencari satuan yang sama! Bergiliran menebak, dapat skor jika benar! 🧠</p>
+    
+    <div class="greeting" id="greeting6"></div>
+
+    <div class="memory-info">
+      <div class="info-card">🎮 Ronde: <span id="memRound">1</span> / 10</div>
+      <div class="info-card">🏆 Pasangan: <span id="memMatched">0</span></div>
+    </div>
+
+    <div class="memory-players">
+      <div class="player-card" id="player1Card">
+        <div class="player-label">Siswa 1</div>
+        <div class="player-name" id="player1Name">Pemain 1</div>
+        <div class="player-score" id="player1Score">0</div>
+      </div>
+      <div class="vs-badge">VS</div>
+      <div class="player-card" id="player2Card">
+        <div class="player-label">Siswa 2</div>
+        <div class="player-name" id="player2Name">Pemain 2</div>
+        <div class="player-score" id="player2Score">0</div>
+      </div>
+    </div>
+
+    <div class="memory-timer" id="memTimer" style="background: var(--coral);">👁️ Siap menghafalkan kartu...</div>
+
+    <div class="memory-grid" id="memGrid"></div>
+
+    <div style="text-align: center; margin-top: 20px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+      <button class="btn btn-green" id="memNextBtn" onclick="nextMemoryRound()" style="display:none;">➡️ Ronde Selanjutnya</button>
+      <button class="btn btn-orange" id="memRestartBtn" onclick="restartCurrentRound()" style="display:none;">🔄 Ulangi Ronde Ini</button>
+      <button class="btn btn-purple" id="memNewGameBtn" onclick="startNewMemoryGame()" style="display:none;">🎮 Game Baru</button>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 7: REFLECTION -->
+<section class="slide" id="slide7">
+  <div class="container">
+    <h2 class="section-title">🌟 Refleksi & Kesimpulan</h2>
+    <p class="section-subtitle">Mari kita rangkum apa yang sudah kita pelajari hari ini!</p>
+    
+    <div class="greeting" id="greeting7"></div>
+
+    <div class="reflection-card">
+      <h4>💭 Refleksi Diri</h4>
+      <p>Hal apa yang paling kamu sukai dari petualangan hari ini? Apakah ada bagian yang masih membingungkan? Catat ya, nanti bisa ditanyakan kepada teman atau guru! 📝</p>
+    </div>
+
+    <div class="reflection-card">
+      <h4>📋 Kesimpulan</h4>
+      <p>⚖️ <strong>Berat</strong> adalah ukuran seberapa berat suatu benda. Ada dua jenis satuan: <strong>tidak baku</strong> (apel, batu, buku) yang ukurannya berbeda-beda, dan <strong>baku</strong> (kg, hg, dag, g, dg, cg, mg) yang sudah standar dan sama di seluruh dunia.</p>
+      <p style="margin-top: 8px;">🔧 Alat ukur baku antara lain timbangan digital, timbangan duduk, neraca, dan timbangan badan.</p>
+      <p style="margin-top: 8px;">🪜 Konversi satuan: turun 1 tangga = ×10, naik 1 tangga = ÷10. Jangan lupa juga ada satuan lain seperti ons, pon, kuintal, dan ton!</p>
+    </div>
+
+    <div class="reflection-card">
+      <h4>✨ Tips Penting</h4>
+      <p>✅ Pilih alat ukur yang sesuai dengan benda yang diukur<br>
+      ✅ Perhatikan satuan yang tertera di alat ukur<br>
+      ✅ Untuk timbangan analog, pastikan seimbang/datar<br>
+      ✅ Latih konversi dengan tangga satuan</p>
+    </div>
+
+    <div class="thank-you">
+      <div class="heart">💖</div>
+      <h2>Terima Kasih Sudah Belajar!</h2>
+      <p id="thankYouNames">Sampai jumpa di petualangan berikutnya!</p>
+      <div class="final-score" id="finalScore">🏆 Total Skor Petualanganmu: 0</div>
+      <p style="margin-top: 16px; font-size: 1rem; color: var(--gray);">Pembelajaran adalah petualangan yang tak pernah berakhir. Teruslah bertanya, teruslah mencoba, dan teruslah belajar! 🚀</p>
+      <button class="btn btn-yellow" onclick="goToSlide(1)" style="margin-top: 16px;">🔄 Mulai Lagi dari Awal</button>
+    </div>
+  </div>
+</section>
+
+<script>
+// ============ STATE ============
+const state = {
+  currentSlide: 1,
+  students: ['', ''],
+  scores: { practice: 0, flash: 0, conv: 0, q1: 0, q2: 0, memory: 0 },
+  practice: { current: 0, answers: [] },
+  flash: { current: 0, answers: {} },
+  conv: { current: 0, answers: [] },
+  q1: { current: 0, answers: {} },
+  q2: { current: 0, answers: {} },
+  memory: {
+    round: 0, player1Score: 0, player2Score: 0, roundStartP1: 0, roundStartP2: 0,
+    currentPlayer: 0, firstPlayer: 0, flipped: [], matched: 0, canFlip: false, cards: []
+  },
+  tanggaKonv: { from: null, to: null }
+};
+const TOTAL_SLIDES = 7;
+
+// ============ TOOLS DATA ============
+const tools = [
+  { name: 'Timbangan Duduk', img: 'https://i0.wp.com/rezekibarokah.com/wp-content/uploads/2021/05/Timbangan-Duduk.jpg', desc: 'Ukur di pasar' },
+  { name: 'Timbangan Rumahan', img: 'https://i0.wp.com/rezekibarokah.com/wp-content/uploads/2021/05/Timbangan-Duduk-rumahan-1142x1536.jpg', desc: 'Ukur di dapur' },
+  { name: 'Neraca 2 Lengan', img: 'https://i0.wp.com/rezekibarokah.com/wp-content/uploads/2021/05/Neraca-2-Lengan.jpg', desc: 'Ukur di lab' },
+  { name: 'Neraca Lengan Gantung', img: 'https://i0.wp.com/rezekibarokah.com/wp-content/uploads/2021/05/Neraca-Lengan-Gantung.jpg', desc: 'Ukur benda ringan' },
+  { name: 'Neraca Ohaus', img: 'https://i0.wp.com/rezekibarokah.com/wp-content/uploads/2021/05/Neraca-Ohaus.jpg', desc: 'Ukur sangat teliti' },
+  { name: 'Timbangan Badan Tinggi', img: 'https://i0.wp.com/rezekibarokah.com/wp-content/uploads/2021/05/Timbangan-Berat-dan-Tinggi-Badan.jpg', desc: 'Ukur berat & tinggi' },
+  { name: 'Timbangan Analog', img: 'https://i0.wp.com/rezekibarokah.com/wp-content/uploads/2021/05/Timbangan-Berat-Badan-Analog.jpg', desc: 'Ukur berat badan' },
+  { name: 'Timbangan Bayi', img: 'https://i0.wp.com/rezekibarokah.com/wp-content/uploads/2021/05/Timbangan-Berat-Badan-Badan-Bayi-1536x1025.jpg', desc: 'Khusus untuk bayi' },
+  { name: 'Timbangan Digital', img: 'https://i0.wp.com/rezekibarokah.com/wp-content/uploads/2021/05/Timbangan-Digital.jpg', desc: 'Praktis & otomatis' },
+  { name: 'Timbangan Kodok', img: 'https://i0.wp.com/rezekibarokah.com/wp-content/uploads/2021/05/Timbangan-Kodok.jpg', desc: 'Ukur bahan makanan' },
+  { name: 'Timbangan Gantung', img: 'https://i0.wp.com/rezekibarokah.com/wp-content/uploads/2021/05/Timbangan-Gantung.jpg', desc: 'Ukur barang berat' },
+  { name: 'Jembatan Timbang', img: 'https://i0.wp.com/rezekibarokah.com/wp-content/uploads/2021/05/Jembatan-Timbang-Weighbridge.jpg', desc: 'Ukur berat truk/mobil' }
+];
+
+// ============ TANGGA DATA ============
+const tanggaUnits = [
+  { unit: 'kg', name: 'kilogram', example: '📦 Berat beras 5 kg' },
+  { unit: 'hg', name: 'hektogram', example: '🥖 Berat roti 2 hg' },
+  { unit: 'dag', name: 'dekagram', example: '🧀 Berat keju 5 dag' },
+  { unit: 'g', name: 'gram', example: '✏️ Berat pensil 10 g' },
+  { unit: 'dg', name: 'desigram', example: '💊 Berat obat 5 dg' },
+  { unit: 'cg', name: 'centigram', example: '🧂 Berat garam halus 20 cg' },
+  { unit: 'mg', name: 'miligram', example: '🔬 Berat debu 50 mg' }
+];
+
+// ============ PRACTICE PROBLEMS (20) - Max 1000g for Analog Scale ============
+const practiceProblems = [
+  { obj: 'Apel', emoji: '🍎', weight: 150 },
+  { obj: 'Pisang', emoji: '🍌', weight: 120 },
+  { obj: 'Buku', emoji: '📕', weight: 300 },
+  { obj: 'Pulpen', emoji: '🖊️', weight: 50 },
+  { obj: 'Beras', emoji: '🍚', weight: 800 },
+  { obj: 'Gula', emoji: '🍬', weight: 500 },
+  { obj: 'Tas', emoji: '🎒', weight: 950 },
+  { obj: 'Sepatu', emoji: '👟', weight: 600 },
+  { obj: 'Kunci', emoji: '🔑', weight: 80 },
+  { obj: 'Koin', emoji: '🪙', weight: 25 },
+  { obj: 'Bola', emoji: '⚽', weight: 450 },
+  { obj: 'Boneka', emoji: '🧸', weight: 700 },
+  { obj: 'Botol', emoji: '🍶', weight: 550 },
+  { obj: 'Mainan Kucing', emoji: '🐈', weight: 900 },
+  { obj: 'Mainan Anjing', emoji: '🐕', weight: 1000 },
+  { obj: 'Boneka Bayi', emoji: '👶', weight: 850 },
+  { obj: 'Semangka', emoji: '🍉', weight: 750 },
+  { obj: 'Lemari Mainan', emoji: '🗄️', weight: 650 },
+  { obj: 'Mobil Mainan', emoji: '🚗', weight: 200 },
+  { obj: 'Truk Mainan', emoji: '🚚', weight: 400 }
+];
+
+// ============ FLASHCARDS DATA (30) ============
+const flashcardData = [
+  { type: 'image', img: tools[0].img, q: 'Alat ukur apa ini?', options: ['Timbangan Duduk', 'Neraca', 'Timbangan Bayi', 'Timbangan Kodok'], correct: 0 },
+  { type: 'image', img: tools[1].img, q: 'Alat ukur apa ini?', options: ['Timbangan Gantung', 'Timbangan Rumahan', 'Jembatan Timbang', 'Timbangan Digital'], correct: 1 },
+  { type: 'image', img: tools[2].img, q: 'Alat ukur apa ini?', options: ['Neraca 2 Lengan', 'Neraca Ohaus', 'Timbangan Duduk', 'Timbangan Kodok'], correct: 0 },
+  { type: 'image', img: tools[3].img, q: 'Alat ukur apa ini?', options: ['Timbangan Digital', 'Neraca Lengan Gantung', 'Timbangan Analog', 'Neraca Ohaus'], correct: 1 },
+  { type: 'image', img: tools[4].img, q: 'Alat ukur apa ini?', options: ['Timbangan Kodok', 'Neraca Ohaus', 'Jembatan Timbang', 'Timbangan Gantung'], correct: 1 },
+  { type: 'image', img: tools[5].img, q: 'Alat ukur apa ini?', options: ['Timbangan Bayi', 'Timbangan Badan Tinggi', 'Timbangan Analog', 'Timbangan Digital'], correct: 1 },
+  { type: 'image', img: tools[6].img, q: 'Alat ukur apa ini?', options: ['Timbangan Analog', 'Neraca 2 Lengan', 'Timbangan Kodok', 'Timbangan Gantung'], correct: 0 },
+  { type: 'image', img: tools[7].img, q: 'Alat ukur apa ini?', options: ['Timbangan Bayi', 'Timbangan Rumahan', 'Timbangan Badan', 'Neraca'], correct: 0 },
+  { type: 'image', img: tools[8].img, q: 'Alat ukur apa ini?', options: ['Neraca', 'Timbangan Digital', 'Jembatan Timbang', 'Timbangan Analog'], correct: 1 },
+  { type: 'image', img: tools[9].img, q: 'Alat ukur apa ini?', options: ['Timbangan Kodok', 'Timbangan Gantung', 'Timbangan Bayi', 'Neraca Ohaus'], correct: 0 },
+  { type: 'image', img: tools[10].img, q: 'Alat ukur apa ini?', options: ['Timbangan Gantung', 'Jembatan Timbang', 'Timbangan Duduk', 'Timbangan Kodok'], correct: 0 },
+  { type: 'image', img: tools[11].img, q: 'Alat ukur apa ini?', options: ['Timbangan Gantung', 'Jembatan Timbang', 'Neraca Ohaus', 'Timbangan Analog'], correct: 1 },
+  { type: 'scenario', emoji: '👶', q: 'Aku ingin mengukur berat bayi yang baru lahir. Alat apa yang paling cocok?', options: ['Timbangan Bayi', 'Jembatan Timbang', 'Neraca Ohaus', 'Timbangan Gantung'], correct: 0 },
+  { type: 'scenario', emoji: '🚚', q: 'Aku ingin mengukur berat truk pengangkut pasir. Alat apa yang cocok?', options: ['Timbangan Digital', 'Neraca 2 Lengan', 'Jembatan Timbang', 'Timbangan Badan'], correct: 2 },
+  { type: 'scenario', emoji: '💊', q: 'Aku ingin mengukur berat obat dengan sangat teliti di apotek. Alat apa yang cocok?', options: ['Neraca Ohaus', 'Timbangan Kodok', 'Jembatan Timbang', 'Timbangan Bayi'], correct: 0 },
+  { type: 'scenario', emoji: '🛒', q: 'Ibu ingin membeli sayuran di pasar. Alat ukur apa yang biasa digunakan tukang sayur?', options: ['Neraca Ohaus', 'Timbangan Duduk / Kodok', 'Jembatan Timbang', 'Timbangan Bayi'], correct: 1 },
+  { type: 'scenario', emoji: '🧍', q: 'Aku ingin tahu berat badanku di kamar. Alat apa yang cocok?', options: ['Timbangan Analog / Digital', 'Neraca Lengan Gantung', 'Timbangan Kodok', 'Timbangan Gantung'], correct: 0 },
+  { type: 'scenario', emoji: '🎒', q: 'Aku ingin mengukur berat tas sekolahku. Alat apa yang cocok?', options: ['Timbangan Bayi', 'Timbangan Gantung', 'Timbangan Digital / Duduk', 'Jembatan Timbang'], correct: 2 },
+  { type: 'scenario', emoji: '🐟', q: 'Nelayan ingin menjual ikan hasil tangkapannya dalam kilogram. Alat apa yang cocok?', options: ['Timbangan Gantung', 'Neraca Ohaus', 'Timbangan Bayi', 'Neraca 2 Lengan'], correct: 0 },
+  { type: 'scenario', emoji: '🔬', q: 'Saat praktikum di laboratorium IPA, alat apa yang digunakan untuk menimbang bahan kimia?', options: ['Timbangan Kodok', 'Neraca 2 Lengan / Ohaus', 'Timbangan Analog', 'Jembatan Timbang'], correct: 1 },
+  { type: 'image', img: tools[0].img, q: 'Alat ukur apa ini?', options: ['Timbangan Duduk', 'Timbangan Badan', 'Jembatan Timbang', 'Neraca'], correct: 0 },
+  { type: 'image', img: tools[4].img, q: 'Alat ukur apa ini?', options: ['Timbangan Analog', 'Neraca Ohaus', 'Timbangan Gantung', 'Timbangan Bayi'], correct: 1 },
+  { type: 'scenario', emoji: '📦', q: 'Kurir ingin menimbang paket besar. Alat apa yang paling praktis?', options: ['Timbangan Bayi', 'Neraca Lengan Gantung', 'Timbangan Digital', 'Timbangan Kodok'], correct: 2 },
+  { type: 'scenario', emoji: '🌾', q: 'Petani ingin menjual panen padi dalam karungan 50kg. Alat apa yang dipakai?', options: ['Neraca Ohaus', 'Timbangan Duduk', 'Timbangan Bayi', 'Neraca Lengan Gantung'], correct: 1 },
+  { type: 'image', img: tools[9].img, q: 'Alat ukur apa ini?', options: ['Timbangan Kodok', 'Timbangan Analog', 'Timbangan Bayi', 'Timbangan Badan'], correct: 0 },
+  { type: 'scenario', emoji: '🧀', q: 'Aku ingin menimbang keju 250 gram dengan cukup teliti di dapur. Alat apa yang cocok?', options: ['Timbangan Kodok', 'Jembatan Timbang', 'Timbangan Bayi', 'Timbangan Analog Badan'], correct: 0 },
+  { type: 'image', img: tools[8].img, q: 'Alat ukur apa ini?', options: ['Timbangan Digital', 'Neraca 2 Lengan', 'Timbangan Gantung', 'Timbangan Badan'], correct: 0 },
+  { type: 'scenario', emoji: '🧪', q: 'Mencari massa jenis zat cair dengan teliti. Alat ukur apa yang dipakai?', options: ['Timbangan Kodok', 'Neraca Ohaus', 'Timbangan Analog', 'Jembatan Timbang'], correct: 1 },
+  { type: 'image', img: tools[11].img, q: 'Alat ukur apa ini?', options: ['Timbangan Gantung', 'Jembatan Timbang', 'Neraca Lengan Gantung', 'Timbangan Duduk'], correct: 1 },
+  { type: 'scenario', emoji: '✉️', q: 'Menimbang berat surat sebelum dikirim lewat kantor pos. Alat apa yang cocok?', options: ['Timbangan Duduk', 'Neraca Lengan Gantung', 'Jembatan Timbang', 'Timbangan Bayi'], correct: 1 }
+];
+
+// ============ CONVERSION PROBLEMS (30) ============
+const convUnits = ['kg', 'hg', 'dag', 'g', 'dg', 'cg', 'mg'];
+const conversionProblems = [];
+function genConv() {
+  const used = new Set();
+  let attempts = 0;
+  while (conversionProblems.length < 30 && attempts < 1000) {
+    attempts++;
+    let fromU, toU, value, answer, explanation;
+    
+    const type = Math.floor(Math.random() * 4);
+    if (type < 3) { // Metric conversion
+      const fromIdx = Math.floor(Math.random() * 7);
+      let toIdx = Math.floor(Math.random() * 7);
+      if (toIdx === fromIdx) continue;
+      value = Math.floor(Math.random() * 90) + 2;
+      const key = `${value}-${fromIdx}-${toIdx}`;
+      if (used.has(key)) continue;
+      used.add(key);
+      
+      const diff = fromIdx - toIdx;
+      const factor = Math.pow(10, Math.abs(diff));
+      const direction = diff > 0 ? 'naik' : 'turun';
+      const opSymbol = diff > 0 ? '÷' : '×';
+      const opText = diff > 0 ? 'dibagi' : 'dikali';
+      answer = diff > 0 ? value / factor : value * factor;
+      const steps = Math.abs(diff);
+      
+      fromU = convUnits[fromIdx];
+      toU = convUnits[toIdx];
+      const factorText = steps > 1 ? ` sebanyak ${steps} kali = ${factor}` : '';
+      explanation = `Dari ${fromU} ke ${toU} adalah ${direction} ${steps} tangga. Karena ${direction}, maka ${opText} 10${factorText}. ${value} ${opSymbol} ${factor} = ${answer} ${toU}`;
+    } else { // Special units
+      const special = [
+        { fromU: 'kg', toU: 'ton', factor: 1000, dir: 'naik', op: '÷' },
+        { fromU: 'ton', toU: 'kg', factor: 1000, dir: 'turun', op: '×' },
+        { fromU: 'kg', toU: 'kuintal', factor: 100, dir: 'naik', op: '÷' },
+        { fromU: 'kuintal', toU: 'kg', factor: 100, dir: 'turun', op: '×' },
+        { fromU: 'kg', toU: 'ons', factor: 10, dir: 'turun', op: '×' },
+        { fromU: 'ons', toU: 'kg', factor: 10, dir: 'naik', op: '÷' },
+        { fromU: 'kg', toU: 'pon', factor: 2, dir: 'turun', op: '×' },
+        { fromU: 'pon', toU: 'kg', factor: 2, dir: 'naik', op: '÷' }
+      ];
+      const sel = special[Math.floor(Math.random() * special.length)];
+      value = Math.floor(Math.random() * 50) + 2;
+      const key = `${value}-${sel.fromU}-${sel.toU}`;
+      if (used.has(key)) continue;
+      used.add(key);
+      
+      fromU = sel.fromU; toU = sel.toU;
+      answer = sel.dir === 'turun' ? value * sel.factor : value / sel.factor;
+      explanation = `Konversi ${fromU} ke ${toU}: 1 ${fromU} = ${sel.factor} ${toU}. Maka ${value} ${sel.op} ${sel.factor} = ${answer} ${toU}`;
+    }
+    
+    conversionProblems.push({
+      question: `${value} ${fromU} = ... ${toU}`,
+      answer: answer, fromU: fromU, toU: toU, value: value, explanation: explanation
+    });
+  }
+}
+genConv();
+
+// ============ QUIZ 1 DATA ============
+const quiz1Tools = ['Timbangan Bayi', 'Jembatan Timbang', 'Timbangan Badan', 'Neraca Ohaus', 'Timbangan Digital', 'Timbangan Gantung', 'Timbangan Kodok', 'Timbangan Duduk', 'Neraca 2 Lengan', 'Timbangan Analog'];
+const allObjects = [
+  { name: 'Bayi', emoji: '👶' }, { name: 'Truk', emoji: '🚚' }, { name: 'Manusia', emoji: '🧍' },
+  { name: 'Bahan Kimia', emoji: '🧪' }, { name: 'Sayur', emoji: '🥕' }, { name: 'Ikan', emoji: '🐟' },
+  { name: 'Apel', emoji: '🍎' }, { name: 'Mobil', emoji: '🚗' }, { name: 'Beras', emoji: '🍚' },
+  { name: 'Tas', emoji: '🎒' }, { name: 'Gajah', emoji: '🐘' }, { name: 'Buku', emoji: '📕' },
+  { name: 'Pensil', emoji: '✏️' }, { name: 'Lemari', emoji: '🗄️' }, { name: 'Kelereng', emoji: '⚪' },
+  { name: 'Koin', emoji: '🪙' }, { name: 'Semangka', emoji: '🍉' }, { name: 'Boneka', emoji: '🧸' },
+  { name: 'Kucing', emoji: '🐈' }, { name: 'Sepatu', emoji: '👟' }
+];
+const toolObjectMap = {
+  'Timbangan Bayi': ['Bayi'],
+  'Jembatan Timbang': ['Truk', 'Mobil', 'Gajah'],
+  'Timbangan Badan': ['Manusia', 'Kucing'],
+  'Neraca Ohaus': ['Bahan Kimia', 'Kelereng', 'Koin'],
+  'Timbangan Digital': ['Tas', 'Buku', 'Apel', 'Semangka', 'Boneka', 'Sepatu'],
+  'Timbangan Gantung': ['Ikan', 'Sayur', 'Tas'],
+  'Timbangan Kodok': ['Sayur', 'Apel', 'Beras', 'Ikan', 'Semangka'],
+  'Timbangan Duduk': ['Beras', 'Buku', 'Sayur', 'Apel', 'Semangka', 'Lemari'],
+  'Neraca 2 Lengan': ['Pensil', 'Buku', 'Kelereng', 'Bahan Kimia'],
+  'Timbangan Analog': ['Manusia', 'Tas', 'Kucing']
+};
+
+// ============ QUIZ 2 DATA ============
+const quiz2Data = [
+  { a: { name: 'Apel A', emoji: '🍎', size: '150 g' }, b: { name: 'Pisang B', emoji: '🍌', size: '1 hg' }, correct: 2 },
+  { a: { name: 'Beras A', emoji: '🍚', size: '5 kg' }, b: { name: 'Gula B', emoji: '🍬', size: '40 ons' }, correct: 0 },
+  { a: { name: 'Buku A', emoji: '📕', size: '300 g' }, b: { name: 'Buku B', emoji: '📗', size: '2 dag' }, correct: 1 },
+  { a: { name: 'Bayi A', emoji: '👶', size: '6 kg' }, b: { name: 'Bayi B', emoji: '👶', size: '12 pon' }, correct: 2 },
+  { a: { name: 'Mobil A', emoji: '🚗', size: '1 ton' }, b: { name: 'Mobil B', emoji: '🚙', size: '800 kg' }, correct: 1 },
+  { a: { name: 'Kucing A', emoji: '🐈', size: '3 kg' }, b: { name: 'Kucing B', emoji: '🐈', size: '2500 g' }, correct: 1 },
+  { a: { name: 'Semangka A', emoji: '🍉', size: '2 kg' }, b: { name: 'Semangka B', emoji: '🍉', size: '15 ons' }, correct: 1 },
+  { a: { name: 'Tas A', emoji: '🎒', size: '1.5 kg' }, b: { name: 'Tas B', emoji: '👜', size: '20 hg' }, correct: 0 },
+  { a: { name: 'Pulpen A', emoji: '🖊️', size: '15 g' }, b: { name: 'Pulpen B', emoji: '🖊️', size: '100 cg' }, correct: 1 },
+  { a: { name: 'Anjing A', emoji: '🐕', size: '10 kg' }, b: { name: 'Anjing B', emoji: '🐕', size: '1 kuintal' }, correct: 0 }
+];
+
+const comparisonOptions = [
+  'Benda A lebih ringan dari Benda B',
+  'Benda A lebih berat dari Benda B',
+  'Benda A memiliki berat yang sama dengan Benda B'
+];
+
+// ============ MEMORY ROUNDS (10) ============
+const memoryRounds = [
+  [{ value: '20 cg', match: '2 dg' }, { value: '1 kg', match: '10 hg' }, { value: '1 ton', match: '1000 kg' }],
+  [{ value: '50 g', match: '5 dag' }, { value: '1 ons', match: '10 dag' }, { value: '1 kg', match: '2 pon' }],
+  [{ value: '30 dg', match: '3 g' }, { value: '1 kuintal', match: '100 kg' }, { value: '5 hg', match: '500 g' }, { value: '70 mg', match: '7 cg' }],
+  [{ value: '2000 g', match: '2 kg' }, { value: '1 kg', match: '1000 g' }, { value: '4 dag', match: '40 g' }, { value: '50 cg', match: '5 dg' }],
+  [{ value: '15 dag', match: '150 g' }, { value: '1 kuintal', match: '100 kg' }, { value: '600 mg', match: '60 cg' }, { value: '3 kg', match: '30 ons' }, { value: '1 ton', match: '10 kuintal' }],
+  [{ value: '25 g', match: '250 dg' }, { value: '3 kg', match: '30 hg' }, { value: '5 ton', match: '50 kuintal' }, { value: '90 g', match: '9 dag' }, { value: '1 kg', match: '100 dag' }],
+  [{ value: '12 dag', match: '120 g' }, { value: '7 kg', match: '70 hg' }, { value: '4 ton', match: '4000 kg' }, { value: '1 hg', match: '100 g' }, { value: '80 cg', match: '8 dg' }, { value: '2 pon', match: '1 kg' }],
+  [{ value: '8 ons', match: '800 g' }, { value: '2 kuintal', match: '200 kg' }, { value: '300 g', match: '3 hg' }, { value: '9 dag', match: '90 g' }, { value: '40 mg', match: '4 cg' }, { value: '6 kg', match: '60 hg' }],
+  [{ value: '11 hg', match: '1100 g' }, { value: '3 ton', match: '30 kuintal' }, { value: '5 kuintal', match: '500 kg' }, { value: '60 cg', match: '6 dg' }, { value: '1 pon', match: '5 ons' }, { value: '7 dag', match: '70 g' }],
+  [{ value: '1 kg', match: '10 ons' }, { value: '5 ton', match: '5000 kg' }, { value: '7 kuintal', match: '700 kg' }, { value: '30 dag', match: '300 g' }, { value: '9 hg', match: '900 g' }, { value: '200 mg', match: '20 cg' }]
+];
+
+// ============ NAVIGATION ============
+function buildNavDots() {
+  const dots = document.getElementById('navDots');
+  dots.innerHTML = '';
+  const titles = ['Cover', 'Materi', 'Game 1', 'Konversi', 'Kuis', 'Memory', 'Refleksi'];
+  for (let i = 1; i <= TOTAL_SLIDES; i++) {
+    const dot = document.createElement('button');
+    dot.className = 'nav-dot' + (i === 1 ? ' active' : '');
+    dot.title = titles[i-1];
+    dot.onclick = () => goToSlide(i);
+    dots.appendChild(dot);
+  }
+}
+
+function goToSlide(n) {
+  if (n < 1 || n > TOTAL_SLIDES) return;
+  document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
+  document.getElementById('slide' + n).classList.add('active');
+  document.querySelectorAll('.nav-dot').forEach((d, i) => d.classList.toggle('active', i + 1 === n));
+  state.currentSlide = n;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  
+  if (n === 7) updateFinalScore();
+  if (n === 6 && state.memory.round === 0) startMemoryRound();
+}
+
+function startAdventure() {
+  const n1 = document.getElementById('student1').value.trim();
+  const n2 = document.getElementById('student2').value.trim();
+  if (!n1 || !n2) { alert('✋ Isi nama dua siswa dulu yuk! 😊'); return; }
+  state.students = [n1, n2];
+  document.getElementById('navStudents').textContent = `👤 ${n1} & ${n2}`;
+  
+  ['greeting2','greeting3','greeting4','greeting5','greeting6','greeting7'].forEach((id) => {
+    document.getElementById(id).innerHTML = `👋 Halo <strong style="color:var(--coral)">${n1}</strong> & <strong style="color:var(--coral)">${n2}</strong>! Selamat belajar! 🌟`;
+  });
+  document.getElementById('thankYouNames').innerHTML = `Sampai jumpa <strong>${n1}</strong> & <strong>${n2}</strong>! Kalian hebat! 🎉`;
+  document.getElementById('player1Name').textContent = n1;
+  document.getElementById('player2Name').textContent = n2;
+  
+  goToSlide(2);
+  buildTanggaBaku();
+  buildToolsGrid();
+  buildPractice();
+}
+
+function showSubSection(which) {
+  document.getElementById('subTidakBaku').classList.remove('active');
+  document.getElementById('subBaku').classList.remove('active');
+  document.getElementById('btnTidakBaku').classList.remove('active');
+  document.getElementById('btnBaku').classList.remove('active');
+  if (which === 'tidakBaku') {
+    document.getElementById('subTidakBaku').classList.add('active');
+    document.getElementById('btnTidakBaku').classList.add('active');
+  } else {
+    document.getElementById('subBaku').classList.add('active');
+    document.getElementById('btnBaku').classList.add('active');
+  }
+}
+
+function buildTanggaBaku() {
+  const c = document.getElementById('tanggaBaku');
+  if (!c || c.children.length > 0) return;
+  c.innerHTML = '';
+  tanggaUnits.forEach((u) => {
+    const step = document.createElement('div');
+    step.className = 'step';
+    step.innerHTML = `<strong>${u.unit}</strong> <span style="font-size:0.7rem">${u.name}</span>`;
+    step.dataset.info = u.example;
+    step.onclick = () => {
+      document.querySelectorAll('#tanggaBaku .step, #tanggaExtra .step').forEach(s => s.classList.remove('from', 'to'));
+      step.classList.add('from');
+      document.getElementById('tanggaInfo').innerHTML = `<p style="font-weight: 700; color: var(--coral);">${u.example}</p>`;
+    };
+    c.appendChild(step);
+  });
+  document.querySelectorAll('#tanggaExtra .step').forEach(s => {
+    s.onclick = () => {
+      document.querySelectorAll('#tanggaBaku .step, #tanggaExtra .step').forEach(st => st.classList.remove('from', 'to'));
+      s.classList.add('from');
+      document.getElementById('tanggaInfo').innerHTML = `<p style="font-weight: 700; color: var(--purple);">${s.dataset.info}</p>`;
+    };
+  });
+}
+
+function buildToolsGrid() {
+  const c = document.getElementById('toolsGrid');
+  if (!c || c.children.length > 0) return;
+  c.innerHTML = '';
+  tools.forEach(t => {
+    const card = document.createElement('div');
+    card.className = 'tool-card';
+    card.innerHTML = `<img src="${t.img}" alt="${t.name}"><div class="tool-name">${t.name}</div><div class="tool-desc">${t.desc}</div>`;
+    c.appendChild(card);
+  });
+}
+
+// ============ PRACTICE (Timbangan Analog Interaktif dengan Tombol) ============
+let currentPracticeIdx = 0;
+let practiceAnswered = {};
+
+function makeScaleSVG(emoji, weight) {
+  const angle = (weight / 1000) * 180 - 90;
+  let scaleNumbers = '';
+  for (let i = 0; i <= 10; i++) {
+    const val = i * 100;
+    const a = (val / 1000) * 180 - 90;
+    const rad = a * Math.PI / 180;
+    const r = 38;
+    const x = 175 + r * Math.sin(rad);
+    const y = 70 - r * Math.cos(rad);
+    scaleNumbers += `<text x="${x}" y="${y+3}" font-family="Fredoka" font-size="7" text-anchor="middle" fill="#2D3436" font-weight="700">${val == 1000 ? '1k' : val}</text>`;
+    const r1 = 45, r2 = 50;
+    const x1 = 175 + r1 * Math.sin(rad);
+    const y1 = 70 - r1 * Math.cos(rad);
+    const x2 = 175 + r2 * Math.sin(rad);
+    const y2 = 70 - r2 * Math.cos(rad);
+    scaleNumbers += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#2D3436" stroke-width="1.5"/>`;
+  }
+  
+  return `
+    <svg viewBox="0 0 350 280" xmlns="http://www.w3.org/2000/svg" style="max-width: 100%;">
+      <rect x="50" y="220" width="250" height="40" fill="#4ECDC4" stroke="#2D3436" stroke-width="3" rx="8"/>
+      <rect x="165" y="80" width="20" height="140" fill="#8B4513" stroke="#2D3436" stroke-width="3"/>
+      <circle cx="175" cy="70" r="60" fill="#FFF8E7" stroke="#2D3436" stroke-width="3"/>
+      <circle cx="175" cy="70" r="55" fill="white" stroke="#FF6B6B" stroke-width="2"/>
+      ${scaleNumbers}
+      <g style="transition: transform 0.8s cubic-bezier(0.4, 0.0, 0.2, 1); transform-origin: 175px 70px; transform: rotate(${angle}deg);">
+        <line x1="175" y1="70" x2="175" y2="25" stroke="#FF6B6B" stroke-width="3" stroke-linecap="round"/>
+        <line x1="175" y1="70" x2="175" y2="85" stroke="#FF6B6B" stroke-width="3" stroke-linecap="round"/>
+      </g>
+      <circle cx="175" cy="70" r="5" fill="#2D3436"/>
+      <text x="175" y="105" font-family="Fredoka" font-size="10" text-anchor="middle" fill="#636E72" font-weight="700">GRAM</text>
+      <text x="175" y="210" font-size="40" text-anchor="middle">${emoji}</text>
+    </svg>`;
+}
+
+function buildPractice() {
+  state.scores.practice = 0;
+  practiceAnswered = {};
+  const c = document.getElementById('practiceButtons');
+  c.innerHTML = '';
+  practiceProblems.forEach((p, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'practice-btn';
+    btn.innerHTML = `<span class="btn-emoji">${p.emoji}</span>${p.obj}`;
+    btn.onclick = () => selectPractice(i);
+    c.appendChild(btn);
+  });
+  document.getElementById('practiceScore').textContent = `Skor: 0/20`;
+  selectPractice(0);
+}
+
+function selectPractice(idx) {
+  currentPracticeIdx = idx;
+  const p = practiceProblems[idx];
+  
+  document.querySelectorAll('.practice-btn').forEach((b, i) => {
+    b.classList.toggle('active', i === idx);
+  });
+  
+  document.getElementById('practiceImage').innerHTML = makeScaleSVG(p.emoji, p.weight);
+  
+  document.getElementById('practiceAnswer').value = '';
+  const fb = document.getElementById('practiceFeedback');
+  fb.className = 'feedback';
+  fb.innerHTML = '';
+}
+
+function checkPractice() {
+  const p = practiceProblems[currentPracticeIdx];
+  const val = parseInt(document.getElementById('practiceAnswer').value);
+  if (isNaN(val)) { alert('Isi jawaban dulu yuk! 😊'); return; }
+  
+  const correct = Math.abs(val - p.weight) < 1;
+  const fb = document.getElementById('practiceFeedback');
+  fb.className = 'feedback show ' + (correct ? 'correct' : 'wrong');
+  fb.innerHTML = correct ? `✅ Hebat! Berat ${p.obj} memang ${p.weight} gram.` : `❌ Belum tepat. Berat ${p.obj} sebenarnya ${p.weight} gram.`;
+  
+  if (correct && !practiceAnswered[currentPracticeIdx]) {
+    practiceAnswered[currentPracticeIdx] = true;
+    state.scores.practice++;
+    confetti();
+  }
+  document.getElementById('practiceScore').textContent = `Skor: ${state.scores.practice}/20`;
+}
+
+// ============ FLASHCARDS ============
+function buildFlashcard() { state.flash.current = 0; state.scores.flash = 0; state.flash.answers = {}; showFlash(); }
+function showFlash() {
+  const f = flashcardData[state.flash.current];
+  document.getElementById('flashNum').textContent = `Kartu ${state.flash.current + 1}`;
+  document.getElementById('flashProgress').textContent = `${state.flash.current + 1} / 30`;
+  document.getElementById('flashQuestion').textContent = f.q;
+  const imgEl = document.getElementById('flashImage');
+  const sceEl = document.getElementById('flashScenario');
+  if (f.type === 'image') {
+    imgEl.innerHTML = `<img src="${f.img}" alt="alat ukur">`; sceEl.style.display = 'none';
+  } else {
+    imgEl.innerHTML = `<div class="big-emoji">${f.emoji}</div>`;
+    sceEl.style.display = 'block'; sceEl.textContent = '📖 Skenario: ' + f.q;
+    document.getElementById('flashQuestion').textContent = 'Alat ukur apa yang sebaiknya digunakan?';
+  }
+  const opts = document.getElementById('flashOptions'); opts.innerHTML = '';
+  f.options.forEach((opt, i) => {
+    const b = document.createElement('button'); b.className = 'flashcard-option'; b.textContent = opt;
+    b.onclick = () => answerFlash(i); opts.appendChild(b);
+  });
+  const fb = document.getElementById('flashFeedback'); const prev = state.flash.answers[state.flash.current];
+  if (prev) {
+    fb.className = 'feedback show ' + (prev.correct ? 'correct' : 'wrong');
+    fb.innerHTML = prev.correct ? `✅ Benar sekali! 🎉` : `❌ Jawaban benar: ${f.options[f.correct]}.`;
+    Array.from(opts.children).forEach((b, i) => {
+      b.disabled = true;
+      if (i === f.correct) b.classList.add('correct');
+      if (i === prev.answer && !prev.correct) b.classList.add('wrong');
+    });
+  } else { fb.className = 'feedback'; fb.innerHTML = ''; }
+  document.getElementById('flashScore').textContent = state.scores.flash;
+}
+function answerFlash(idx) {
+  const f = flashcardData[state.flash.current];
+  if (state.flash.answers[state.flash.current]) return;
+  const correct = idx === f.correct;
+  if (correct) { state.scores.flash++; confetti(); }
+  state.flash.answers[state.flash.current] = { answer: idx, correct };
+  const opts = document.getElementById('flashOptions');
+  Array.from(opts.children).forEach((b, i) => {
+    b.disabled = true;
+    if (i === f.correct) b.classList.add('correct');
+    if (i === idx && !correct) b.classList.add('wrong');
+  });
+  const fb = document.getElementById('flashFeedback');
+  fb.className = 'feedback show ' + (correct ? 'correct' : 'wrong');
+  fb.innerHTML = correct ? `✅ Hebat! Itu ${f.options[f.correct]}! 🎉` : `❌ Jawaban benar: ${f.options[f.correct]}. 💪`;
+  document.getElementById('flashScore').textContent = state.scores.flash;
+}
+function nextFlash() { if (state.flash.current < 29) { state.flash.current++; showFlash(); } else { alert(`🎉 Game selesai! Skor: ${state.scores.flash}/30`); goToSlide(4); } }
+function prevFlash() { if (state.flash.current > 0) { state.flash.current--; showFlash(); } }
+
+// ============ CONVERSION ============
+function buildConversion() {
+  state.conv.current = 0; state.scores.conv = 0;
+  state.conv.answers = new Array(conversionProblems.length).fill(null);
+  buildTanggaKonv(); showConversion();
+}
+function buildTanggaKonv() {
+  const c = document.getElementById('tanggaKonv');
+  if (!c) return;
+  c.innerHTML = '';
+  convUnits.forEach((u, i) => {
+    const step = document.createElement('div');
+    step.className = 'step'; step.textContent = u; step.dataset.idx = i; step.dataset.unit = u;
+    step.onclick = () => tanggaKonvSelect(i, u); c.appendChild(step);
+  });
+  
+  const cExtra = document.getElementById('tanggaKonvExtra');
+  if (cExtra && !cExtra.dataset.built) {
+    cExtra.dataset.built = 'true';
+    cExtra.querySelectorAll('.step').forEach(step => {
+      const unit = step.dataset.unit;
+      step.onclick = () => tanggaKonvSelect(-1, unit);
+    });
+  }
+}
+function tanggaKonvSelect(idx, unit) {
+  if (state.tanggaKonv.from && state.tanggaKonv.from.unit === unit && state.tanggaKonv.to === null) {
+    state.tanggaKonv.from = null;
+  } else if (state.tanggaKonv.to && state.tanggaKonv.to.unit === unit) {
+    state.tanggaKonv.to = null;
+  } else if (idx !== -1) {
+    if (state.tanggaKonv.from === null) state.tanggaKonv.from = { idx, unit };
+    else if (state.tanggaKonv.to === null && idx !== state.tanggaKonv.from.idx) state.tanggaKonv.to = { idx, unit };
+    else { state.tanggaKonv.from = { idx, unit }; state.tanggaKonv.to = null; }
+  } else {
+    if (state.tanggaKonv.from === null) state.tanggaKonv.from = { idx: -1, unit };
+    else if (state.tanggaKonv.to === null && unit !== state.tanggaKonv.from.unit) state.tanggaKonv.to = { idx: -1, unit };
+    else { state.tanggaKonv.from = { idx: -1, unit }; state.tanggaKonv.to = null; }
+  }
+
+  document.querySelectorAll('#tanggaKonv .step, #tanggaKonvExtra .step').forEach(s => {
+    s.classList.remove('from', 'to');
+    if (state.tanggaKonv.from && s.dataset.unit === state.tanggaKonv.from.unit) s.classList.add('from');
+    if (state.tanggaKonv.to && s.dataset.unit === state.tanggaKonv.to.unit) s.classList.add('to');
+  });
+
+  if (state.tanggaKonv.from !== null && state.tanggaKonv.to !== null) {
+    const fU = state.tanggaKonv.from.unit, tU = state.tanggaKonv.to.unit;
+    const fromIdx = convUnits.indexOf(fU);
+    const toIdx = convUnits.indexOf(tU);
+    
+    let html = `<p style="font-weight: 700; color: var(--coral); font-size: 1.1rem;">Dari <strong>${fU}</strong> ke <strong>${tU}</strong><br>`;
+    
+    if (fromIdx !== -1 && toIdx !== -1) {
+      const diff = fromIdx - toIdx;
+      const factor = Math.pow(10, Math.abs(diff));
+      const direction = diff > 0 ? 'naik' : 'turun';
+      const opSymbol = diff > 0 ? '÷' : '×';
+      html += `${direction === 'turun' ? '⬇️' : '⬆️'} ${direction} ${Math.abs(diff)} tangga<br>Maka ${opSymbol} ${factor}<br>Contoh: 1 ${fU} = ${diff > 0 ? (1/factor) : factor} ${tU}`;
+    } else {
+      let factor = 1, op = '×';
+      if (fU === 'ton' && tU === 'kg') { factor = 1000; }
+      else if (fU === 'kg' && tU === 'ton') { factor = 1000; op = '÷'; }
+      else if (fU === 'kuintal' && tU === 'kg') { factor = 100; }
+      else if (fU === 'kg' && tU === 'kuintal') { factor = 100; op = '÷'; }
+      else if (fU === 'kg' && tU === 'ons') { factor = 10; }
+      else if (fU === 'ons' && tU === 'kg') { factor = 10; op = '÷'; }
+      else if (fU === 'kg' && tU === 'pon') { factor = 2; }
+      else if (fU === 'pon' && tU === 'kg') { factor = 2; op = '÷'; }
+      else { html = `<p style="font-weight: 700; color: var(--coral); font-size: 1.1rem;">Konversi antar ${fU} dan ${tU} tidak standar langsung, gunakan kg sebagai perantara.`; }
+      
+      if (factor !== 1 || op === '÷') {
+        html += `1 ${fU} = ${op === '×' ? factor : 1/factor} ${tU}<br>Maka ${op} ${factor}`;
+      }
+    }
+    html += `</p>`;
+    document.getElementById('konvInfo').innerHTML = html;
+  } else {
+    document.getElementById('konvInfo').innerHTML = `<p style="color: var(--gray);">👆 Klik dua anak tangga kiri untuk melihat konversi metrik!</p>`;
+  }
+}
+function showConversion() {
+  const p = conversionProblems[state.conv.current];
+  document.getElementById('convNum').textContent = `Soal ${state.conv.current + 1}`;
+  document.getElementById('convProgress').textContent = `${state.conv.current + 1} / 30`;
+  document.getElementById('convQuestion').innerHTML = `<strong style="font-size:1.2rem;color:var(--coral)">${p.question}</strong>`;
+  const prev = state.conv.answers[state.conv.current];
+  document.getElementById('convAnswer').value = prev !== null ? prev.value : '';
+  const fb = document.getElementById('convFeedback');
+  if (prev !== null && prev.checked) {
+    fb.className = 'feedback show ' + (prev.correct ? 'correct' : 'wrong');
+    fb.innerHTML = (prev.correct ? `✅ Benar! ` : `❌ Jawaban: ${p.answer} ${p.toU}. `) + `<br><strong>Pembahasan:</strong> ${p.explanation}`;
+  } else { fb.className = 'feedback'; fb.innerHTML = ''; }
+  document.getElementById('convScore').textContent = state.scores.conv;
+}
+function checkConversion() {
+  const p = conversionProblems[state.conv.current];
+  const val = parseFloat(document.getElementById('convAnswer').value);
+  if (isNaN(val)) { alert('Isi jawaban dulu yuk! 😊'); return; }
+  const correct = Math.abs(val - p.answer) < 0.001 * Math.max(1, p.answer);
+  const prev = state.conv.answers[state.conv.current];
+  if (!prev || !prev.checked) { if (correct) state.scores.conv++; } 
+  else if (prev.correct && !correct) state.scores.conv--;
+  else if (!prev.correct && correct) state.scores.conv++;
+  state.conv.answers[state.conv.current] = { value: val, correct, checked: true };
+  const fb = document.getElementById('convFeedback');
+  fb.className = 'feedback show ' + (correct ? 'correct' : 'wrong');
+  fb.innerHTML = (correct ? `✅ Benar! ` : `❌ Jawaban: ${p.answer} ${p.toU}. `) + `<br><strong>Pembahasan:</strong> ${p.explanation}`;
+  if (correct) confetti();
+  document.getElementById('convScore').textContent = state.scores.conv;
+}
+function nextConversion() { if (state.conv.current < 29) { state.conv.current++; showConversion(); } else alert(`🎉 Konversi selesai! Skor: ${state.scores.conv}/30`); }
+function prevConversion() { if (state.conv.current > 0) { state.conv.current--; showConversion(); } }
+
+// ============ QUIZ 1 ============
+function buildQuiz1() { state.q1.current = 0; state.scores.q1 = 0; state.q1.answers = {}; showQuiz1(); }
+function showQuiz1() {
+  const tool = quiz1Tools[state.q1.current];
+  document.getElementById('q1Num').textContent = `Soal ${state.q1.current + 1}`;
+  document.getElementById('q1Progress').textContent = `${state.q1.current + 1} / 10`;
+  document.getElementById('q1Question').innerHTML = `Pilihlah <strong style="color:var(--coral)">SEMUA</strong> benda yang dapat diukur menggunakan <strong style="background:var(--yellow);padding:4px 12px;border-radius:20px">${tool}</strong>! ✅`;
+  const c = document.getElementById('q1Objects'); c.innerHTML = '';
+  const correctSet = new Set(toolObjectMap[tool] || []);
+  const prev = state.q1.answers[state.q1.current]; const isLocked = prev && prev.checked;
+  allObjects.forEach((obj, i) => {
+    const div = document.createElement('div'); div.className = 'object-checkbox';
+    if (isLocked) div.classList.add('locked');
+    div.innerHTML = `<div class="obj-icon">${obj.emoji}</div><div class="obj-name">${obj.name}</div>`;
+    div.dataset.idx = i; div.onclick = () => {
+      if (isLocked) return; div.classList.toggle('checked'); saveQuiz1Selections();
+    }; c.appendChild(div);
+  });
+  if (prev) {
+    if (isLocked) {
+      Array.from(c.children).forEach((d, i) => {
+        if (prev.selected.includes(i)) d.classList.add('checked');
+        d.classList.add(correctSet.has(allObjects[i].name) ? 'correct' : 'wrong');
+      });
+      const fb = document.getElementById('q1Feedback');
+      fb.className = 'feedback show ' + (prev.correct ? 'correct' : 'wrong');
+      fb.innerHTML = prev.correct ? `✅ Hebat! Semua benar! 🎉` : `❌ Yang benar: ${[...correctSet].join(', ')}.`;
+    } else if (prev.selected && prev.selected.length > 0) {
+      Array.from(c.children).forEach((d, i) => { if (prev.selected.includes(i)) d.classList.add('checked'); });
+      document.getElementById('q1Feedback').className = 'feedback'; document.getElementById('q1Feedback').innerHTML = '';
+    } else { document.getElementById('q1Feedback').className = 'feedback'; document.getElementById('q1Feedback').innerHTML = ''; }
+  } else { document.getElementById('q1Feedback').className = 'feedback'; document.getElementById('q1Feedback').innerHTML = ''; }
+  document.getElementById('q1Score').textContent = state.scores.q1;
+}
+function saveQuiz1Selections() {
+  const existing = state.q1.answers[state.q1.current];
+  if (existing && existing.checked) return;
+  const selected = [];
+  document.querySelectorAll('#q1Objects .object-checkbox').forEach((d, i) => { if (d.classList.contains('checked')) selected.push(i); });
+  state.q1.answers[state.q1.current] = { selected, checked: false, correct: false };
+}
+function checkQuiz1() {
+  const tool = quiz1Tools[state.q1.current];
+  const correctSet = new Set(toolObjectMap[tool] || []);
+  const selected = [];
+  document.querySelectorAll('#q1Objects .object-checkbox').forEach((d, i) => { if (d.classList.contains('checked')) selected.push(i); });
+  if (selected.length === 0) { alert('Pilih setidaknya satu benda! 😊'); return; }
+  const selectedNames = selected.map(i => allObjects[i].name);
+  const correct = selectedNames.every(n => correctSet.has(n)) && [...correctSet].every(n => selectedNames.includes(n));
+  const prev = state.q1.answers[state.q1.current];
+  if (!prev || !prev.checked) { if (correct) state.scores.q1++; } 
+  else if (prev.correct && !correct) state.scores.q1--;
+  else if (!prev.correct && correct) state.scores.q1++;
+  state.q1.answers[state.q1.current] = { selected, correct, checked: true };
+  document.querySelectorAll('#q1Objects .object-checkbox').forEach((d, i) => {
+    d.classList.add('locked'); d.classList.add(correctSet.has(allObjects[i].name) ? 'correct' : 'wrong');
+  });
+  const fb = document.getElementById('q1Feedback');
+  fb.className = 'feedback show ' + (correct ? 'correct' : 'wrong');
+  fb.innerHTML = correct ? `✅ Hebat! Semua benar! 🎉` : `❌ Yang benar: ${[...correctSet].join(', ')}.`;
+  if (correct) confetti();
+  document.getElementById('q1Score').textContent = state.scores.q1;
+}
+function nextQuiz1() { saveQuiz1Selections(); if (state.q1.current < 9) { state.q1.current++; showQuiz1(); } else alert(`🎉 Kuis 1 selesai! Skor: ${state.scores.q1}/10`); }
+function prevQuiz1() { saveQuiz1Selections(); if (state.q1.current > 0) { state.q1.current--; showQuiz1(); } }
+
+// ============ QUIZ 2 ============
+function buildQuiz2() { state.q2.current = 0; state.scores.q2 = 0; state.q2.answers = {}; showQuiz2(); }
+function showQuiz2() {
+  const q = quiz2Data[state.q2.current];
+  document.getElementById('q2Num').textContent = `Soal ${state.q2.current + 1}`;
+  document.getElementById('q2Progress').textContent = `${state.q2.current + 1} / 10`;
+  document.getElementById('q2Question').textContent = 'Bandingkan kedua benda berikut. Mana yang benar?';
+  document.getElementById('q2Objects').innerHTML = `
+    <div class="comparison-object">
+      <div class="obj-emoji">${q.a.emoji}</div><div class="obj-name">${q.a.name}</div><div class="obj-size">${q.a.size}</div>
+    </div>
+    <div style="font-size: 2rem; align-self: center;">⚖️</div>
+    <div class="comparison-object b">
+      <div class="obj-emoji">${q.b.emoji}</div><div class="obj-name">${q.b.name}</div><div class="obj-size">${q.b.size}</div>
+    </div>`;
+  const opts = document.getElementById('q2Options'); opts.innerHTML = '';
+  comparisonOptions.forEach((opt, i) => {
+    const b = document.createElement('button'); b.className = 'comparison-option'; b.textContent = opt;
+    b.onclick = () => answerQuiz2(i); opts.appendChild(b);
+  });
+  const prev = state.q2.answers[state.q2.current]; const fb = document.getElementById('q2Feedback');
+  if (prev) {
+    fb.className = 'feedback show ' + (prev.correct ? 'correct' : 'wrong');
+    fb.innerHTML = prev.correct ? `✅ Benar! ${comparisonOptions[prev.selected]}` : `❌ Jawaban benar: ${comparisonOptions[q.correct]}`;
+    Array.from(opts.children).forEach((b, i) => {
+      b.disabled = true;
+      if (i === q.correct) b.classList.add('correct');
+      if (i === prev.selected && !prev.correct) b.classList.add('wrong');
+    });
+  } else { fb.className = 'feedback'; fb.innerHTML = ''; }
+  document.getElementById('q2Score').textContent = state.scores.q2;
+}
+function answerQuiz2(idx) {
+  const q = quiz2Data[state.q2.current];
+  if (state.q2.answers[state.q2.current]) return;
+  const correct = idx === q.correct;
+  if (correct) { state.scores.q2++; confetti(); }
+  state.q2.answers[state.q2.current] = { selected: idx, correct };
+  const opts = document.getElementById('q2Options');
+  Array.from(opts.children).forEach((b, i) => {
+    b.disabled = true;
+    if (i === q.correct) b.classList.add('correct');
+    if (i === idx && !correct) b.classList.add('wrong');
+  });
+  const fb = document.getElementById('q2Feedback');
+  fb.className = 'feedback show ' + (correct ? 'correct' : 'wrong');
+  fb.innerHTML = correct ? `✅ Benar! ${comparisonOptions[idx]} 🎉` : `❌ Jawaban benar: ${comparisonOptions[q.correct]}`;
+  document.getElementById('q2Score').textContent = state.scores.q2;
+}
+function nextQuiz2() { if (state.q2.current < 9) { state.q2.current++; showQuiz2(); } else alert(`🎉 Kuis 2 selesai! Skor: ${state.scores.q2}/10`); }
+function prevQuiz2() { if (state.q2.current > 0) { state.q2.current--; showQuiz2(); } }
+function switchQuiz(n) {
+  document.querySelectorAll('.quiz-tab').forEach((t, i) => t.classList.toggle('active', i + 1 === n));
+  document.getElementById('quiz1Content').classList.toggle('active', n === 1);
+  document.getElementById('quiz2Content').classList.toggle('active', n === 2);
+}
+
+// ============ MEMORY GAME ============
+function startNewMemoryGame() {
+  state.memory.round = 0; state.memory.player1Score = 0; state.memory.player2Score = 0; state.memory.matched = 0;
+  startMemoryRound();
+}
+function startMemoryRound() {
+  if (state.memory.round === 0) {
+    state.memory.round = 1; state.memory.player1Score = 0; state.memory.player2Score = 0;
+  }
+  state.memory.roundStartP1 = state.memory.player1Score;
+  state.memory.roundStartP2 = state.memory.player2Score;
+  state.memory.matched = 0; state.memory.flipped = []; state.memory.canFlip = false;
+  
+  document.getElementById('player1Name').textContent = state.students[0] || 'Pemain 1';
+  document.getElementById('player2Name').textContent = state.students[1] || 'Pemain 2';
+  document.getElementById('memRound').textContent = state.memory.round;
+  document.getElementById('memMatched').textContent = 0;
+  document.getElementById('player1Score').textContent = state.memory.player1Score;
+  document.getElementById('player2Score').textContent = state.memory.player2Score;
+  document.getElementById('memNextBtn').style.display = 'none';
+  document.getElementById('memRestartBtn').style.display = 'none';
+  document.getElementById('memNewGameBtn').style.display = 'none';
+  
+  setupMemoryCards(); randomizeFirstPlayer();
+}
+function restartCurrentRound() {
+  state.memory.player1Score = state.memory.roundStartP1;
+  state.memory.player2Score = state.memory.roundStartP2;
+  state.memory.matched = 0; state.memory.flipped = []; state.memory.canFlip = false;
+  document.getElementById('memMatched').textContent = 0;
+  document.getElementById('player1Score').textContent = state.memory.player1Score;
+  document.getElementById('player2Score').textContent = state.memory.player2Score;
+  document.getElementById('memNextBtn').style.display = 'none';
+  document.getElementById('memRestartBtn').style.display = 'none';
+  document.getElementById('memNewGameBtn').style.display = 'none';
+  setupMemoryCards(); randomizeFirstPlayer();
+}
+function setupMemoryCards() {
+  const round = memoryRounds[state.memory.round - 1];
+  const cards = [];
+  round.forEach((pair, i) => {
+    cards.push({ id: i * 2, pairId: i, value: pair.value });
+    cards.push({ id: i * 2 + 1, pairId: i, value: pair.match });
+  });
+  for (let i = cards.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1)); [cards[i], cards[j]] = [cards[j], cards[i]];
+  }
+  state.memory.cards = cards;
+  const grid = document.getElementById('memGrid');
+  const cols = cards.length <= 6 ? 3 : cards.length <= 8 ? 4 : cards.length <= 10 ? 5 : 4;
+  grid.className = 'memory-grid cols-' + cols; grid.innerHTML = '';
+  cards.forEach((card, i) => {
+    const div = document.createElement('div'); div.className = 'memory-card'; div.dataset.idx = i;
+    div.innerHTML = `<div class="memory-card-inner"><div class="memory-card-front">⚖️</div><div class="memory-card-back">${card.value}</div></div>`;
+    div.onclick = () => flipMemoryCard(i); grid.appendChild(div);
+  });
+}
+function randomizeFirstPlayer() {
+  const timer = document.getElementById('memTimer');
+  timer.style.background = 'var(--purple)'; timer.textContent = '🎲 Acak Penebak Pertama...';
+  state.memory.canFlip = false;
+  const p1Card = document.getElementById('player1Card'); const p2Card = document.getElementById('player2Card');
+  let count = 0;
+  const interval = setInterval(() => {
+    if (count % 2 === 0) { p1Card.classList.add('active'); p2Card.classList.remove('active'); }
+    else { p1Card.classList.remove('active'); p2Card.classList.add('active'); }
+    count++;
+    if (count > 12) {
+      clearInterval(interval);
+      const first = Math.random() < 0.5 ? 0 : 1;
+      state.memory.firstPlayer = first; state.memory.currentPlayer = first;
+      updateCurrentPlayerDisplay();
+      timer.innerHTML = `🎉 <strong>${state.students[first] || ('Pemain ' + (first + 1))}</strong> mulai duluan!`;
+      setTimeout(() => startMemorizePhase(), 1800);
+    }
+  }, 150);
+}
+function startMemorizePhase() {
+  document.querySelectorAll('.memory-card').forEach(c => c.classList.add('flipped'));
+  let timeLeft = 10; const timer = document.getElementById('memTimer');
+  timer.style.background = 'var(--coral)'; timer.textContent = `👁️ Hafalkan! ${timeLeft} detik...`;
+  const interval = setInterval(() => {
+    timeLeft--; timer.textContent = `👁️ Hafalkan! ${timeLeft} detik...`;
+    if (timeLeft <= 0) {
+      clearInterval(interval);
+      document.querySelectorAll('.memory-card').forEach(c => c.classList.remove('flipped'));
+      const curName = state.students[state.memory.currentPlayer] || ('Pemain ' + (state.memory.currentPlayer + 1));
+      timer.style.background = 'var(--teal)'; timer.innerHTML = `🧠 <strong>${curName}</strong>, giliranmu cari pasangan!`;
+      state.memory.canFlip = true; updateCurrentPlayerDisplay();
+    }
+  }, 1000);
+}
+function updateCurrentPlayerDisplay() {
+  document.getElementById('player1Card').classList.toggle('active', state.memory.currentPlayer === 0);
+  document.getElementById('player2Card').classList.toggle('active', state.memory.currentPlayer === 1);
+}
+function showFloatScore(playerCardEl, points) {
+  const float = document.createElement('div'); float.className = 'memory-float-score';
+  float.textContent = '+' + points; float.style.left = '50%'; float.style.top = '0';
+  float.style.transform = 'translateX(-50%)';
+  playerCardEl.style.position = 'relative'; playerCardEl.appendChild(float);
+  setTimeout(() => float.remove(), 1500);
+}
+function flipMemoryCard(idx) {
+  if (!state.memory.canFlip) return;
+  const card = document.querySelector(`.memory-card[data-idx="${idx}"]`);
+  if (!card || card.classList.contains('flipped') || card.classList.contains('matched')) return;
+  if (state.memory.flipped.length >= 2) return;
+  card.classList.add('flipped'); state.memory.flipped.push(idx);
+  if (state.memory.flipped.length === 2) {
+    state.memory.canFlip = false; const playerWhoFlipped = state.memory.currentPlayer;
+    setTimeout(() => {
+      const [a, b] = state.memory.flipped;
+      const ca = state.memory.cards[a]; const cb = state.memory.cards[b];
+      const timer = document.getElementById('memTimer');
+      if (ca.pairId === cb.pairId) {
+        document.querySelector(`.memory-card[data-idx="${a}"]`).classList.add('matched');
+        document.querySelector(`.memory-card[data-idx="${b}"]`).classList.add('matched');
+        state.memory.matched++; const points = 10;
+        const playerCard = playerWhoFlipped === 0 ? document.getElementById('player1Card') : document.getElementById('player2Card');
+        if (playerWhoFlipped === 0) state.memory.player1Score += points; else state.memory.player2Score += points;
+        document.getElementById('player1Score').textContent = state.memory.player1Score;
+        document.getElementById('player2Score').textContent = state.memory.player2Score;
+        document.getElementById('memMatched').textContent = state.memory.matched;
+        showFloatScore(playerCard, points); confetti();
+        timer.style.background = 'var(--green)';
+        timer.innerHTML = `🎉 <strong>${state.students[playerWhoFlipped] || ('Pemain ' + (playerWhoFlipped + 1))}</strong> cocok! +10 poin! Giliranmu lagi!`;
+        updateCurrentPlayerDisplay();
+        if (state.memory.matched === state.memory.cards.length / 2) setTimeout(() => handleRoundComplete(), 800);
+      } else {
+        document.querySelector(`.memory-card[data-idx="${a}"]`).classList.remove('flipped');
+        document.querySelector(`.memory-card[data-idx="${b}"]`).classList.remove('flipped');
+        state.memory.currentPlayer = 1 - state.memory.currentPlayer; updateCurrentPlayerDisplay();
+        timer.style.background = 'var(--orange)';
+        timer.innerHTML = `🔄 Tidak cocok! Sekarang giliran <strong>${state.students[state.memory.currentPlayer] || ('Pemain ' + (state.memory.currentPlayer + 1))}</strong>!`;
+      }
+      state.memory.flipped = []; state.memory.canFlip = true;
+    }, 1000);
+  }
+}
+function handleRoundComplete() {
+  const timer = document.getElementById('memTimer'); timer.style.background = 'var(--green)';
+  const p1 = state.memory.player1Score, p2 = state.memory.player2Score;
+  const n1 = state.students[0] || 'Pemain 1', n2 = state.students[1] || 'Pemain 2';
+  let winnerText;
+  if (p1 > p2) winnerText = `🏆 Ronde ${state.memory.round} Selesai! <strong>${n1}</strong> memimpin! (${p1} vs ${p2})`;
+  else if (p2 > p1) winnerText = `🏆 Ronde ${state.memory.round} Selesai! <strong>${n2}</strong> memimpin! (${p1} vs ${p2})`;
+  else winnerText = `🏆 Ronde ${state.memory.round} Selesai! Seri! (${p1} vs ${p2})`;
+  timer.innerHTML = winnerText;
+  if (state.memory.round < 10) {
+    document.getElementById('memNextBtn').style.display = 'inline-flex';
+    document.getElementById('memNextBtn').textContent = `➡️ Ronde ${state.memory.round + 1}`;
+  } else {
+    let finalText;
+    if (p1 > p2) finalText = `🏆 GAME SELESAI! Juara: <strong>${n1}</strong> dengan ${p1} poin! 🎉`;
+    else if (p2 > p1) finalText = `🏆 GAME SELESAI! Juara: <strong>${n2}</strong> dengan ${p2} poin! 🎉`;
+    else finalText = `🏆 GAME SELESAI! Seri! ${n1} (${p1}) vs ${n2} (${p2}) 🎉`;
+    timer.innerHTML = finalText; state.scores.memory = p1 + p2;
+    document.getElementById('memNewGameBtn').style.display = 'inline-flex';
+    for (let i = 0; i < 5; i++) setTimeout(() => confetti(), i * 300);
+  }
+  document.getElementById('memRestartBtn').style.display = 'inline-flex';
+}
+function nextMemoryRound() { if (state.memory.round < 10) { state.memory.round++; startMemoryRound(); } }
+
+// ============ FINAL SCORE ============
+function updateFinalScore() {
+  const total = state.scores.practice + state.scores.flash + state.scores.conv + state.scores.q1 + state.scores.q2 + state.scores.memory;
+  document.getElementById('finalScore').textContent = `🏆 Total Skor Petualanganmu: ${total}`;
+}
+
+// ============ CONFETTI ============
+function confetti() {
+  const colors = ['#FF6B6B', '#FFD93D', '#4ECDC4', '#FF9F43', '#A29BFE', '#6BCB77'];
+  for (let i = 0; i < 30; i++) {
+    const c = document.createElement('div'); c.className = 'confetti';
+    c.style.left = Math.random() * 100 + 'vw';
+    c.style.background = colors[Math.floor(Math.random() * colors.length)];
+    c.style.animationDelay = Math.random() * 0.5 + 's';
+    c.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+    document.body.appendChild(c); setTimeout(() => c.remove(), 3000);
+  }
+}
+
+// ============ INIT ============
+buildNavDots();
+let flashBuilt = false, convBuilt = false, q1Built = false;
+const origGoToSlide = goToSlide;
+goToSlide = function(n) {
+  origGoToSlide(n);
+  if (n === 3 && !flashBuilt) { buildFlashcard(); flashBuilt = true; }
+  if (n === 4 && !convBuilt) { buildConversion(); convBuilt = true; }
+  if (n === 5 && !q1Built) { buildQuiz1(); buildQuiz2(); q1Built = true; }
+};
+
+document.addEventListener('keypress', (e) => {
+  if (e) {
+    if (e.key === 'Enter') {
+      if (e.target.id === 'student1') document.getElementById('student2').focus();
+      else if (e.target.id === 'student2') startAdventure();
+      else if (e.target.id === 'practiceAnswer') checkPractice();
+      else if (e.target.id === 'convAnswer') checkConversion();
+    }
+  }
+});
+</script>
+</body>
+</html>
