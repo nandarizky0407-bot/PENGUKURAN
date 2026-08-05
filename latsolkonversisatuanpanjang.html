@@ -1,0 +1,1123 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Duel Konversi — Satuan Panjang</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=JetBrains+Mono:wght@500;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+:root{
+  --bg:#0a0c14; --bg2:#10131e; --card:#161a26; --card2:#1c2030;
+  --border:rgba(255,255,255,.08); --border2:rgba(255,255,255,.14);
+  --fg:#f3f5fb; --muted:#8a92a6; --dim:#5a6178;
+  --amber:#f59e0b; --amber-2:#fbbf24;
+  --teal:#14b8a6; --teal-2:#2dd4bf;
+  --rose:#f43f5e; --emerald:#10b981; --red:#ef4444;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:'Manrope',system-ui,sans-serif;background:var(--bg);color:var(--fg);min-height:100vh;overflow-x:hidden;line-height:1.5}
+body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse 70% 50% at 15% 10%,rgba(245,158,11,.10),transparent 60%),radial-gradient(ellipse 60% 50% at 85% 90%,rgba(20,184,166,.10),transparent 60%),radial-gradient(ellipse 50% 40% at 50% 50%,rgba(244,63,94,.05),transparent 70%)}
+body::after{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.4;background-image:linear-gradient(rgba(255,255,255,.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.02) 1px,transparent 1px);background-size:64px 64px}
+.screen{position:relative;z-index:1;display:none;min-height:100vh}
+.screen.active{display:block;animation:fadeUp .5s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.mono{font-family:'JetBrains Mono',monospace}
+
+/* COVER */
+#cover{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:48px 24px;min-height:100vh;text-align:center}
+.cover-badge{display:inline-flex;align-items:center;gap:10px;padding:7px 16px;background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.25);border-radius:100px;font-size:12px;letter-spacing:1.5px;color:var(--amber-2);font-weight:700;text-transform:uppercase;margin-bottom:28px}
+.cover-badge .dot{width:6px;height:6px;background:var(--amber);border-radius:50%;animation:pulse 1.8s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.6;transform:scale(1.4)}}
+.cover-title{font-family:'Bricolage Grotesque',sans-serif;font-size:clamp(48px,10vw,128px);font-weight:800;line-height:.88;letter-spacing:-.045em;margin-bottom:18px}
+.cover-title .a1{background:linear-gradient(135deg,var(--amber),var(--rose));-webkit-background-clip:text;background-clip:text;color:transparent}
+.cover-title .a2{background:linear-gradient(135deg,var(--teal),var(--emerald));-webkit-background-clip:text;background-clip:text;color:transparent}
+.cover-sub{font-size:clamp(15px,1.8vw,19px);color:var(--muted);max-width:640px;margin:0 auto 36px;line-height:1.65}
+.stair-preview{display:flex;align-items:flex-end;justify-content:center;gap:6px;margin:28px auto 44px;height:140px;flex-wrap:wrap}
+.stair-step{width:54px;border-radius:8px 8px 0 0;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-weight:700;font-size:15px;background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.02));border:1px solid var(--border);border-bottom:none;position:relative;animation:stairRise .7s cubic-bezier(.2,.8,.2,1) backwards}
+.stair-step::after{content:attr(data-name);position:absolute;bottom:-22px;font-size:9px;color:var(--dim);font-family:'Manrope';font-weight:600}
+@keyframes stairRise{from{height:0!important;opacity:0}}
+.stair-step:nth-child(1){height:30%;animation-delay:.05s;color:var(--amber)}
+.stair-step:nth-child(2){height:42%;animation-delay:.12s}
+.stair-step:nth-child(3){height:56%;animation-delay:.19s}
+.stair-step:nth-child(4){height:72%;animation-delay:.26s;background:linear-gradient(180deg,var(--amber),rgba(245,158,11,.15));color:#0a0c14;border-color:var(--amber)}
+.stair-step:nth-child(5){height:56%;animation-delay:.33s}
+.stair-step:nth-child(6){height:42%;animation-delay:.4s}
+.stair-step:nth-child(7){height:30%;animation-delay:.47s;color:var(--teal)}
+.input-row{display:grid;grid-template-columns:1fr 1fr;gap:18px;max-width:720px;width:100%;margin:0 auto 28px}
+.name-card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:22px;position:relative;transition:all .3s;overflow:hidden}
+.name-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--amber)}
+.name-card.s2::before{background:var(--teal)}
+.name-card.s1{border-color:rgba(245,158,11,.2)}.name-card.s2{border-color:rgba(20,184,166,.2)}
+.name-card.s1:focus-within{border-color:var(--amber);box-shadow:0 0 0 4px rgba(245,158,11,.1)}
+.name-card.s2:focus-within{border-color:var(--teal);box-shadow:0 0 0 4px rgba(20,184,166,.1)}
+.name-card .label{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px}
+.name-card.s1 .label{color:var(--amber)}.name-card.s2 .label{color:var(--teal)}
+.name-card input{width:100%;background:transparent;border:none;outline:none;color:var(--fg);font-family:'Bricolage Grotesque',sans-serif;font-size:26px;font-weight:700}
+.name-card input::placeholder{color:rgba(255,255,255,.18)}
+.name-card .err{color:var(--red);font-size:11px;font-weight:700;margin-top:6px;letter-spacing:.5px;display:none}
+.name-card.err .err{display:block}
+.name-card.err{border-color:var(--red);box-shadow:0 0 0 4px rgba(239,68,68,.1)}
+.btn-row{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+.btn{padding:14px 26px;border:1px solid var(--border2);background:var(--card);color:var(--fg);border-radius:12px;font-family:'Manrope';font-weight:700;font-size:14px;cursor:pointer;display:inline-flex;align-items:center;gap:10px;transition:all .2s;letter-spacing:.3px}
+.btn:hover{transform:translateY(-2px);border-color:rgba(255,255,255,.25)}
+.btn-primary{background:linear-gradient(135deg,var(--amber),var(--rose));color:#0a0c14;border-color:transparent;font-weight:800}
+.btn-primary:hover{box-shadow:0 12px 32px rgba(245,158,11,.35)}
+.btn-teal{background:linear-gradient(135deg,var(--teal),var(--emerald));color:#0a0c14;border-color:transparent;font-weight:800}
+.btn-ghost{background:transparent}
+.btn:disabled{opacity:.4;cursor:not-allowed;transform:none!important}
+.btn-sm{padding:9px 16px;font-size:13px}
+.cover-foot{margin-top:60px;color:var(--dim);font-size:12px;letter-spacing:1px;text-transform:uppercase}
+
+/* MATERI MODAL */
+.modal-overlay{position:fixed;inset:0;z-index:100;background:rgba(5,7,12,.85);backdrop-filter:blur(14px);display:none;align-items:center;justify-content:center;padding:24px;overflow-y:auto}
+.modal-overlay.active{display:flex;animation:fadeUp .35s ease}
+.modal-card{background:var(--bg2);border:1px solid var(--border2);border-radius:24px;max-width:1000px;width:100%;max-height:90vh;overflow-y:auto;padding:36px;position:relative}
+.modal-close{position:absolute;top:18px;right:18px;width:38px;height:38px;border-radius:50%;background:var(--card);border:1px solid var(--border2);color:var(--fg);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.modal-close:hover{background:var(--rose);transform:rotate(90deg)}
+.modal-title{font-family:'Bricolage Grotesque';font-size:clamp(28px,4vw,42px);font-weight:800;margin-bottom:8px;letter-spacing:-.02em}
+.modal-title .ac{color:var(--amber)}
+.modal-sub{color:var(--muted);margin-bottom:32px;font-size:15px}
+.stair-big{display:flex;align-items:flex-end;justify-content:center;gap:8px;margin:32px 0 48px;flex-wrap:wrap}
+.stair-big .step{width:84px;border-radius:10px 10px 0 0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02));border:1px solid var(--border);border-bottom:none;padding:10px 4px;font-family:'JetBrains Mono';font-weight:700;position:relative}
+.stair-big .step .u{font-size:22px;color:var(--fg)}
+.stair-big .step .n{font-size:9px;color:var(--dim);margin-top:2px;font-family:'Manrope';letter-spacing:.5px;text-align:center;line-height:1.2}
+.stair-big .step:nth-child(1){height:90px;background:linear-gradient(180deg,rgba(245,158,11,.3),rgba(245,158,11,.05));border-color:rgba(245,158,11,.3)}
+.stair-big .step:nth-child(1) .u{color:var(--amber)}
+.stair-big .step:nth-child(2){height:115px}.stair-big .step:nth-child(3){height:140px}
+.stair-big .step:nth-child(4){height:170px;background:linear-gradient(180deg,rgba(255,255,255,.12),rgba(255,255,255,.02));border-color:var(--border2)}
+.stair-big .step:nth-child(5){height:140px}.stair-big .step:nth-child(6){height:115px}
+.stair-big .step:nth-child(7){height:90px;background:linear-gradient(180deg,rgba(20,184,166,.3),rgba(20,184,166,.05));border-color:rgba(20,184,166,.3)}
+.stair-big .step:nth-child(7) .u{color:var(--teal)}
+.stair-arrows{display:flex;justify-content:space-between;max-width:680px;margin:-32px auto 24px;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase}
+.stair-arrows .l{color:var(--teal)}.stair-arrows .r{color:var(--amber)}
+.conv-table{width:100%;border-collapse:collapse;margin:20px 0 32px;font-size:14px}
+.conv-table th,.conv-table td{padding:12px 14px;text-align:left;border-bottom:1px solid var(--border)}
+.conv-table th{color:var(--muted);font-weight:700;font-size:11px;letter-spacing:1px;text-transform:uppercase}
+.conv-table td{font-family:'JetBrains Mono';font-weight:600}
+.conv-table td:first-child{color:var(--amber-2)}
+.tips-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:16px}
+.tip{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px}
+.tip i{font-size:18px;color:var(--amber);margin-bottom:10px;display:block}
+.tip h4{font-size:14px;font-weight:700;margin-bottom:6px}
+.tip p{font-size:13px;color:var(--muted);line-height:1.55}
+
+/* CONFIRM MODAL */
+.confirm-card{max-width:460px;text-align:center;padding:32px}
+.confirm-card .icon{width:64px;height:64px;border-radius:50%;background:rgba(244,63,94,.15);display:flex;align-items:center;justify-content:center;margin:0 auto 18px;color:var(--rose);font-size:26px}
+.confirm-card h3{font-family:'Bricolage Grotesque';font-size:22px;font-weight:800;margin-bottom:10px}
+.confirm-card p{color:var(--muted);font-size:14px;line-height:1.6;margin-bottom:24px}
+.confirm-actions{display:flex;gap:10px;justify-content:center}
+
+/* QUIZ */
+#quiz{padding:18px;max-width:1400px;margin:0 auto}
+.quiz-top{display:grid;grid-template-columns:1fr auto 1fr;gap:16px;align-items:center;background:var(--card);border:1px solid var(--border);border-radius:18px;padding:14px 20px;margin-bottom:16px}
+.player-chip{display:flex;align-items:center;gap:12px}
+.player-chip.right{justify-content:flex-end}
+.player-avatar{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-family:'Bricolage Grotesque';font-weight:800;font-size:18px}
+.player-chip.s1 .player-avatar{background:linear-gradient(135deg,var(--amber),var(--rose));color:#0a0c14}
+.player-chip.s2 .player-avatar{background:linear-gradient(135deg,var(--teal),var(--emerald));color:#0a0c14}
+.player-chip .name{font-weight:700;font-size:15px}
+.player-chip .role{font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase}
+.timer-block{text-align:center;padding:6px 26px;border-left:1px solid var(--border);border-right:1px solid var(--border)}
+.timer-label{font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;font-weight:700}
+.timer-num{font-family:'JetBrains Mono';font-size:32px;font-weight:700;line-height:1;color:var(--fg);transition:color .3s}
+.timer-num.warn{color:var(--amber);animation:tick 1s infinite}
+.timer-num.danger{color:var(--red);animation:tick .5s infinite}
+@keyframes tick{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+.timer-sts{font-size:10px;color:var(--muted);letter-spacing:1px;margin-top:2px}
+.nav-bar{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:12px;margin-bottom:16px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.nav-label{font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;font-weight:700;margin-right:6px}
+.nav-dot{width:28px;height:28px;border-radius:8px;background:var(--bg2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;cursor:pointer;transition:all .15s;font-family:'JetBrains Mono';color:var(--muted)}
+.nav-dot:hover{border-color:var(--border2);color:var(--fg)}
+.nav-dot.cur{background:var(--fg);color:#0a0c14;border-color:var(--fg)}
+.nav-dot.t1{border-top:2px solid var(--amber)}.nav-dot.t2{border-top:2px solid var(--rose)}.nav-dot.t3{border-top:2px solid var(--teal)}
+.nav-dot.s1-correct{background:rgba(245,158,11,.2);border-color:var(--amber);color:var(--amber-2)}
+.nav-dot.s2-correct{background:rgba(20,184,166,.2);border-color:var(--teal);color:var(--teal-2)}
+.nav-dot.both-correct{background:linear-gradient(135deg,rgba(245,158,11,.25),rgba(20,184,166,.25));border-color:var(--amber);color:var(--fg)}
+.nav-dot.wrong{opacity:.55}
+.quiz-main{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.q-panel{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:22px;position:relative;overflow:hidden}
+.q-panel::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.q-panel.s1::before{background:linear-gradient(90deg,var(--amber),var(--rose))}
+.q-panel.s2::before{background:linear-gradient(90deg,var(--teal),var(--emerald))}
+.q-panel.locked{opacity:.75}
+.q-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.q-type{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;font-weight:800;padding:4px 10px;border-radius:6px}
+.q-type.t1{background:rgba(245,158,11,.12);color:var(--amber-2)}
+.q-type.t2{background:rgba(244,63,94,.12);color:var(--rose)}
+.q-type.t3{background:rgba(20,184,166,.12);color:var(--teal-2)}
+.q-num{font-family:'JetBrains Mono';font-size:13px;color:var(--muted);font-weight:700}
+.q-num .big{color:var(--fg);font-size:22px;font-weight:800}
+.q-text{font-size:17px;line-height:1.6;margin-bottom:18px;font-weight:500;min-height:80px}
+.q-text strong{color:var(--amber-2);font-weight:800}
+.q-panel.s2 .q-text strong{color:var(--teal-2)}
+.opts{display:grid;gap:8px;margin-bottom:14px}
+.opt{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:13px 16px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:all .15s;font-family:'JetBrains Mono';font-weight:600}
+.opt:hover{border-color:var(--border2);background:var(--card2)}
+.opt.selected{background:rgba(245,158,11,.08);border-color:var(--amber);color:var(--amber-2)}
+.q-panel.s2 .opt.selected{background:rgba(20,184,166,.08);border-color:var(--teal);color:var(--teal-2)}
+.opt.correct{background:rgba(16,185,129,.12);border-color:var(--emerald);color:var(--emerald)}
+.opt.wrong{background:rgba(239,68,68,.1);border-color:var(--red);color:var(--red);text-decoration:line-through;opacity:.7}
+.opt .letter{width:24px;height:24px;border-radius:6px;background:var(--card2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800}
+.opt.selected .letter{background:var(--amber);color:#0a0c14;border-color:var(--amber)}
+.q-panel.s2 .opt.selected .letter{background:var(--teal);color:#0a0c14;border-color:var(--teal)}
+.opt.correct .letter{background:var(--emerald);color:#0a0c14;border-color:var(--emerald)}
+.q-actions{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+.pembahasan{margin-top:14px;background:var(--bg2);border:1px solid var(--border);border-left:3px solid var(--amber);border-radius:10px;padding:14px 16px;font-size:13.5px;line-height:1.65;display:none}
+.q-panel.s2 .pembahasan{border-left-color:var(--teal)}
+.pembahasan.show{display:block;animation:fadeUp .3s ease}
+.pembahasan .pb-title{font-weight:800;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--amber-2);margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.q-panel.s2 .pembahasan .pb-title{color:var(--teal-2)}
+.pembahasan .ans{font-family:'JetBrains Mono';font-weight:700;color:var(--emerald);font-size:15px;margin-top:8px;display:block}
+.q-status{position:absolute;top:14px;right:18px;font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;padding:4px 9px;border-radius:6px}
+.q-status.benar{background:var(--emerald);color:#0a0c14}
+.q-status.salah{background:var(--red);color:#fff}
+.quiz-bottom{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.bottom-left,.bottom-right{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.progress-info{font-size:13px;color:var(--muted);font-weight:600}
+.progress-info b{color:var(--fg);font-family:'JetBrains Mono'}
+
+/* RESULT */
+#result{padding:32px 20px;max-width:1280px;margin:0 auto}
+.result-hero{text-align:center;margin-bottom:40px;padding:20px 0}
+.result-hero .label{font-size:12px;letter-spacing:3px;color:var(--muted);text-transform:uppercase;font-weight:700;margin-bottom:14px}
+.result-hero h1{font-family:'Bricolage Grotesque';font-size:clamp(36px,6vw,72px);font-weight:800;letter-spacing:-.03em;line-height:1;margin-bottom:12px}
+.result-hero .winner-name{background:linear-gradient(135deg,var(--amber),var(--rose));-webkit-background-clip:text;background-clip:text;color:transparent}
+.result-hero .sub{color:var(--muted);font-size:16px;max-width:600px;margin:0 auto}
+.result-hero .draw{color:var(--teal)}
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:36px}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:24px;position:relative;overflow:hidden}
+.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px}
+.stat-card.s1::before{background:linear-gradient(90deg,var(--amber),var(--rose))}
+.stat-card.s2::before{background:linear-gradient(90deg,var(--teal),var(--emerald))}
+.sc-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+.sc-name{display:flex;align-items:center;gap:12px}
+.sc-name .av{width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-family:'Bricolage Grotesque';font-weight:800;font-size:20px}
+.stat-card.s1 .sc-name .av{background:linear-gradient(135deg,var(--amber),var(--rose));color:#0a0c14}
+.stat-card.s2 .sc-name .av{background:linear-gradient(135deg,var(--teal),var(--emerald));color:#0a0c14}
+.sc-name .n{font-size:18px;font-weight:800}
+.sc-rank{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);font-weight:700;text-align:right}
+.sc-rank .pos{font-family:'Bricolage Grotesque';font-size:32px;font-weight:800;display:block;line-height:1;color:var(--fg)}
+.stat-card.s1 .sc-rank .pos{color:var(--amber)}
+.stat-card.s2 .sc-rank .pos{color:var(--teal)}
+.sc-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:18px 0}
+.sc-stat{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:12px;text-align:center}
+.sc-stat .v{font-family:'JetBrains Mono';font-size:24px;font-weight:700;line-height:1}
+.sc-stat .l{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);font-weight:700;margin-top:6px}
+.sc-stat .v.ok{color:var(--emerald)}.sc-stat .v.no{color:var(--red)}
+.sc-stat .v.am{color:var(--amber-2)}.sc-stat .v.te{color:var(--teal-2)}
+.sc-bar{height:8px;background:var(--bg2);border-radius:100px;overflow:hidden;margin-top:8px}
+.sc-bar .fill{height:100%;border-radius:100px;transition:width 1s ease}
+.stat-card.s1 .sc-bar .fill{background:linear-gradient(90deg,var(--amber),var(--rose))}
+.stat-card.s2 .sc-bar .fill{background:linear-gradient(90deg,var(--teal),var(--emerald))}
+.detail-section{margin-bottom:36px}
+.detail-section h2{font-family:'Bricolage Grotesque';font-size:24px;font-weight:800;margin-bottom:16px;display:flex;align-items:center;gap:10px}
+.detail-section h2 i{color:var(--amber)}
+.detail-tabs{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.detail-tab{padding:8px 14px;border:1px solid var(--border);background:var(--card);border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;color:var(--muted);letter-spacing:.5px}
+.detail-tab.active{background:var(--fg);color:#0a0c14;border-color:var(--fg)}
+.detail-table{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;overflow-x:auto}
+.detail-table table{width:100%;border-collapse:collapse;font-size:13px;min-width:760px}
+.detail-table th{background:var(--bg2);padding:12px 14px;text-align:left;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);font-weight:800;border-bottom:1px solid var(--border)}
+.detail-table td{padding:11px 14px;border-bottom:1px solid var(--border);font-family:'JetBrains Mono';font-weight:600}
+.detail-table td:first-child{font-family:'Manrope';font-weight:700}
+.detail-table tr:last-child td{border-bottom:none}
+.detail-table tr:hover{background:rgba(255,255,255,.02)}
+.badge-correct{display:inline-block;padding:3px 8px;background:rgba(16,185,129,.15);color:var(--emerald);border-radius:6px;font-size:11px;font-weight:800}
+.badge-wrong{display:inline-block;padding:3px 8px;background:rgba(239,68,68,.12);color:var(--red);border-radius:6px;font-size:11px;font-weight:800}
+.badge-skip{display:inline-block;padding:3px 8px;background:rgba(255,255,255,.05);color:var(--muted);border-radius:6px;font-size:11px;font-weight:800}
+.tag-type{font-size:10px;font-weight:800;letter-spacing:.5px;padding:2px 7px;border-radius:4px}
+.tag-type.t1{background:rgba(245,158,11,.12);color:var(--amber-2)}
+.tag-type.t2{background:rgba(244,63,94,.12);color:var(--rose)}
+.tag-type.t3{background:rgba(20,184,166,.12);color:var(--teal-2)}
+.closing{margin-top:48px;text-align:center;max-width:760px;margin-left:auto;margin-right:auto;padding:32px 24px;background:var(--card);border:1px solid var(--border);border-radius:20px;position:relative;overflow:hidden}
+.closing::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--amber),var(--rose),var(--teal))}
+.closing h2{font-family:'Bricolage Grotesque';font-size:30px;font-weight:800;margin-bottom:14px}
+.closing h2 .ac{color:var(--amber)}
+.closing p{color:var(--muted);font-size:15px;line-height:1.75;margin-bottom:14px}
+.closing .quote{font-style:italic;color:var(--fg);font-size:16px;padding:14px 22px;border-left:3px solid var(--teal);background:var(--bg2);border-radius:8px;text-align:left;margin:18px 0}
+.closing .thanks{font-family:'Bricolage Grotesque';font-size:34px;font-weight:800;margin:24px 0 10px;background:linear-gradient(135deg,var(--amber),var(--rose),var(--teal));-webkit-background-clip:text;background-clip:text;color:transparent;letter-spacing:-.02em}
+.closing .sign{font-size:12px;letter-spacing:2px;color:var(--dim);text-transform:uppercase;font-weight:700}
+.closing-actions{display:flex;gap:10px;justify-content:center;margin-top:24px;flex-wrap:wrap}
+.toast-wrap{position:fixed;top:20px;right:20px;z-index:300;display:flex;flex-direction:column;gap:8px;max-width:90vw}
+.toast{padding:12px 18px;background:var(--card2);border:1px solid var(--border2);border-radius:10px;font-size:13px;font-weight:600;color:var(--fg);display:flex;align-items:center;gap:10px;animation:slideIn .3s ease;box-shadow:0 10px 30px rgba(0,0,0,.4)}
+.toast.success{border-left:3px solid var(--emerald)}
+.toast.warn{border-left:3px solid var(--amber)}
+.toast.error{border-left:3px solid var(--red)}
+@keyframes slideIn{from{transform:translateX(120%);opacity:0}to{transform:translateX(0);opacity:1}}
+@media (max-width:880px){
+  .quiz-main{grid-template-columns:1fr}
+  .stat-grid{grid-template-columns:1fr}
+  .input-row{grid-template-columns:1fr}
+  .sc-stats{grid-template-columns:repeat(2,1fr)}
+  .quiz-top{grid-template-columns:1fr;gap:10px}
+  .timer-block{border:none;padding:6px 0}
+  .stair-big .step{width:60px}
+  .stair-big .step .u{font-size:16px}
+}
+@media (max-width:480px){
+  .stair-big .step{width:44px}
+  .stair-big .step .u{font-size:13px}
+  .stair-big .step .n{font-size:7px}
+  .nav-dot{width:24px;height:24px;font-size:10px}
+  .q-text{font-size:15px;min-height:60px}
+  .cover-title{font-size:54px}
+}
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<section class="screen active" id="cover">
+  <div class="cover-badge"><span class="dot"></span> Matematika · Duel Berbasis Waktu</div>
+  <h1 class="cover-title">KONVERSI<br><span class="a1">SATUAN</span> <span class="a2">PANJANG</span></h1>
+  <p class="cover-sub">Berdualah dalam 60 soal konversi — dari kilometer hingga milimeter. Setiap soal punya 2 menit. Cepat, teliti, dan saling mengalahkan.</p>
+  <div class="stair-preview">
+    <div class="stair-step" data-name="kilo">km</div>
+    <div class="stair-step" data-name="hekto">hm</div>
+    <div class="stair-step" data-name="deka">dam</div>
+    <div class="stair-step" data-name="meter">m</div>
+    <div class="stair-step" data-name="desi">dm</div>
+    <div class="stair-step" data-name="senti">cm</div>
+    <div class="stair-step" data-name="mili">mm</div>
+  </div>
+  <div class="input-row">
+    <div class="name-card s1" id="card1">
+      <div class="label"><i class="fas fa-user-astronaut"></i> Pemain 1 · Tim Amber</div>
+      <input type="text" id="name1" placeholder="Masukkan nama…" maxlength="18" autocomplete="off">
+      <div class="err"><i class="fas fa-circle-exclamation"></i> Nama tidak boleh kosong</div>
+    </div>
+    <div class="name-card s2" id="card2">
+      <div class="label"><i class="fas fa-user-ninja"></i> Pemain 2 · Tim Teal</div>
+      <input type="text" id="name2" placeholder="Masukkan nama…" maxlength="18" autocomplete="off">
+      <div class="err"><i class="fas fa-circle-exclamation"></i> Nama tidak boleh kosong</div>
+    </div>
+  </div>
+  <div class="btn-row">
+    <button class="btn btn-ghost" onclick="openMateri()"><i class="fas fa-book-open"></i> Lihat Materi</button>
+    <button class="btn btn-primary" id="btnStart" onclick="startQuiz()"><i class="fas fa-bolt"></i> Mulai Duel</button>
+  </div>
+  <div class="cover-foot">60 Soal · 3 Jenis · 2 Menit / Soal</div>
+</section>
+
+<!-- MATERI MODAL -->
+<div class="modal-overlay" id="materiOverlay">
+  <div class="modal-card">
+    <button class="modal-close" onclick="closeMateri()"><i class="fas fa-times"></i></button>
+    <h2 class="modal-title">Tangga <span class="ac">Satuan Panjang</span></h2>
+    <p class="modal-sub">Satuan baku panjang di sistem metrik bersusun 7 anak tangga. Satu tangga = kelipatan 10.</p>
+    <div class="stair-big">
+      <div class="step"><div class="u">km</div><div class="n">kilo<br>meter</div></div>
+      <div class="step"><div class="u">hm</div><div class="n">hekto<br>meter</div></div>
+      <div class="step"><div class="u">dam</div><div class="n">deka<br>meter</div></div>
+      <div class="step"><div class="u">m</div><div class="n">meter</div></div>
+      <div class="step"><div class="u">dm</div><div class="n">desi<br>meter</div></div>
+      <div class="step"><div class="u">cm</div><div class="n">senti<br>meter</div></div>
+      <div class="step"><div class="u">mm</div><div class="n">mili<br>meter</div></div>
+    </div>
+    <div class="stair-arrows">
+      <span class="l"><i class="fas fa-arrow-left"></i> Turun: ÷ 10 per tangga</span>
+      <span class="r">Naik: × 10 per tangga <i class="fas fa-arrow-right"></i></span>
+    </div>
+    <h3 style="font-family:'Bricolage Grotesque';font-size:18px;font-weight:800;margin-top:8px;margin-bottom:8px">Tabel Konversi ke Meter</h3>
+    <table class="conv-table">
+      <thead><tr><th>Satuan</th><th>Nama</th><th>Setara dengan</th></tr></thead>
+      <tbody>
+        <tr><td>1 km</td><td>kilometer</td><td>1.000 m</td></tr>
+        <tr><td>1 hm</td><td>hektometer</td><td>100 m</td></tr>
+        <tr><td>1 dam</td><td>dekameter</td><td>10 m</td></tr>
+        <tr><td>1 m</td><td>meter</td><td>1 m (acuan)</td></tr>
+        <tr><td>1 dm</td><td>desimeter</td><td>0,1 m</td></tr>
+        <tr><td>1 cm</td><td>sentimeter</td><td>0,01 m</td></tr>
+        <tr><td>1 mm</td><td>milimeter</td><td>0,001 m</td></tr>
+      </tbody>
+    </table>
+    <h3 style="font-family:'Bricolage Grotesque';font-size:18px;font-weight:800;margin-bottom:8px">Tips & Trik</h3>
+    <div class="tips-grid">
+      <div class="tip"><i class="fas fa-stairs"></i><h4>Aturan Tangga</h4><p>Naik tangga (ke satuan lebih kecil) = kalikan 10 per anak. Turun tangga (ke satuan lebih besar) = bagi 10 per anak.</p></div>
+      <div class="tip"><i class="fas fa-calculator"></i><h4>Hitung Langkah</h4><p>Hitung jumlah anak tangga antara dua satuan. Itu pangkat dari 10 — km → m = 3 tangga = ×1.000.</p></div>
+      <div class="tip"><i class="fas fa-plus-minus"></i><h4>Operasi Campuran</h4><p>Untuk soal +/−, konversikan keduanya ke satuan target terlebih dahulu, baru jumlahkan atau kurangkan.</p></div>
+      <div class="tip"><i class="fas fa-lightbulb"></i><h4>Hati-hati Nol</h4><p>Untuk km → mm ada 6 tangga = ×1.000.000. Tambah/buang nol dengan teliti, jangan terburu.</p></div>
+    </div>
+    <div style="text-align:center;margin-top:30px"><button class="btn btn-primary" onclick="closeMateri()"><i class="fas fa-check"></i> Saya Mengerti</button></div>
+  </div>
+</div>
+
+<!-- CONFIRM MODAL -->
+<div class="modal-overlay" id="confirmOverlay">
+  <div class="modal-card confirm-card">
+    <div class="icon"><i class="fas fa-flag-checkered"></i></div>
+    <h3>Akhiri Duel Sekarang?</h3>
+    <p>Soal yang belum dikerjakan akan dianggap salah dan tidak bisa diubah. Yakin ingin menyelesaikan duel?</p>
+    <div class="confirm-actions">
+      <button class="btn btn-ghost" onclick="closeConfirm()"><i class="fas fa-xmark"></i> Lanjutkan Duel</button>
+      <button class="btn" style="background:var(--rose);color:#fff;border-color:transparent" onclick="confirmFinish()"><i class="fas fa-check"></i> Ya, Akhiri</button>
+    </div>
+  </div>
+</div>
+
+<!-- QUIZ -->
+<section class="screen" id="quiz">
+  <div class="quiz-top">
+    <div class="player-chip s1">
+      <div class="player-avatar" id="ava1">A</div>
+      <div><div class="name" id="pname1">Pemain 1</div><div class="role">Tim Amber</div></div>
+    </div>
+    <div class="timer-block">
+      <div class="timer-label">Waktu Soal</div>
+      <div class="timer-num mono" id="timerNum">02:00</div>
+      <div class="timer-sts" id="timerSts">Berjalan</div>
+    </div>
+    <div class="player-chip s2 right">
+      <div style="text-align:right"><div class="name" id="pname2">Pemain 2</div><div class="role">Tim Teal</div></div>
+      <div class="player-avatar" id="ava2">B</div>
+    </div>
+  </div>
+  <div class="nav-bar" id="navBar"></div>
+  <div class="quiz-main">
+    <div class="q-panel s1" id="panel1"></div>
+    <div class="q-panel s2" id="panel2"></div>
+  </div>
+  <div class="quiz-bottom">
+    <div class="bottom-left">
+      <button class="btn btn-sm btn-ghost" onclick="prevSoal()"><i class="fas fa-chevron-left"></i> Sebelumnya</button>
+      <button class="btn btn-sm btn-ghost" onclick="nextSoal()">Selanjutnya <i class="fas fa-chevron-right"></i></button>
+      <span class="progress-info">Soal <b id="curNum">1</b> / <b>60</b></span>
+    </div>
+    <div class="bottom-right">
+      <button class="btn btn-sm btn-ghost" onclick="addTime()"><i class="fas fa-plus"></i> +15 Detik</button>
+      <button class="btn btn-sm btn-ghost" onclick="openMateri()"><i class="fas fa-book"></i> Materi</button>
+      <button class="btn btn-sm" style="background:var(--rose);color:#fff;border-color:transparent" onclick="askFinish()"><i class="fas fa-flag-checkered"></i> Finish</button>
+    </div>
+  </div>
+</section>
+
+<!-- RESULT -->
+<section class="screen" id="result">
+  <div class="result-hero">
+    <div class="label">Hasil Akhir Duel</div>
+    <h1 id="resultTitle">Selamat!</h1>
+    <p class="sub" id="resultSub"></p>
+  </div>
+  <div class="stat-grid">
+    <div class="stat-card s1">
+      <div class="sc-head">
+        <div class="sc-name">
+          <div class="av" id="resAva1">A</div>
+          <div><div class="n" id="resName1">Pemain 1</div><div style="font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;font-weight:700">Tim Amber</div></div>
+        </div>
+        <div class="sc-rank">Peringkat<span class="pos" id="rank1">1</span></div>
+      </div>
+      <div class="sc-stats">
+        <div class="sc-stat"><div class="v ok" id="benar1">0</div><div class="l">Benar</div></div>
+        <div class="sc-stat"><div class="v no" id="salah1">0</div><div class="l">Salah</div></div>
+        <div class="sc-stat"><div class="v am" id="persen1">0%</div><div class="l">Akurasi</div></div>
+        <div class="sc-stat"><div class="v am" id="avg1">0s</div><div class="l">Rata-rata</div></div>
+      </div>
+      <div class="sc-bar"><div class="fill" id="bar1" style="width:0%"></div></div>
+    </div>
+    <div class="stat-card s2">
+      <div class="sc-head">
+        <div class="sc-name">
+          <div class="av" id="resAva2">B</div>
+          <div><div class="n" id="resName2">Pemain 2</div><div style="font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;font-weight:700">Tim Teal</div></div>
+        </div>
+        <div class="sc-rank">Peringkat<span class="pos" id="rank2">2</span></div>
+      </div>
+      <div class="sc-stats">
+        <div class="sc-stat"><div class="v ok" id="benar2">0</div><div class="l">Benar</div></div>
+        <div class="sc-stat"><div class="v no" id="salah2">0</div><div class="l">Salah</div></div>
+        <div class="sc-stat"><div class="v te" id="persen2">0%</div><div class="l">Akurasi</div></div>
+        <div class="sc-stat"><div class="v te" id="avg2">0s</div><div class="l">Rata-rata</div></div>
+      </div>
+      <div class="sc-bar"><div class="fill" id="bar2" style="width:0%"></div></div>
+    </div>
+  </div>
+  <div class="detail-section">
+    <h2><i class="fas fa-clipboard-list"></i> Detail Pengerjaan</h2>
+    <div class="detail-tabs">
+      <div class="detail-tab active" onclick="switchDetail(0,'all')" id="tabAll">Semua (60)</div>
+      <div class="detail-tab" onclick="switchDetail(1,'t1')" id="tabT1">Jenis 1 · Konversi</div>
+      <div class="detail-tab" onclick="switchDetail(2,'t2')" id="tabT2">Jenis 2 · Operasi</div>
+      <div class="detail-tab" onclick="switchDetail(3,'t3')" id="tabT3">Jenis 3 · Cerita</div>
+    </div>
+    <div class="detail-table">
+      <table id="detailTable">
+        <thead><tr><th>No</th><th>Jenis</th><th>Soal (Singkat)</th><th>Kunci</th><th>Jwb 1</th><th>Hasil 1</th><th>Waktu 1</th><th>Jwb 2</th><th>Hasil 2</th><th>Waktu 2</th></tr></thead>
+        <tbody id="detailBody"></tbody>
+      </table>
+    </div>
+  </div>
+  <div class="closing">
+    <h2>Kesimpulan & <span class="ac">Refleksi</span></h2>
+    <p id="kesimpulanText"></p>
+    <div class="quote" id="refleksiText"></div>
+    <div class="thanks">Thank You for Today</div>
+    <div class="sign">— Selamat berlatih, sampai jumpa di duel berikutnya —</div>
+    <div class="closing-actions">
+      <button class="btn btn-ghost" onclick="restartQuiz()"><i class="fas fa-rotate"></i> Ulangi Duel</button>
+      <button class="btn btn-primary" onclick="goHome()"><i class="fas fa-house"></i> Halaman Awal</button>
+    </div>
+  </div>
+</section>
+
+<div class="toast-wrap" id="toastWrap"></div>
+
+<script>
+/* ===== STATE & CONSTANT ===== */
+const UNITS = ['km','hm','dam','m','dm','cm','mm'];
+
+const state = {
+  players: [
+    {name:'', questions:[], answers:Array(60).fill(null), checked:Array(60).fill(false), timePerQ:Array(60).fill(0)},
+    {name:'', questions:[], answers:Array(60).fill(null), checked:Array(60).fill(false), timePerQ:Array(60).fill(0)}
+  ],
+  curIdx: 0,
+  timeLeft: 120,
+  timerInterval: null,
+  qStartTime: null,
+  finished: false,
+  quizStart: null,
+  detailFilter: 'all'
+};
+
+/* ===== HELPERS ===== */
+function convert(value, fromU, toU){
+  const fi = UNITS.indexOf(fromU);
+  const ti = UNITS.indexOf(toU);
+  return value * Math.pow(10, ti - fi);
+}
+
+function rnd(min, max){ 
+  return Math.floor(Math.random() * (max - min + 1)) + min; 
+}
+
+function shuffleArray(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+
+function buildOptions(correct, distractors){
+  const result = [correct];
+  const seen = new Set([correct]);
+  for(const d of distractors){
+    if(result.length >= 4) break;
+    if(d !== correct && Number.isFinite(d) && d > 0 && Number.isInteger(d) && !seen.has(d)){
+      result.push(d);
+      seen.add(d);
+    }
+  }
+  let safety = 0;
+  while(result.length < 4 && safety < 300){
+    const range = Math.max(50, Math.floor(correct * 0.3));
+    const noise = (Math.random() < 0.5 ? 1 : -1) * rnd(1, range);
+    const cand = correct + noise;
+    if(cand > 0 && Number.isInteger(cand) && !seen.has(cand)){
+      result.push(cand);
+      seen.add(cand);
+    }
+    safety++;
+  }
+  // Fallback ekstrem
+  let mult = 2;
+  while(result.length < 4){
+    const cand = correct + mult;
+    if(!seen.has(cand) && cand > 0){ result.push(cand); seen.add(cand); }
+    mult++;
+    if(mult > 5000) break;
+  }
+  return shuffleArray(result);
+}
+
+/* ===== TYPE 1: KONVERSI BIASA ===== */
+function makeType1(idx){
+  const pairs = [
+    ['km','m'],['hm','m'],['dam','m'],['m','dm'],['m','cm'],['m','mm'],
+    ['km','dam'],['km','hm'],['hm','dm'],['hm','cm'],['dam','cm'],['dam','dm'],
+    ['m','km'],['m','hm'],['m','dam'],['dm','m'],['cm','m'],['mm','m'],
+    ['cm','mm'],['mm','cm']
+  ];
+  const [fromU, toU] = pairs[idx % pairs.length];
+  const fi = UNITS.indexOf(fromU);
+  const ti = UNITS.indexOf(toU);
+  const diff = Math.abs(ti - fi);
+  const factor = Math.pow(10, diff);
+  
+  let value, correct;
+  if(fi < ti){
+    value = rnd(1, 20);
+    correct = value * factor;
+  } else {
+    correct = rnd(1, 20);
+    value = correct * factor;
+  }
+  
+  const distractors = [correct+factor, correct-factor, correct*10, Math.floor(correct/10), correct+1, correct-1];
+  const options = buildOptions(correct, distractors);
+  
+  return {
+    type:1, typeName:'Konversi',
+    questionHtml:`Berapakah hasil konversi <strong>${value} ${fromU}</strong> ke dalam satuan <strong>${toU}</strong>?`,
+    options, correct, correctUnit:toU,
+    pembahasan:`Konversi dari <strong>${fromU}</strong> ke <strong>${toU}</strong> menempati <strong>${diff} anak tangga</strong>.<br>${fromU} → ${toU} ${fi<ti?'naik tangga (× 10 per tangga)':'turun tangga (÷ 10 per tangga)'}, sehingga faktornya <strong>× ${factor.toLocaleString('id-ID')}</strong>.<br>${value} ${fromU} ${fi<ti?'×':'÷'} ${factor.toLocaleString('id-ID')} = <strong>${correct.toLocaleString('id-ID')} ${toU}</strong>`,
+    short:`${value} ${fromU} → ${toU}`
+  };
+}
+
+/* ===== TYPE 2: OPERASI ===== */
+function makeType2(idx){
+  const configs = [
+    ['km','m','+','m'], ['m','cm','+','cm'], ['km','m','-','m'], ['hm','dam','+','dam'],
+    ['m','dm','+','dm'], ['dm','cm','-','cm'], ['km','km','+','m'], ['m','m','+','cm'],
+    ['dam','m','+','m'], ['hm','m','-','m'], ['km','dam','+','dam'], ['m','cm','-','mm'],
+    ['hm','hm','+','m'], ['dam','dam','+','cm'], ['km','dam','-','m'], ['m','dm','+','mm'],
+    ['dm','cm','+','mm'], ['hm','m','+','dm'], ['km','m','+','mm'], ['dam','dm','-','cm']
+  ];
+  const [u1, u2, op, toU] = configs[idx % configs.length];
+  
+  const v1 = rnd(1, 15);
+  const v2 = rnd(1, 15);
+  
+  const c1 = convert(v1, u1, toU);
+  const c2 = convert(v2, u2, toU);
+  
+  let correct = op === '+' ? c1 + c2 : Math.abs(c1 - c2);
+  if(correct === 0) correct = c1 + c2; // Hindari 0
+  
+  const symbol = op === '+' ? '+' : '−';
+  const distractors = [c1+c2, Math.abs(c1-c2), correct+10, correct-10, correct*10, Math.floor(correct/10)];
+  const options = buildOptions(correct, distractors);
+  
+  return {
+    type:2, typeName:'Operasi',
+    questionHtml:`Hitunglah <strong>${v1} ${u1} ${symbol} ${v2} ${u2}</strong> dan nyatakan hasilnya dalam satuan <strong>${toU}</strong>.`,
+    options, correct, correctUnit:toU,
+    pembahasan:`<strong>Langkah 1:</strong> Konversikan kedua nilai ke satuan <strong>${toU}</strong>.<br>${v1} ${u1} = ${c1.toLocaleString('id-ID')} ${toU}<br>${v2} ${u2} = ${c2.toLocaleString('id-ID')} ${toU}<br><strong>Langkah 2:</strong> Lakukan operasi ${op === '+' ? 'penjumlahan' : 'pengurangan'}.<br>${c1.toLocaleString('id-ID')} ${symbol} ${c2.toLocaleString('id-ID')} = <strong>${correct.toLocaleString('id-ID')} ${toU}</strong>`,
+    short:`${v1} ${u1} ${symbol} ${v2} ${u2} → ${toU}`
+  };
+}
+
+/* ===== TYPE 3: CERITA ===== */
+function makeType3(idx){
+  const stories = [
+    {t:`Andi bersepeda sejauh {a} km, kemudian berjalan kaki {b} m. Berapa total jarak tempuh Andi dalam meter (m)?`, u1:'km', u2:'m', op:'+', toU:'m'},
+    {t:`Sebuah tali sepanjang {a} m dipotong {b} cm. Berapa panjang tali yang tersisa dalam sentimeter (cm)?`, u1:'m', u2:'cm', op:'-', toU:'cm'},
+    {t:`Jarak rumah ke sekolah {a} km, sekolah ke toko {b} hm. Berapa total jarak rumah-toko dalam meter (m)?`, u1:'km', u2:'hm', op:'+', toU:'m'},
+    {t:`Pohon tingginya {a} m, lalu dipangkas {b} dm. Berapa tinggi pohon sekarang dalam desimeter (dm)?`, u1:'m', u2:'dm', op:'-', toU:'dm'},
+    {t:`Mobil menempuh {a} km, motor menempuh {b} hm. Berapa selisih jarak tempuh keduanya dalam meter (m)?`, u1:'km', u2:'hm', op:'-', toU:'m'},
+    {t:`Terdapat kayu sepanjang {a} m dan besi sepanjang {b} cm. Berapa total panjang keduanya dalam milimeter (mm)?`, u1:'m', u2:'cm', op:'+', toU:'mm'},
+    {t:`Siti berlari {a} m, lalu berjalan {b} dam. Berapa total jarak yang ditempuh Siti dalam desimeter (dm)?`, u1:'m', u2:'dam', op:'+', toU:'dm'},
+    {t:`Panjang sungai A {a} hm, sungai B {b} dam. Berapa selisih panjang kedua sungai dalam meter (m)?`, u1:'hm', u2:'dam', op:'-', toU:'m'},
+    {t:`Gedung perkantoran setinggi {a} m, tiang bendera {b} cm. Berapa selisih ketinggiannya dalam milimeter (mm)?`, u1:'m', u2:'cm', op:'-', toU:'mm'},
+    {t:`Lapangan A panjang {a} dam, lapangan B {b} m. Berapa selisih panjang kedua lapangan dalam desimeter (dm)?`, u1:'dam', u2:'m', op:'-', toU:'dm'},
+    {t:`Sumur sedalam {a} m, bak mandi {b} dm. Berapa selisih kedalamannya dalam sentimeter (cm)?`, u1:'m', u2:'dm', op:'-', toU:'cm'},
+    {t:`Pagar rumah {a} hm, tembok sekolah {b} m. Berapa total panjang keduanya dalam desimeter (dm)?`, u1:'hm', u2:'m', op:'+', toU:'dm'},
+    {t:`Tiang bendera {a} m, tiang lampu {b} cm. Berapa selisih tingginya dalam milimeter (mm)?`, u1:'m', u2:'cm', op:'-', toU:'mm'},
+    {t:`Lebar jalan raya {a} dam, trotoar {b} dm. Berapa total lebar keduanya dalam sentimeter (cm)?`, u1:'dam', u2:'dm', op:'+', toU:'cm'},
+    {t:`Mobil melaju {a} km, sepeda {b} hm. Berapa selisih jarak tempuh dalam meter (m)?`, u1:'km', u2:'hm', op:'-', toU:'m'},
+    {t:`Rel kereta sepanjang {a} km dan {b} m. Berapa total panjang rel dalam sentimeter (cm)?`, u1:'km', u2:'m', op:'+', toU:'cm'},
+    {t:`Kolam renang {a} m, bak air {b} dm. Berapa selisih kedalaman dalam sentimeter (cm)?`, u1:'m', u2:'dm', op:'-', toU:'cm'},
+    {t:`Pendaki naik {a} hm, lalu turun {b} dam. Berapa posisi pendaki sekarang dalam meter (m)?`, u1:'hm', u2:'dam', op:'-', toU:'m'},
+    {t:`Jembatan lama {a} hm, jembatan baru {b} m. Berapa selisih panjang dalam desimeter (dm)?`, u1:'hm', u2:'m', op:'-', toU:'dm'},
+    {t:`Stasiun A ke B {a} km, B ke C {b} hm. Berapa total jarak A–C dalam dekameter (dam)?`, u1:'km', u2:'hm', op:'+', toU:'dam'}
+  ];
+  
+  const cfg = stories[idx % stories.length];
+  const a = rnd(1, 15);
+  const b = rnd(1, 15);
+  
+  const c1 = convert(a, cfg.u1, cfg.toU);
+  const c2 = convert(b, cfg.u2, cfg.toU);
+  
+  let correct = cfg.op === '+' ? c1 + c2 : Math.abs(c1 - c2);
+  if(correct === 0) correct = c1 + c2; // Hindari 0
+  
+  const symbol = cfg.op === '+' ? '+' : '−';
+  const distractors = [c1+c2, Math.abs(c1-c2), correct+10, correct-10, correct*10, Math.floor(correct/10)];
+  const options = buildOptions(correct, distractors);
+  
+  const text = cfg.t.replace('{a}', `<strong>${a}</strong>`).replace('{b}', `<strong>${b}</strong>`);
+  
+  return {
+    type:3, typeName:'Cerita',
+    questionHtml: text,
+    options, correct, correctUnit:cfg.toU,
+    pembahasan:`<strong>Diketahui:</strong><br>• ${a} ${cfg.u1}<br>• ${b} ${cfg.u2}<br><strong>Ditanya:</strong> hasil dalam ${cfg.toU}<br><br><strong>Langkah 1:</strong> Konversikan ke ${cfg.toU}.<br>${a} ${cfg.u1} = ${c1.toLocaleString('id-ID')} ${cfg.toU}<br>${b} ${cfg.u2} = ${c2.toLocaleString('id-ID')} ${cfg.toU}<br><strong>Langkah 2:</strong> Operasi ${cfg.op === '+' ? 'penjumlahan' : 'pengurangan'}.<br>${c1.toLocaleString('id-ID')} ${symbol} ${c2.toLocaleString('id-ID')} = <strong>${correct.toLocaleString('id-ID')} ${cfg.toU}</strong>`,
+    short:`Cerita ${idx+1}: ${a} ${cfg.u1} ${symbol} ${b} ${cfg.u2} → ${cfg.toU}`
+  };
+}
+
+function generateAllQuestions(){
+  for(let p=0;p<2;p++){
+    const qs = [];
+    for(let i=0;i<20;i++) qs.push(makeType1(i));
+    for(let i=0;i<20;i++) qs.push(makeType2(i));
+    for(let i=0;i<20;i++) qs.push(makeType3(i));
+    state.players[p].questions = qs;
+  }
+}
+
+/* ===== START QUIZ ===== */
+function startQuiz(){
+  const n1 = document.getElementById('name1').value.trim();
+  const n2 = document.getElementById('name2').value.trim();
+  const card1 = document.getElementById('card1');
+  const card2 = document.getElementById('card2');
+  card1.classList.remove('err');
+  card2.classList.remove('err');
+  
+  let valid = true;
+  if(!n1){ card1.classList.add('err'); valid = false; }
+  if(!n2){ card2.classList.add('err'); valid = false; }
+  if(!valid){
+    toast('Mohon isi nama kedua pemain terlebih dahulu','error');
+    if(!n1) document.getElementById('name1').focus();
+    else document.getElementById('name2').focus();
+    return;
+  }
+  
+  const btn = document.getElementById('btnStart');
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Menyiapkan...';
+  
+  // Beri delay sedikit agar UI sempat update spinner
+  setTimeout(()=>{
+    try{
+      state.players[0].name = n1;
+      state.players[1].name = n2;
+      generateAllQuestions();
+      
+      document.getElementById('ava1').textContent = n1.charAt(0).toUpperCase();
+      document.getElementById('ava2').textContent = n2.charAt(0).toUpperCase();
+      document.getElementById('pname1').textContent = n1;
+      document.getElementById('pname2').textContent = n2;
+      
+      switchScreen('quiz');
+      renderNavBar();
+      state.quizStart = Date.now();
+      loadSoal(0);
+      
+      toast('Duel dimulai! Semoga beruntung, '+n1+' & '+n2+'!','success');
+    }catch(e){
+      console.error('Error starting quiz:', e);
+      toast('Terjadi kesalahan sistem: '+e.message,'error');
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fas fa-bolt"></i> Mulai Duel';
+    }
+  }, 50);
+}
+
+function switchScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+/* ===== MODALS ===== */
+function openMateri(){ document.getElementById('materiOverlay').classList.add('active'); }
+function closeMateri(){ document.getElementById('materiOverlay').classList.remove('active'); }
+function askFinish(){ document.getElementById('confirmOverlay').classList.add('active'); }
+function closeConfirm(){ document.getElementById('confirmOverlay').classList.remove('active'); }
+
+function confirmFinish(){
+  closeConfirm();
+  for(let p=0;p<2;p++){
+    for(let i=0;i<60;i++){
+      if(!state.players[p].checked[i]){
+        state.players[p].checked[i] = true;
+      }
+    }
+  }
+  stopTimer();
+  state.finished = true;
+  showResult();
+}
+
+/* ===== NAVIGATION ===== */
+function renderNavBar(){
+  const bar = document.getElementById('navBar');
+  bar.innerHTML = '<span class="nav-label">Navigasi:</span>';
+  for(let i=0;i<60;i++){
+    const d = document.createElement('div');
+    d.className = 'nav-dot';
+    if(i<20) d.classList.add('t1');
+    else if(i<40) d.classList.add('t2');
+    else d.classList.add('t3');
+    if(i === state.curIdx) d.classList.add('cur');
+    
+    const c1 = state.players[0].checked[i];
+    const c2 = state.players[1].checked[i];
+    const a1 = state.players[0].answers[i];
+    const a2 = state.players[1].answers[i];
+    const q1 = state.players[0].questions[i];
+    const q2 = state.players[1].questions[i];
+    
+    if(c1 && c2 && q1 && q2){
+      const b1 = a1 === q1.options.indexOf(q1.correct);
+      const b2 = a2 === q2.options.indexOf(q2.correct);
+      if(b1 && b2) d.classList.add('both-correct');
+      else if(b1) d.classList.add('s1-correct');
+      else if(b2) d.classList.add('s2-correct');
+      else d.classList.add('wrong');
+    }
+    d.textContent = i+1;
+    d.title = `Soal ${i+1} · ${['Konversi','Operasi','Cerita'][Math.floor(i/20)]}`;
+    d.onclick = ()=>loadSoal(i);
+    bar.appendChild(d);
+  }
+}
+
+function loadSoal(idx){
+  state.curIdx = idx;
+  document.getElementById('curNum').textContent = idx+1;
+  renderNavBar();
+  renderPanel(0);
+  renderPanel(1);
+  resetTimer();
+  
+  const c1 = state.players[0].checked[idx];
+  const c2 = state.players[1].checked[idx];
+  if(c1 && c2){
+    stopTimer();
+    document.getElementById('timerSts').textContent = 'Selesai · Kedua pemain sudah cek';
+    document.getElementById('timerNum').textContent = '00:00';
+  } else {
+    startTimer();
+  }
+}
+
+function renderPanel(p){
+  const panel = document.getElementById('panel'+(p+1));
+  const q = state.players[p].questions[state.curIdx];
+  if(!q){
+    panel.innerHTML = '<div style="padding:40px;text-align:center;color:var(--muted)">Soal belum siap.</div>';
+    return;
+  }
+  const ans = state.players[p].answers[state.curIdx];
+  const cek = state.players[p].checked[state.curIdx];
+  const correctIdx = q.options.indexOf(q.correct);
+  
+  let optsHtml = '';
+  q.options.forEach((opt, i)=>{
+    let cls = 'opt';
+    if(ans === i) cls += ' selected';
+    if(cek){
+      if(i === correctIdx) cls += ' correct';
+      else if(ans === i) cls += ' wrong';
+    }
+    optsHtml += `<div class="${cls}" onclick="selectOpt(${p},${i})">
+      <div class="letter">${String.fromCharCode(65+i)}</div>
+      <div>${opt.toLocaleString('id-ID')} ${q.correctUnit}</div>
+    </div>`;
+  });
+  
+  const statusBadge = cek ? 
+    (ans === correctIdx ? 
+      '<div class="q-status benar">Benar</div>' : 
+      '<div class="q-status salah">Salah</div>') : '';
+  
+  const cekBtn = cek ? '' : `<button class="btn btn-sm ${p===0?'btn-primary':'btn-teal'}" onclick="cekJawaban(${p})" ${ans===null?'disabled':''}><i class="fas fa-check"></i> Cek Jawaban</button>`;
+  const pbBtn = cek ? `<button class="btn btn-sm btn-ghost" onclick="togglePembahasan(${p})"><i class="fas fa-lightbulb"></i> Pembahasan</button>` : '';
+  const pbContent = cek ? `<div class="pembahasan show" id="pb${p}">
+    <div class="pb-title"><i class="fas fa-lightbulb"></i> Pembahasan</div>
+    ${q.pembahasan}
+    <span class="ans">Jawaban benar: ${q.correct.toLocaleString('id-ID')} ${q.correctUnit}</span>
+  </div>` : '<div class="pembahasan" id="pb'+p+'"></div>';
+  
+  panel.innerHTML = `
+    ${statusBadge}
+    <div class="q-head">
+      <div class="q-type t${q.type}">${q.typeName}</div>
+      <div class="q-num">Soal <span class="big">${state.curIdx+1}</span> / 60</div>
+    </div>
+    <div class="q-text">${q.questionHtml}</div>
+    <div class="opts">${optsHtml}</div>
+    <div class="q-actions">${cekBtn}${pbBtn}</div>
+    ${pbContent}
+  `;
+  panel.classList.toggle('locked', cek);
+}
+
+function selectOpt(p, i){
+  if(state.players[p].checked[state.curIdx]) return;
+  state.players[p].answers[state.curIdx] = i;
+  renderPanel(p);
+}
+
+function cekJawaban(p){
+  if(state.players[p].checked[state.curIdx]) return;
+  if(state.players[p].answers[state.curIdx] === null){
+    toast('Pilih jawaban dulu!','warn');
+    return;
+  }
+  const elapsed = Math.floor((Date.now() - state.qStartTime) / 1000);
+  state.players[p].timePerQ[state.curIdx] = Math.max(1, elapsed);
+  state.players[p].checked[state.curIdx] = true;
+  
+  const q = state.players[p].questions[state.curIdx];
+  const correct = state.players[p].answers[state.curIdx] === q.options.indexOf(q.correct);
+  
+  renderPanel(p);
+  renderNavBar();
+  
+  const c1 = state.players[0].checked[state.curIdx];
+  const c2 = state.players[1].checked[state.curIdx];
+  if(c1 && c2){
+    stopTimer();
+    document.getElementById('timerSts').textContent = 'Selesai · Kedua pemain sudah cek';
+    document.getElementById('timerNum').textContent = '00:00';
+    toast(`${state.players[p].name}: ${correct?'Benar!':'Salah.'}`, correct?'success':'warn');
+  } else {
+    toast(`${state.players[p].name} sudah cek jawaban!`,'success');
+  }
+}
+
+function togglePembahasan(p){
+  const pb = document.getElementById('pb'+p);
+  if(pb) pb.classList.toggle('show');
+}
+
+function nextSoal(){
+  if(state.curIdx < 59) loadSoal(state.curIdx + 1);
+  else toast('Sudah soal terakhir!','warn');
+}
+function prevSoal(){
+  if(state.curIdx > 0) loadSoal(state.curIdx - 1);
+  else toast('Sudah soal pertama!','warn');
+}
+
+/* ===== TIMER ===== */
+function startTimer(){
+  stopTimer();
+  state.qStartTime = Date.now();
+  document.getElementById('timerSts').textContent = 'Berjalan';
+  updateTimerDisplay();
+  state.timerInterval = setInterval(()=>{
+    state.timeLeft--;
+    updateTimerDisplay();
+    if(state.timeLeft <= 0){
+      autoCekBoth();
+      stopTimer();
+    }
+  }, 1000);
+}
+
+function stopTimer(){
+  if(state.timerInterval){
+    clearInterval(state.timerInterval);
+    state.timerInterval = null;
+  }
+}
+
+function resetTimer(){
+  stopTimer();
+  state.timeLeft = 120;
+  document.getElementById('timerNum').classList.remove('warn','danger');
+  updateTimerDisplay();
+}
+
+function updateTimerDisplay(){
+  const m = Math.floor(Math.max(0,state.timeLeft) / 60).toString().padStart(2,'0');
+  const s = (Math.max(0,state.timeLeft) % 60).toString().padStart(2,'0');
+  const el = document.getElementById('timerNum');
+  el.textContent = `${m}:${s}`;
+  el.classList.remove('warn','danger');
+  if(state.timeLeft <= 30 && state.timeLeft > 10) el.classList.add('warn');
+  else if(state.timeLeft <= 10 && state.timeLeft > 0) el.classList.add('danger');
+}
+
+function addTime(){
+  state.timeLeft += 15;
+  updateTimerDisplay();
+  toast('+15 detik ditambahkan!','success');
+  document.getElementById('timerSts').textContent = '+15s · Berjalan';
+  setTimeout(()=>{
+    if(state.timerInterval) document.getElementById('timerSts').textContent = 'Berjalan';
+  }, 1500);
+}
+
+function autoCekBoth(){
+  for(let p=0;p<2;p++){
+    if(!state.players[p].checked[state.curIdx]){
+      const elapsed = Math.floor((Date.now() - state.qStartTime) / 1000);
+      state.players[p].timePerQ[state.curIdx] = Math.max(1, elapsed);
+      state.players[p].checked[state.curIdx] = true;
+    }
+  }
+  renderPanel(0);
+  renderPanel(1);
+  renderNavBar();
+  document.getElementById('timerSts').textContent = 'Waktu habis!';
+  toast('Waktu habis! Jawaban otomatis dikunci.','error');
+}
+
+/* ===== RESULT ===== */
+function showResult(){
+  switchScreen('result');
+  
+  const stats = [0,1].map(p=>{
+    let benar = 0, salah = 0, totalTime = 0;
+    for(let i=0;i<60;i++){
+      const q = state.players[p].questions[i];
+      if(q && state.players[p].answers[i] === q.options.indexOf(q.correct)) benar++;
+      else salah++;
+      totalTime += state.players[p].timePerQ[i] || 0;
+    }
+    return {
+      name: state.players[p].name,
+      benar, salah,
+      persen: Math.round(benar / 60 * 100),
+      avgTime: Math.round(totalTime / 60),
+      totalTime
+    };
+  });
+  
+  let winnerIdx;
+  if(stats[0].benar > stats[1].benar) winnerIdx = 0;
+  else if(stats[1].benar > stats[0].benar) winnerIdx = 1;
+  else {
+    if(stats[0].totalTime < stats[1].totalTime) winnerIdx = 0;
+    else if(stats[1].totalTime < stats[0].totalTime) winnerIdx = 1;
+    else winnerIdx = -1;
+  }
+  
+  const titleEl = document.getElementById('resultTitle');
+  const subEl = document.getElementById('resultSub');
+  if(winnerIdx === -1){
+    titleEl.innerHTML = '<span class="draw">Hasil Seri!</span>';
+    subEl.textContent = `${stats[0].name} dan ${stats[1].name} sama-sama menjawab ${stats[0].benar} soal dengan benar. Pertandingan yang sangat ketat!`;
+  } else {
+    titleEl.innerHTML = `Pemenang: <span class="winner-name">${stats[winnerIdx].name}</span>`;
+    const diff = Math.abs(stats[0].benar - stats[1].benar);
+    subEl.textContent = `Selisih ${diff} soal benar. ${stats[1-winnerIdx].name} tampil tangguh, tetapi ${stats[winnerIdx].name} lebih konsisten.`;
+  }
+  
+  for(let p=0;p<2;p++){
+    document.getElementById('resName'+(p+1)).textContent = stats[p].name;
+    document.getElementById('resAva'+(p+1)).textContent = stats[p].name.charAt(0).toUpperCase();
+    document.getElementById('benar'+(p+1)).textContent = stats[p].benar;
+    document.getElementById('salah'+(p+1)).textContent = stats[p].salah;
+    document.getElementById('persen'+(p+1)).textContent = stats[p].persen+'%';
+    document.getElementById('avg'+(p+1)).textContent = stats[p].avgTime+'s';
+    document.getElementById('bar'+(p+1)).style.width = stats[p].persen+'%';
+    document.getElementById('rank'+(p+1)).textContent = (winnerIdx === p ? '1' : (winnerIdx === -1 ? '1' : '2'));
+  }
+  
+  renderDetail();
+  renderKesimpulan(stats, winnerIdx);
+}
+
+function renderDetail(){
+  const body = document.getElementById('detailBody');
+  body.innerHTML = '';
+  for(let i=0;i<60;i++){
+    const q1 = state.players[0].questions[i];
+    const q2 = state.players[1].questions[i];
+    if(!q1 || !q2) continue;
+    
+    const a1 = state.players[0].answers[i];
+    const a2 = state.players[1].answers[i];
+    const t1 = state.players[0].timePerQ[i];
+    const t2 = state.players[1].timePerQ[i];
+    const b1 = a1 === q1.options.indexOf(q1.correct);
+    const b2 = a2 === q2.options.indexOf(q2.correct);
+    const typeNum = Math.floor(i/20) + 1;
+    
+    if(state.detailFilter !== 'all' && state.detailFilter !== 't'+typeNum) continue;
+    
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td>${i+1}</td>
+      <td><span class="tag-type t${typeNum}">Jenis ${typeNum}</span></td>
+      <td style="font-family:'Manrope';font-weight:500;font-size:12px;max-width:280px;white-space:normal">${q1.short}</td>
+      <td style="color:var(--emerald)">${q1.correct.toLocaleString('id-ID')} ${q1.correctUnit}</td>
+      <td>${a1 !== null ? q1.options[a1].toLocaleString('id-ID') : '—'}</td>
+      <td>${a1 !== null ? (b1 ? '<span class="badge-correct">Benar</span>' : '<span class="badge-wrong">Salah</span>') : '<span class="badge-skip">Kosong</span>'}</td>
+      <td>${t1}s</td>
+      <td>${a2 !== null ? q2.options[a2].toLocaleString('id-ID') : '—'}</td>
+      <td>${a2 !== null ? (b2 ? '<span class="badge-correct">Benar</span>' : '<span class="badge-wrong">Salah</span>') : '<span class="badge-skip">Kosong</span>'}</td>
+      <td>${t2}s</td>
+    `;
+    body.appendChild(row);
+  }
+}
+
+function switchDetail(tabIdx, filter){
+  state.detailFilter = filter;
+  document.querySelectorAll('.detail-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById(['tabAll','tabT1','tabT2','tabT3'][tabIdx]).classList.add('active');
+  renderDetail();
+}
+
+function renderKesimpulan(stats, winnerIdx){
+  const totalBenar = stats[0].benar + stats[1].benar;
+  const totalSoal = 120;
+  const akurasiTim = Math.round(totalBenar / totalSoal * 100);
+  
+  const kesimpulan = `Berdasarkan duel yang berlangsung sebanyak 60 soal untuk setiap pemain, tercatat total <strong>${totalBenar} dari ${totalSoal} soal</strong> terjawab benar (akurasi gabungan <strong>${akurasiTim}%</strong>). ${winnerIdx === -1 ? 'Pertandingan berakhir seri dengan akurasi setara dari kedua pemain.' : `<strong>${stats[winnerIdx].name}</strong> tampil sebagai pemenang dengan ${stats[winnerIdx].benar} jawaban benar (akurasi ${stats[winnerIdx].persen}%), mengungguli ${stats[1-winnerIdx].name} yang mengantongi ${stats[1-winnerIdx].benar} jawaban benar.`} Rata-rata waktu pengerjaan per soal berkisar ${stats[0].avgTime}s dan ${stats[1].avgTime}s — menunjukkan kecepatan berpikir yang baik. Soal jenis konversi langsung cenderung lebih cepat dijawab, sementara soal cerita membutuhkan waktu lebih lama untuk membaca dan memahami konteks.`;
+  
+  document.getElementById('kesimpulanText').innerHTML = kesimpulan;
+  
+  let refleksi;
+  if(akurasiTim >= 80){
+    refleksi = `"Penguasaan konversi satuan panjang kalian sudah sangat baik! Pertahankan kecepatan dan ketelitian ini. Untuk soal cerita, biasakan menulis 'diketahui' dan 'ditanya' agar tidak salah langkah. Sedikit latihan lagi pada konversi yang melibatkan km ↔ mm (6 tangga) akan membuat kalian sempurna."`;
+  } else if(akurasiTim >= 60){
+    refleksi = `"Kalian sudah cukup baik dalam konversi, tetapi masih ada ruang untuk peningkatan. Perhatikan baik-baik soal operasi (penjumlahan/pengurangan) — pastikan kedua nilai dikonversi ke satuan target sebelum dihitung. Untuk soal cerita, baca pelan-pelan dan identifikasi satuan yang ditanyakan sebelum mulai menghitung."`;
+  } else if(akurasiTim >= 40){
+    refleksi = `"Konsep dasar tangga satuan sudah mulai tertanam, namun masih banyak kesalahan terutama pada konversi yang melibatkan banyak anak tangga. Ingat: setiap naik 1 tangga = × 10, setiap turun 1 tangga = ÷ 10. Latih lagi konversi km ke mm (× 1.000.000) dan sebaliknya. Jangan buru-buru, teliti dulu sebelum memilih jawaban."`;
+  } else {
+    refleksi = `"Mari kita evaluasi bersama. Konversi satuan panjang membutuhkan pemahaman tangga: km — hm — dam — m — dm — cm — mm. Pelajari kembali materinya, mulai dari konversi sederhana (1-2 tangga) sebelum mencoba yang lebih kompleks. Setiap anak tangga = kelipatan 10. Gunakan jari atau gambar tangga di kertas jika membantu. Jangan menyerah, setiap ahli pernah menjadi pemula!"`;
+  }
+  document.getElementById('refleksiText').innerHTML = refleksi;
+}
+
+/* ===== TOAST ===== */
+function toast(msg, type='success'){
+  const wrap = document.getElementById('toastWrap');
+  const t = document.createElement('div');
+  t.className = 'toast ' + type;
+  const icon = type === 'success' ? 'check-circle' : type === 'error' ? 'circle-exclamation' : 'triangle-exclamation';
+  t.innerHTML = `<i class="fas fa-${icon}"></i> ${msg}`;
+  wrap.appendChild(t);
+  setTimeout(()=>{
+    t.style.opacity = '0';
+    t.style.transform = 'translateX(120%)';
+    setTimeout(()=>t.remove(), 300);
+  }, 3000);
+}
+
+/* ===== RESTART ===== */
+function restartQuiz(){
+  state.players = [
+    {name:state.players[0].name, questions:[], answers:Array(60).fill(null), checked:Array(60).fill(false), timePerQ:Array(60).fill(0)},
+    {name:state.players[1].name, questions:[], answers:Array(60).fill(null), checked:Array(60).fill(false), timePerQ:Array(60).fill(0)}
+  ];
+  state.curIdx = 0;
+  state.finished = false;
+  state.detailFilter = 'all';
+  generateAllQuestions();
+  switchScreen('quiz');
+  renderNavBar();
+  loadSoal(0);
+  toast('Duel baru dimulai!','success');
+}
+
+function goHome(){ location.reload(); }
+
+/* ===== INIT ===== */
+document.getElementById('name1').addEventListener('input', ()=>document.getElementById('card1').classList.remove('err'));
+document.getElementById('name2').addEventListener('input', ()=>document.getElementById('card2').classList.remove('err'));
+document.getElementById('name1').addEventListener('keypress', e=>{ if(e.key === 'Enter') document.getElementById('name2').focus(); });
+document.getElementById('name2').addEventListener('keypress', e=>{ if(e.key === 'Enter') startQuiz(); });
+document.addEventListener('keydown', e=>{ if(e.key === 'Escape'){ closeMateri(); closeConfirm(); } });
+</script>
+</body>
+</html>
