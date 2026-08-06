@@ -1,0 +1,2189 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Latihan Konversi Satuan Panjang</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700;9..144,900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+:root {
+  --bg: #faf6f0;
+  --bg-deep: #f0e8dc;
+  --surface: #ffffff;
+  --ink: #1a1612;
+  --ink-soft: #6b5e51;
+  --muted: #a89a8a;
+  --accent: #d97757;
+  --accent-deep: #b85a3c;
+  --accent-soft: rgba(217, 119, 87, 0.1);
+  --green: #5d7a5a;
+  --green-deep: #3d5a3a;
+  --green-soft: rgba(93, 122, 90, 0.1);
+  --gold: #e8a13a;
+  --gold-soft: rgba(232, 161, 58, 0.12);
+  --red: #c44545;
+  --red-soft: rgba(196, 69, 69, 0.1);
+  --border: #e8e0d5;
+  --border-strong: #d4c8b8;
+  --shadow: 0 4px 24px rgba(60, 40, 20, 0.06);
+  --shadow-lg: 0 12px 48px rgba(60, 40, 20, 0.1);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  min-height: 100vh;
+  line-height: 1.6;
+  background-image: 
+    radial-gradient(circle at 10% 0%, rgba(217, 119, 87, 0.05) 0%, transparent 40%),
+    radial-gradient(circle at 90% 100%, rgba(93, 122, 90, 0.05) 0%, transparent 40%);
+}
+
+h1, h2, h3, h4 {
+  font-family: 'Fraunces', serif;
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--ink);
+}
+
+.screen { display: none; min-height: 100vh; }
+.screen.active { display: block; animation: fadeIn 0.4s ease; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* === COVER === */
+.cover { display: flex; align-items: center; justify-content: center; padding: 2rem; }
+
+.cover-card {
+  background: var(--surface);
+  border-radius: 32px;
+  padding: 3rem;
+  max-width: 760px;
+  width: 100%;
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
+}
+
+.cover-card::before {
+  content: '';
+  position: absolute;
+  top: -150px; right: -150px;
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba(217, 119, 87, 0.12) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.cover-card::after {
+  content: '';
+  position: absolute;
+  bottom: -100px; left: -100px;
+  width: 300px; height: 300px;
+  background: radial-gradient(circle, rgba(93, 122, 90, 0.1) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.cover-label {
+  display: inline-block;
+  padding: 0.4rem 1rem;
+  background: var(--bg-deep);
+  border-radius: 100px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent-deep);
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+
+.cover-title {
+  font-size: clamp(2.5rem, 5vw, 3.75rem);
+  font-weight: 900;
+  margin-bottom: 1rem;
+  color: var(--ink);
+  position: relative;
+  letter-spacing: -0.02em;
+}
+
+.cover-title em {
+  font-style: italic;
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.cover-subtitle {
+  font-size: 1.05rem;
+  color: var(--ink-soft);
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+.name-inputs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+
+.name-input-group label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: var(--ink-soft);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.name-input-group label .dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+}
+
+.name-input-group.s1 .dot { background: var(--accent); }
+.name-input-group.s2 .dot { background: var(--green); }
+
+.name-input-group input {
+  width: 100%;
+  padding: 1rem 1.1rem;
+  border: 2px solid var(--border);
+  border-radius: 14px;
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 500;
+  background: var(--bg);
+  color: var(--ink);
+  transition: all 0.2s;
+}
+
+.name-input-group input:focus {
+  outline: none;
+  border-color: var(--accent);
+  background: var(--surface);
+  box-shadow: 0 0 0 4px var(--accent-soft);
+}
+
+.name-input-group.s2 input:focus {
+  border-color: var(--green);
+  box-shadow: 0 0 0 4px var(--green-soft);
+}
+
+.cover-actions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  position: relative;
+}
+
+.btn {
+  padding: 0.9rem 1.5rem;
+  border: none;
+  border-radius: 12px;
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  white-space: nowrap;
+}
+
+.btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.btn-primary { background: var(--ink); color: var(--surface); }
+.btn-primary:hover:not(:disabled) {
+  background: var(--accent);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(217, 119, 87, 0.3);
+}
+
+.btn-secondary { background: var(--bg-deep); color: var(--ink); }
+.btn-secondary:hover:not(:disabled) { background: var(--border-strong); }
+
+.btn-danger { background: var(--red); color: white; }
+.btn-danger:hover:not(:disabled) { background: #a83838; transform: translateY(-1px); }
+
+.btn-icon {
+  background: var(--bg-deep);
+  color: var(--ink);
+  padding: 0.6rem 0.9rem;
+}
+.btn-icon:hover:not(:disabled) {
+  background: var(--accent);
+  color: white;
+}
+
+.cover-info {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border);
+  position: relative;
+}
+
+.info-item { text-align: center; }
+.info-num {
+  font-family: 'Fraunces', serif;
+  font-weight: 900;
+  font-size: 1.75rem;
+  color: var(--accent);
+  line-height: 1;
+}
+.info-label {
+  font-size: 0.75rem;
+  color: var(--ink-soft);
+  margin-top: 0.3rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+}
+
+/* === MODAL === */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(26, 22, 18, 0.6);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s;
+}
+
+.modal-overlay.active { opacity: 1; visibility: visible; }
+
+.modal {
+  background: var(--surface);
+  border-radius: 24px;
+  padding: 2.5rem;
+  max-width: 800px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  transform: scale(0.95) translateY(20px);
+  transition: transform 0.3s;
+  box-shadow: var(--shadow-lg);
+}
+
+.modal-overlay.active .modal { transform: scale(1) translateY(0); }
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.modal-icon {
+  width: 48px; height: 48px;
+  background: var(--accent-soft);
+  color: var(--accent-deep);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+}
+
+.modal-title { font-size: 1.75rem; font-weight: 800; }
+.modal-subtitle { color: var(--ink-soft); font-size: 0.95rem; }
+.modal-body { margin-bottom: 1.5rem; }
+.modal-body p { margin-bottom: 1rem; color: var(--ink-soft); }
+
+/* Tangga satuan */
+.ladder {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 1.5rem 0;
+}
+
+.ladder-step {
+  display: flex;
+  align-items: center;
+  height: 44px;
+  position: relative;
+  transition: transform 0.2s;
+}
+
+.ladder-step:hover { transform: translateX(4px); }
+
+.ladder-bar {
+  color: white;
+  padding: 0 1rem;
+  border-radius: 8px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Fraunces', serif;
+  font-weight: 800;
+  font-size: 1rem;
+  min-width: 70px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.ladder-step[data-unit="km"] .ladder-bar { background: linear-gradient(135deg, #d97757, #b85a3c); }
+.ladder-step[data-unit="hm"] .ladder-bar { background: linear-gradient(135deg, #e08b6a, #c46b4a); }
+.ladder-step[data-unit="dam"] .ladder-bar { background: linear-gradient(135deg, #e8a07f, #cd8561); }
+.ladder-step[data-unit="m"] .ladder-bar { background: linear-gradient(135deg, #5d7a5a, #3d5a3a); }
+.ladder-step[data-unit="dm"] .ladder-bar { background: linear-gradient(135deg, #7d9a7a, #5d7a5a); }
+.ladder-step[data-unit="cm"] .ladder-bar { background: linear-gradient(135deg, #95b092, #7d9a7a); }
+.ladder-step[data-unit="mm"] .ladder-bar { background: linear-gradient(135deg, #b0c6ad, #95b092); }
+
+.ladder-info {
+  margin-left: 1rem;
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+}
+
+.ladder-info strong { color: var(--ink); font-weight: 700; }
+
+.ladder-step[data-unit="km"] { padding-left: 0; }
+.ladder-step[data-unit="hm"] { padding-left: 5%; }
+.ladder-step[data-unit="dam"] { padding-left: 10%; }
+.ladder-step[data-unit="m"] { padding-left: 15%; }
+.ladder-step[data-unit="dm"] { padding-left: 20%; }
+.ladder-step[data-unit="cm"] { padding-left: 25%; }
+.ladder-step[data-unit="mm"] { padding-left: 30%; }
+
+.conversion-tip {
+  background: var(--bg-deep);
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  margin-top: 1rem;
+  border-left: 4px solid var(--green);
+  font-size: 0.9rem;
+  color: var(--ink-soft);
+  line-height: 1.7;
+}
+
+.conversion-tip strong { color: var(--ink); }
+
+/* === QUIZ === */
+#quiz.active {
+  padding: 1.5rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.quiz-header {
+  background: var(--surface);
+  border-radius: 20px;
+  padding: 1rem 1.5rem;
+  margin-bottom: 1.5rem;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 1rem;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+}
+
+.quiz-info { display: flex; flex-direction: column; gap: 0.2rem; }
+
+.question-counter {
+  font-family: 'Fraunces', serif;
+  font-weight: 800;
+  font-size: 1.5rem;
+  color: var(--ink);
+}
+
+.question-counter span { color: var(--accent); }
+
+.question-type {
+  font-size: 0.8rem;
+  color: var(--ink-soft);
+  font-weight: 600;
+}
+
+.type-badge {
+  display: inline-block;
+  padding: 0.2rem 0.6rem;
+  background: var(--accent-soft);
+  color: var(--accent-deep);
+  border-radius: 100px;
+  margin-right: 0.4rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.type-badge.t2 { background: var(--green-soft); color: var(--green-deep); }
+.type-badge.t3 { background: var(--gold-soft); color: #8a6420; }
+
+.timer-section {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  justify-self: center;
+}
+
+.timer-wrap { text-align: center; }
+
+.timer {
+  position: relative;
+  width: 80px; height: 80px;
+}
+
+.timer svg { width: 100%; height: 100%; }
+
+.timer-circle-bg { fill: none; stroke: var(--bg-deep); stroke-width: 6; }
+
+.timer-circle {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 6;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.5s linear, stroke 0.3s;
+  transform: rotate(-90deg);
+  transform-origin: center;
+}
+
+.timer.warning .timer-circle { stroke: var(--gold); }
+.timer.danger .timer-circle { stroke: var(--red); }
+.timer.danger { animation: pulse 1s infinite; }
+.timer.stopped { opacity: 0.5; }
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+.timer-text {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: 'Fraunces', serif;
+  font-weight: 800;
+  font-size: 1.25rem;
+  color: var(--ink);
+}
+
+.timer-label {
+  font-size: 0.7rem;
+  color: var(--ink-soft);
+  margin-top: 0.25rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+}
+
+.quiz-actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-self: end;
+  align-items: center;
+}
+
+/* Student Panels */
+.students-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.student-panel {
+  background: var(--surface);
+  border-radius: 20px;
+  padding: 1.5rem;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
+}
+
+.student-panel::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 4px; height: 100%;
+}
+
+.student-panel.s1::before { background: var(--accent); }
+.student-panel.s2::before { background: var(--green); }
+
+.panel-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.student-avatar {
+  width: 44px; height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Fraunces', serif;
+  font-weight: 800;
+  font-size: 1.25rem;
+  color: white;
+}
+
+.s1 .student-avatar { background: var(--accent); }
+.s2 .student-avatar { background: var(--green); }
+
+.student-info { flex: 1; min-width: 0; }
+
+.student-label {
+  font-size: 0.7rem;
+  color: var(--ink-soft);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+}
+
+.student-name {
+  font-family: 'Fraunces', serif;
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.student-status {
+  padding: 0.3rem 0.75rem;
+  border-radius: 100px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  background: var(--bg-deep);
+  color: var(--ink-soft);
+  white-space: nowrap;
+}
+
+.student-status.correct { background: var(--green-soft); color: var(--green-deep); }
+.student-status.wrong { background: var(--red-soft); color: var(--red); }
+
+.question-box { margin-bottom: 1rem; }
+
+.question-text {
+  font-size: 1.05rem;
+  color: var(--ink);
+  margin-bottom: 1rem;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.question-text strong { font-weight: 700; color: var(--accent-deep); }
+.s2 .question-text strong { color: var(--green-deep); }
+
+.options { display: grid; gap: 0.5rem; }
+
+.option {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.85rem 1rem;
+  background: var(--bg);
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: inherit;
+  font-size: 0.95rem;
+  text-align: left;
+  color: var(--ink);
+  font-weight: 500;
+  width: 100%;
+}
+
+.option:hover:not(:disabled) {
+  border-color: var(--accent);
+  background: var(--surface);
+  transform: translateX(2px);
+}
+
+.s2 .option:hover:not(:disabled) { border-color: var(--green); }
+
+.option:disabled { cursor: not-allowed; }
+
+.option-letter {
+  width: 28px; height: 28px;
+  border-radius: 8px;
+  background: var(--bg-deep);
+  color: var(--ink-soft);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.85rem;
+  flex-shrink: 0;
+  transition: all 0.15s;
+}
+
+.option.selected .option-letter { background: var(--accent); color: white; }
+.s2 .option.selected .option-letter { background: var(--green); }
+.option.selected { border-color: var(--accent); background: var(--accent-soft); }
+.s2 .option.selected { border-color: var(--green); background: var(--green-soft); }
+
+.option.correct { border-color: var(--green); background: var(--green-soft); }
+.option.correct .option-letter { background: var(--green); color: white; }
+.option.wrong { border-color: var(--red); background: var(--red-soft); }
+.option.wrong .option-letter { background: var(--red); color: white; }
+.option-text { flex: 1; }
+.option-icon { margin-left: auto; font-size: 1rem; }
+.option.correct .option-icon { color: var(--green); }
+.option.wrong .option-icon { color: var(--red); }
+
+.panel-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.panel-actions .btn {
+  flex: 1;
+  justify-content: center;
+}
+
+.explanation {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: var(--bg-deep);
+  border-radius: 12px;
+  border-left: 4px solid var(--accent);
+  animation: slideDown 0.3s ease;
+}
+
+.s2 .explanation { border-left-color: var(--green); }
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.explanation-title {
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.explanation-title i { color: var(--accent); }
+.s2 .explanation-title i { color: var(--green); }
+
+.explanation-text {
+  font-size: 0.9rem;
+  color: var(--ink-soft);
+  line-height: 1.7;
+}
+
+.explanation-text strong { color: var(--ink); }
+
+/* Palette */
+.palette {
+  background: var(--surface);
+  border-radius: 20px;
+  padding: 1.25rem;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+}
+
+.palette-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.palette-title {
+  font-size: 0.8rem;
+  color: var(--ink-soft);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 700;
+}
+
+.palette-legend {
+  display: flex;
+  gap: 0.75rem;
+  font-size: 0.75rem;
+  color: var(--ink-soft);
+  flex-wrap: wrap;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.legend-dot {
+  width: 10px; height: 10px;
+  border-radius: 3px;
+}
+
+.legend-dot.t1 { background: var(--accent); }
+.legend-dot.t2 { background: var(--green); }
+.legend-dot.t3 { background: var(--gold); }
+
+.palette-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(38px, 1fr));
+  gap: 0.35rem;
+}
+
+.palette-item {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg);
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--ink-soft);
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: 'Fraunces', serif;
+  position: relative;
+  padding: 0;
+}
+
+.palette-item:hover {
+  border-color: var(--accent);
+  transform: translateY(-1px);
+}
+
+.palette-item.current {
+  background: var(--ink);
+  color: white;
+  border-color: var(--ink);
+}
+
+.palette-item.both-correct { background: var(--green-soft); border-color: var(--green); color: var(--green-deep); }
+.palette-item.both-wrong { background: var(--red-soft); border-color: var(--red); color: var(--red); }
+.palette-item.mixed { background: var(--gold-soft); border-color: var(--gold); color: #8a6420; }
+.palette-item.partial { background: var(--bg-deep); border-color: var(--border-strong); color: var(--ink-soft); }
+
+.palette-item.type-1::after {
+  content: '';
+  position: absolute;
+  top: 2px; left: 2px;
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.palette-item.type-2::after {
+  content: '';
+  position: absolute;
+  top: 2px; left: 2px;
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--green);
+}
+
+.palette-item.type-3::after {
+  content: '';
+  position: absolute;
+  top: 2px; left: 2px;
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--gold);
+}
+
+/* === RESULTS === */
+#results.active {
+  padding: 2rem 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.results-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.results-title {
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 900;
+  margin-bottom: 0.5rem;
+}
+
+.results-title em {
+  font-style: italic;
+  color: var(--accent);
+}
+
+.results-subtitle {
+  color: var(--ink-soft);
+  font-size: 1.05rem;
+}
+
+.results-summary {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.result-card {
+  background: var(--surface);
+  border-radius: 20px;
+  padding: 1.5rem;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
+}
+
+.result-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 4px;
+}
+
+.result-card.s1::before { background: var(--accent); }
+.result-card.s2::before { background: var(--green); }
+
+.result-card.winner { box-shadow: 0 12px 40px rgba(232, 161, 58, 0.2); }
+
+.result-card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.winner-badge {
+  margin-left: auto;
+  padding: 0.3rem 0.75rem;
+  background: linear-gradient(135deg, #f4c14d, #e8a13a);
+  color: white;
+  border-radius: 100px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  box-shadow: 0 4px 12px rgba(232, 161, 58, 0.3);
+}
+
+.result-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.stat {
+  text-align: center;
+  padding: 1rem 0.5rem;
+  background: var(--bg);
+  border-radius: 12px;
+}
+
+.stat-num {
+  font-family: 'Fraunces', serif;
+  font-weight: 800;
+  font-size: 1.75rem;
+  line-height: 1;
+}
+
+.stat-num.correct { color: var(--green); }
+.stat-num.wrong { color: var(--red); }
+.stat-num.time { color: var(--accent); }
+
+.stat-label {
+  font-size: 0.7rem;
+  color: var(--ink-soft);
+  margin-top: 0.3rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+}
+
+.type-breakdown {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+}
+
+.type-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.4rem 0;
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+}
+
+.type-row strong { color: var(--ink); font-weight: 700; }
+
+.type-row .type-tag {
+  display: inline-block;
+  padding: 0.15rem 0.5rem;
+  border-radius: 100px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  margin-right: 0.5rem;
+}
+
+.type-tag.t1 { background: var(--accent-soft); color: var(--accent-deep); }
+.type-tag.t2 { background: var(--green-soft); color: var(--green-deep); }
+.type-tag.t3 { background: var(--gold-soft); color: #8a6420; }
+
+.progress-bar {
+  height: 6px;
+  background: var(--bg-deep);
+  border-radius: 100px;
+  overflow: hidden;
+  margin-top: 0.3rem;
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: 100px;
+  transition: width 0.6s ease;
+}
+
+.progress-fill.t1 { background: var(--accent); }
+.progress-fill.t2 { background: var(--green); }
+.progress-fill.t3 { background: var(--gold); }
+
+.results-detail {
+  background: var(--surface);
+  border-radius: 20px;
+  padding: 1.5rem;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+  margin-bottom: 1.5rem;
+}
+
+.detail-title {
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.detail-title i { color: var(--accent); }
+
+.detail-table-wrap {
+  overflow-x: auto;
+}
+
+.detail-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+  min-width: 600px;
+}
+
+.detail-table th {
+  text-align: left;
+  padding: 0.7rem 0.5rem;
+  background: var(--bg-deep);
+  color: var(--ink-soft);
+  font-weight: 700;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.detail-table th:first-child { border-radius: 8px 0 0 8px; }
+.detail-table th:last-child { border-radius: 0 8px 8px 0; }
+
+.detail-table td {
+  padding: 0.6rem 0.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.detail-table tr:last-child td { border-bottom: none; }
+
+.detail-table .q-num {
+  font-family: 'Fraunces', serif;
+  font-weight: 700;
+}
+
+.detail-table .correct { color: var(--green); font-weight: 600; }
+.detail-table .wrong { color: var(--red); font-weight: 600; }
+.detail-table .neutral { color: var(--muted); }
+
+.results-section {
+  background: var(--surface);
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+  margin-bottom: 1.5rem;
+}
+
+.section-title {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.section-title i { color: var(--accent); }
+
+.section-content {
+  color: var(--ink-soft);
+  line-height: 1.8;
+}
+
+.section-content p { margin-bottom: 0.75rem; }
+.section-content strong { color: var(--ink); }
+
+.reflection-list {
+  list-style: none;
+  padding: 0;
+}
+
+.reflection-list li {
+  padding: 0.85rem 1rem;
+  background: var(--bg);
+  border-radius: 12px;
+  margin-bottom: 0.5rem;
+  border-left: 4px solid var(--accent);
+  color: var(--ink);
+  font-weight: 500;
+}
+
+.reflection-list li:nth-child(even) { border-left-color: var(--green); }
+
+.thank-you {
+  text-align: center;
+  padding: 3rem 2rem;
+  background: linear-gradient(135deg, var(--accent-soft), var(--green-soft));
+  border-radius: 24px;
+  margin-bottom: 2rem;
+  border: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
+}
+
+.thank-you::before {
+  content: '';
+  position: absolute;
+  top: -50px; left: -50px;
+  width: 200px; height: 200px;
+  background: radial-gradient(circle, rgba(232, 161, 58, 0.2) 0%, transparent 70%);
+  border-radius: 50%;
+}
+
+.thank-you::after {
+  content: '';
+  position: absolute;
+  bottom: -50px; right: -50px;
+  width: 200px; height: 200px;
+  background: radial-gradient(circle, rgba(217, 119, 87, 0.2) 0%, transparent 70%);
+  border-radius: 50%;
+}
+
+.thank-you-title {
+  font-size: clamp(2rem, 4vw, 2.75rem);
+  font-weight: 900;
+  margin-bottom: 0.5rem;
+  font-style: italic;
+  position: relative;
+}
+
+.thank-you-title em {
+  color: var(--accent);
+  font-style: italic;
+}
+
+.thank-you-text {
+  color: var(--ink-soft);
+  font-size: 1.05rem;
+  max-width: 540px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.thank-you-decor {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  position: relative;
+}
+
+/* Toast */
+.toast {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background: var(--ink);
+  color: white;
+  padding: 0.9rem 1.5rem;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  z-index: 2000;
+  transition: transform 0.3s;
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  max-width: 90vw;
+}
+
+.toast.show { transform: translateX(-50%) translateY(0); }
+
+.toast i { color: var(--accent); }
+
+/* Responsive */
+@media (max-width: 900px) {
+  .students-grid { grid-template-columns: 1fr; }
+  .name-inputs { grid-template-columns: 1fr; }
+  .results-summary { grid-template-columns: 1fr; }
+  .quiz-header { grid-template-columns: 1fr; gap: 0.75rem; }
+  .quiz-actions { justify-self: stretch; justify-content: space-between; }
+  .timer-section { justify-self: start; }
+  .cover-info { grid-template-columns: 1fr; gap: 0.5rem; }
+  .result-stats { grid-template-columns: 1fr 1fr 1fr; }
+  .cover-card { padding: 2rem; }
+}
+
+@media (max-width: 500px) {
+  .btn { padding: 0.75rem 1rem; font-size: 0.85rem; }
+  .palette-grid { grid-template-columns: repeat(auto-fill, minmax(32px, 1fr)); }
+  .result-stats { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<section id="cover" class="screen active cover">
+  <div class="cover-card">
+    <span class="cover-label">Math Lab · Satuan Panjang</span>
+    <h1 class="cover-title">Konversi <em>Satuan Panjang</em></h1>
+    <p class="cover-subtitle">Latihan interaktif untuk berdua — kerjakan 60 soal, bersainglah secara sehat, dan lihat siapa lebih jago tangga konversi.</p>
+    
+    <div class="name-inputs">
+      <div class="name-input-group s1">
+        <label><span class="dot"></span> Siswa 1</label>
+        <input id="name1" type="text" placeholder="Nama lengkap siswa 1" autocomplete="off">
+      </div>
+      <div class="name-input-group s2">
+        <label><span class="dot"></span> Siswa 2</label>
+        <input id="name2" type="text" placeholder="Nama lengkap siswa 2" autocomplete="off">
+      </div>
+    </div>
+    
+    <div class="cover-actions">
+      <button class="btn btn-secondary" onclick="showMaterial()">
+        <i class="fas fa-book-open"></i> Lihat Materi
+      </button>
+      <button class="btn btn-primary" onclick="startQuiz()">
+        <i class="fas fa-play"></i> Mulai Latihan
+      </button>
+    </div>
+    
+    <div class="cover-info">
+      <div class="info-item">
+        <div class="info-num">60</div>
+        <div class="info-label">Soal per siswa</div>
+      </div>
+      <div class="info-item">
+        <div class="info-num">3</div>
+        <div class="info-label">Jenis soal</div>
+      </div>
+      <div class="info-item">
+        <div class="info-num">2:00</div>
+        <div class="info-label">Menit per soal</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MATERIAL MODAL -->
+<div id="materialModal" class="modal-overlay">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-icon"><i class="fas fa-ruler-vertical"></i></div>
+      <div>
+        <h2 class="modal-title">Tangga Satuan Panjang</h2>
+        <p class="modal-subtitle">Konversi antar satuan baku panjang</p>
+      </div>
+    </div>
+    
+    <div class="modal-body">
+      <p>Satuan panjang dalam sistem metrik disusun berdasarkan tangga. Setiap <strong>turun satu tangga</strong>, nilai menjadi <strong>10 kali lebih besar</strong>. Sebaliknya, setiap <strong>naik satu tangga</strong>, nilai menjadi <strong>10 kali lebih kecil</strong>.</p>
+      
+      <div class="ladder">
+        <div class="ladder-step" data-unit="km">
+          <div class="ladder-bar">km</div>
+          <div class="ladder-info"><strong>Kilometer</strong> · 1 km = 1.000 m</div>
+        </div>
+        <div class="ladder-step" data-unit="hm">
+          <div class="ladder-bar">hm</div>
+          <div class="ladder-info"><strong>Hektometer</strong> · 1 hm = 100 m</div>
+        </div>
+        <div class="ladder-step" data-unit="dam">
+          <div class="ladder-bar">dam</div>
+          <div class="ladder-info"><strong>Dekameter</strong> · 1 dam = 10 m</div>
+        </div>
+        <div class="ladder-step" data-unit="m">
+          <div class="ladder-bar">m</div>
+          <div class="ladder-info"><strong>Meter</strong> · satuan dasar</div>
+        </div>
+        <div class="ladder-step" data-unit="dm">
+          <div class="ladder-bar">dm</div>
+          <div class="ladder-info"><strong>Desimeter</strong> · 1 m = 10 dm</div>
+        </div>
+        <div class="ladder-step" data-unit="cm">
+          <div class="ladder-bar">cm</div>
+          <div class="ladder-info"><strong>Sentimeter</strong> · 1 m = 100 cm</div>
+        </div>
+        <div class="ladder-step" data-unit="mm">
+          <div class="ladder-bar">mm</div>
+          <div class="ladder-info"><strong>Milimeter</strong> · 1 m = 1.000 mm</div>
+        </div>
+      </div>
+      
+      <div class="conversion-tip">
+        <strong>Trik cepat:</strong> Naik tangga = bagi 10, turun tangga = kali 10. Contoh: 2 km = ... m? Dari km ke m turun 3 tangga, jadi 2 × 10 × 10 × 10 = <strong>2.000 m</strong>.
+      </div>
+    </div>
+    
+    <div style="display: flex; justify-content: flex-end;">
+      <button class="btn btn-primary" onclick="closeMaterial()">
+        <i class="fas fa-check"></i> Saya Mengerti
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- QUIZ -->
+<section id="quiz" class="screen">
+  <header class="quiz-header">
+    <div class="quiz-info">
+      <div class="question-counter">Soal <span id="qNum">1</span> / 60</div>
+      <div class="question-type" id="qType"><span class="type-badge">Tipe 1</span> Konversi Sederhana</div>
+    </div>
+    
+    <div class="timer-section">
+      <div class="timer-wrap">
+        <div class="timer" id="timer">
+          <svg viewBox="0 0 80 80">
+            <circle class="timer-circle-bg" cx="40" cy="40" r="34"/>
+            <circle class="timer-circle" id="timerCircle" cx="40" cy="40" r="34" 
+                    stroke-dasharray="213.6" stroke-dashoffset="0"/>
+          </svg>
+          <div class="timer-text" id="timerText">2:00</div>
+        </div>
+        <div class="timer-label" id="timerLabel">Waktu</div>
+      </div>
+      <button class="btn btn-icon" onclick="addTime()" title="Tambah 15 detik">
+        <i class="fas fa-stopwatch"></i> +15s
+      </button>
+    </div>
+    
+    <div class="quiz-actions">
+      <button class="btn btn-secondary" onclick="prevQuestion()" id="prevBtn" title="Soal sebelumnya">
+        <i class="fas fa-chevron-left"></i>
+      </button>
+      <button class="btn btn-secondary" onclick="nextQuestion()" id="nextBtn">
+        Berikutnya <i class="fas fa-chevron-right"></i>
+      </button>
+      <button class="btn btn-danger" onclick="finishQuiz()">
+        <i class="fas fa-flag-checkered"></i> Finish
+      </button>
+    </div>
+  </header>
+  
+  <div class="students-grid">
+    <div class="student-panel s1" id="panel1"></div>
+    <div class="student-panel s2" id="panel2"></div>
+  </div>
+  
+  <div class="palette">
+    <div class="palette-header">
+      <div class="palette-title">Navigasi Soal</div>
+      <div class="palette-legend">
+        <span class="legend-item"><span class="legend-dot t1"></span> Tipe 1</span>
+        <span class="legend-item"><span class="legend-dot t2"></span> Tipe 2</span>
+        <span class="legend-item"><span class="legend-dot t3"></span> Tipe 3</span>
+      </div>
+    </div>
+    <div class="palette-grid" id="paletteGrid"></div>
+  </div>
+</section>
+
+<!-- RESULTS -->
+<section id="results" class="screen">
+  <div class="results-header">
+    <h1 class="results-title">Hasil <em>Latihan</em></h1>
+    <p class="results-subtitle">Konversi Satuan Panjang · Kerja keras yang luar biasa!</p>
+  </div>
+  
+  <div class="results-summary" id="resultsSummary"></div>
+  
+  <div class="results-detail">
+    <h3 class="detail-title"><i class="fas fa-list-check"></i> Rincian Jawaban per Soal</h3>
+    <div class="detail-table-wrap">
+      <table class="detail-table" id="detailTable">
+        <thead>
+          <tr>
+            <th>No</th>
+            <th>Tipe</th>
+            <th id="th1">Siswa 1</th>
+            <th>Waktu 1</th>
+            <th id="th2">Siswa 2</th>
+            <th>Waktu 2</th>
+          </tr>
+        </thead>
+        <tbody id="detailBody"></tbody>
+      </table>
+    </div>
+  </div>
+  
+  <div class="results-section">
+    <h3 class="section-title"><i class="fas fa-trophy"></i> Kesimpulan</h3>
+    <div class="section-content" id="conclusion"></div>
+  </div>
+  
+  <div class="results-section">
+    <h3 class="section-title"><i class="fas fa-lightbulb"></i> Refleksi</h3>
+    <div class="section-content">
+      <ul class="reflection-list">
+        <li>Soal tipe mana yang paling mudah bagiku? Mana yang paling sulit?</li>
+        <li>Apakah aku sudah menggunakan tangga konversi dengan benar setiap mengerjakan soal?</li>
+        <li>Bagian mana yang membuatku sering salah — perhitungan operasi atau konversi satuan?</li>
+        <li>Strategi apa yang bisa kupakai agar lebih cepat dan akurat di latihan berikutnya?</li>
+        <li>Bagaimana perasaanku saat mengerjakan bersama teman? Apakah kompetisi membuatku lebih semangat?</li>
+        <li>Apakah aku belajar hal baru dari pembahasan soal yang salah? Apa rencanaku untuk berlatih lebih lanjut?</li>
+      </ul>
+    </div>
+  </div>
+  
+  <div class="thank-you">
+    <div class="thank-you-decor"><i class="fas fa-star" style="color: var(--gold);"></i></div>
+    <h2 class="thank-you-title">Thank you <em>for today</em></h2>
+    <p class="thank-you-text">Kalian sudah bekerja keras dengan penuh semangat. Setiap soal yang kalian selesaikan adalah satu langkah lebih dekat untuk menguasai konversi satuan. Sampai jumpa di petualangan matematika berikutnya!</p>
+  </div>
+</section>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* === STATE === */
+const state = {
+  student1Name: '',
+  student2Name: '',
+  currentQuestionIdx: 0,
+  totalQuestions: 60,
+  timer: 120,
+  timerInterval: null,
+  timerRunning: false,
+  student1Results: [],
+  student2Results: [],
+  showExplanation1: false,
+  showExplanation2: false,
+  questions1: [],
+  questions2: [],
+};
+
+const conversionToMeter = {
+  'mm': 0.001, 'cm': 0.01, 'dm': 0.1, 'm': 1,
+  'dam': 10, 'hm': 100, 'km': 1000
+};
+
+function convert(value, from, to) {
+  return value * conversionToMeter[from] / conversionToMeter[to];
+}
+
+/* === SEEDED RANDOM === */
+function mulberry32(seed) {
+  return function() {
+    seed |= 0; seed = seed + 0x6D2B79F5 | 0;
+    let t = Math.imul(seed ^ seed >>> 15, 1 | seed);
+    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  };
+}
+
+function shuffle(arr, rng) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(rng() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function makeDistractors(answer, rng, strategies) {
+  const options = [answer];
+  const seen = new Set([answer]);
+  
+  const shuffledStrategies = [...strategies].sort(() => rng() - 0.5);
+  
+  for (const s of shuffledStrategies) {
+    if (options.length >= 4) break;
+    const w = s();
+    if (!Number.isFinite(w) || w <= 0) continue;
+    const rounded = Math.round(w * 100) / 100;
+    if (rounded > 0 && !seen.has(rounded)) {
+      seen.add(rounded);
+      options.push(rounded);
+    }
+  }
+  
+  let offset = 1;
+  while (options.length < 4 && offset < 100) {
+    const candidates = [answer + offset, Math.abs(answer - offset), answer + offset * 10, Math.abs(answer - offset * 10)];
+    for (const c of candidates) {
+      if (options.length >= 4) break;
+      if (c > 0) {
+        const rounded = Math.round(c * 100) / 100;
+        if (rounded > 0 && !seen.has(rounded)) {
+          seen.add(rounded);
+          options.push(rounded);
+        }
+      }
+    }
+    offset++;
+  }
+  
+  return options;
+}
+
+/* === QUESTION GENERATION === */
+function generateType1(rng) {
+  const units = ['mm', 'cm', 'dm', 'm', 'dam', 'hm', 'km'];
+  const fromIdx = Math.floor(rng() * 7);
+  let toIdx = Math.floor(rng() * 7);
+  while (toIdx === fromIdx) toIdx = Math.floor(rng() * 7);
+  
+  const fromUnit = units[fromIdx];
+  const toUnit = units[toIdx];
+  const diff = fromIdx - toIdx;
+  
+  let value;
+  if (diff > 0) {
+    if (diff === 1) value = Math.floor(rng() * 90) + 10;
+    else if (diff === 2) value = Math.floor(rng() * 40) + 5;
+    else if (diff === 3) value = Math.floor(rng() * 15) + 2;
+    else if (diff === 4) value = Math.floor(rng() * 8) + 1;
+    else if (diff === 5) value = Math.floor(rng() * 4) + 1;
+    else value = Math.floor(rng() * 3) + 1;
+  } else {
+    const absDiff = Math.abs(diff);
+    if (absDiff === 1) value = Math.floor(rng() * 90) + 10;
+    else if (absDiff === 2) value = (Math.floor(rng() * 9) + 1) * 10;
+    else if (absDiff === 3) value = (Math.floor(rng() * 9) + 1) * 100;
+    else if (absDiff === 4) value = (Math.floor(rng() * 9) + 1) * 1000;
+    else if (absDiff === 5) value = (Math.floor(rng() * 9) + 1) * 10000;
+    else value = (Math.floor(rng() * 9) + 1) * 100000;
+  }
+  
+  const answer = convert(value, fromUnit, toUnit);
+  const answerRounded = Math.round(answer * 100) / 100;
+  
+  const options = makeDistractors(answerRounded, rng, [
+    () => answerRounded * 10,
+    () => answerRounded / 10,
+    () => answerRounded * 100,
+    () => answerRounded / 100,
+    () => answerRounded + 10,
+    () => Math.abs(answerRounded - 10),
+    () => answerRounded + 1,
+    () => Math.abs(answerRounded - 1),
+  ]);
+  
+  shuffle(options, rng);
+  const correctIdx = options.indexOf(answerRounded);
+  
+  return {
+    type: 1,
+    typeLabel: 'Konversi Sederhana',
+    questionText: `Berapakah hasil konversi <strong>${value} ${fromUnit}</strong> ke <strong>${toUnit}</strong>?`,
+    options: options.map(o => `${o} ${toUnit}`),
+    correctIdx,
+    explanation: `Untuk konversi dari ${fromUnit} ke ${toUnit}, perhatikan tangga satuan. ${value} ${fromUnit} setara dengan <strong>${answerRounded} ${toUnit}</strong>.`
+  };
+}
+
+function generateType2(rng) {
+  const units = ['mm', 'cm', 'dm', 'm', 'dam', 'hm', 'km'];
+  const op = rng() > 0.5 ? '+' : '−';
+  
+  const unit1Idx = Math.floor(rng() * 7);
+  let unit2Idx = Math.floor(rng() * 7);
+  while (unit2Idx === unit1Idx) unit2Idx = Math.floor(rng() * 7);
+  const targetIdx = Math.floor(rng() * 7);
+  
+  let unit1 = units[unit1Idx];
+  let unit2 = units[unit2Idx];
+  const targetUnit = units[targetIdx];
+  
+  let val1 = Math.floor(rng() * 12) + 2;
+  let val2 = Math.floor(rng() * 12) + 2;
+  
+  let c1 = convert(val1, unit1, targetUnit);
+  let c2 = convert(val2, unit2, targetUnit);
+  
+  if (op === '−' && c1 < c2) {
+    [val1, val2] = [val2, val1];
+    [unit1, unit2] = [unit2, unit1];
+    [c1, c2] = [c2, c1];
+  }
+  
+  const answer = op === '+' ? c1 + c2 : c1 - c2;
+  const answerRounded = Math.round(answer * 100) / 100;
+  
+  const options = makeDistractors(answerRounded, rng, [
+    () => c1 + c2,
+    () => Math.abs(c1 - c2),
+    () => answerRounded * 10,
+    () => answerRounded / 10,
+    () => answerRounded + 10,
+    () => Math.abs(answerRounded - 10),
+    () => val1 + val2,
+    () => Math.abs(val1 - val2),
+  ]);
+  
+  shuffle(options, rng);
+  const correctIdx = options.indexOf(answerRounded);
+  
+  const c1R = Math.round(c1 * 100) / 100;
+  const c2R = Math.round(c2 * 100) / 100;
+  
+  return {
+    type: 2,
+    typeLabel: 'Operasi Konversi',
+    questionText: `Hitunglah hasil dari <strong>${val1} ${unit1} ${op} ${val2} ${unit2}</strong>, kemudian nyatakan hasilnya dalam <strong>${targetUnit}</strong>.`,
+    options: options.map(o => `${o} ${targetUnit}`),
+    correctIdx,
+    explanation: `<strong>Langkah 1:</strong> Konversi kedua nilai ke ${targetUnit}. ${val1} ${unit1} = ${c1R} ${targetUnit}, dan ${val2} ${unit2} = ${c2R} ${targetUnit}.<br><strong>Langkah 2:</strong> Hitung operasi. ${c1R} ${op} ${c2R} = <strong>${answerRounded} ${targetUnit}</strong>.`
+  };
+}
+
+function generateType3(rng) {
+  const scenarios = [
+    { template: (v1, u1, v2, u2, t) => `Andi bersepeda sejauh <strong>${v1} ${u1}</strong>, kemudian istirahat sejenak dan melanjutkan perjalanan sejauh <strong>${v2} ${u2}</strong>. Berapa total jarak yang ditempuh Andi dalam <strong>${t}</strong>?`, op: '+' },
+    { template: (v1, u1, v2, u2, t) => `Sebuah pita sepanjang <strong>${v1} ${u1}</strong> dipotong sebesar <strong>${v2} ${u2}</strong> untuk membuat hiasan. Berapa panjang pita yang tersisa dalam <strong>${t}</strong>?`, op: '-' },
+    { template: (v1, u1, v2, u2, t) => `Dua tali masing-masing sepanjang <strong>${v1} ${u1}</strong> dan <strong>${v2} ${u2}</strong> diikat menjadi satu. Berapa panjang total tali tersebut dalam <strong>${t}</strong>?`, op: '+' },
+    { template: (v1, u1, v2, u2, t) => `Jarak rumah Siska ke sekolah adalah <strong>${v1} ${u1}</strong>, sedangkan jarak rumah Rina ke sekolah <strong>${v2} ${u2}</strong>. Berapa selisih jarak rumah mereka ke sekolah dalam <strong>${t}</strong>?`, op: '-' },
+    { template: (v1, u1, v2, u2, t) => `Sebuah rel kereta api sepanjang <strong>${v1} ${u1}</strong> akan diperpanjang lagi sebesar <strong>${v2} ${u2}</strong>. Berapa panjang rel kereta api setelah diperpanjang dalam <strong>${t}</strong>?`, op: '+' },
+    { template: (v1, u1, v2, u2, t) => `Sebatang kawat sepanjang <strong>${v1} ${u1}</strong> dipotong menjadi dua bagian. Jika salah satu bagian panjangnya <strong>${v2} ${u2}</strong>, berapa panjang bagian kawat yang lain dalam <strong>${t}</strong>?`, op: '-' },
+    { template: (v1, u1, v2, u2, t) => `Pak Budi berjalan kaki sejauh <strong>${v1} ${u1}</strong> ke warung, lalu berjalan lagi <strong>${v2} ${u2}</strong> ke sawah. Berapa jarak total yang ditempuh Pak Budi dalam <strong>${t}</strong>?`, op: '+' },
+    { template: (v1, u1, v2, u2, t) => `Sebuah penggaris panjangnya <strong>${v1} ${u1}</strong>, sedangkan pensil panjangnya <strong>${v2} ${u2}</strong>. Berapa selisih panjang penggaris dan pensil tersebut dalam <strong>${t}</strong>?`, op: '-' },
+    { template: (v1, u1, v2, u2, t) => `Ani berlari sejauh <strong>${v1} ${u1}</strong>, kemudian berjalan sejauh <strong>${v2} ${u2}</strong>. Berapa total jarak yang ditempuh Ani dalam <strong>${t}</strong>?`, op: '+' },
+    { template: (v1, u1, v2, u2, t) => `Sebuah bambu sepanjang <strong>${v1} ${u1}</strong> dipotong untuk membuat sapu sepanjang <strong>${v2} ${u2}</strong>. Berapa panjang sisa bambu dalam <strong>${t}</strong>?`, op: '-' },
+  ];
+  
+  const scenario = scenarios[Math.floor(rng() * scenarios.length)];
+  const units = ['cm', 'dm', 'm', 'dam', 'hm', 'km'];
+  
+  let u1 = units[Math.floor(rng() * units.length)];
+  let u2 = units[Math.floor(rng() * units.length)];
+  while (u2 === u1) u2 = units[Math.floor(rng() * units.length)];
+  const target = units[Math.floor(rng() * units.length)];
+  
+  let v1 = Math.floor(rng() * 15) + 2;
+  let v2 = Math.floor(rng() * 15) + 2;
+  
+  let c1 = convert(v1, u1, target);
+  let c2 = convert(v2, u2, target);
+  
+  if (scenario.op === '-' && c1 < c2) {
+    [v1, v2] = [v2, v1];
+    [u1, u2] = [u2, u1];
+    [c1, c2] = [c2, c1];
+  }
+  
+  const answer = scenario.op === '+' ? c1 + c2 : c1 - c2;
+  const answerRounded = Math.round(answer * 100) / 100;
+  
+  const options = makeDistractors(answerRounded, rng, [
+    () => c1 + c2,
+    () => Math.abs(c1 - c2),
+    () => answerRounded * 10,
+    () => answerRounded / 10,
+    () => answerRounded + 10,
+    () => Math.abs(answerRounded - 10),
+    () => v1 + v2,
+    () => Math.abs(v1 - v2),
+  ]);
+  
+  shuffle(options, rng);
+  const correctIdx = options.indexOf(answerRounded);
+  
+  const c1R = Math.round(c1 * 100) / 100;
+  const c2R = Math.round(c2 * 100) / 100;
+  
+  return {
+    type: 3,
+    typeLabel: 'Soal Cerita',
+    questionText: scenario.template(v1, u1, v2, u2, target),
+    options: options.map(o => `${o} ${target}`),
+    correctIdx,
+    explanation: `<strong>Langkah 1:</strong> Identifikasi nilai dan konversi ke ${target}. ${v1} ${u1} = ${c1R} ${target}, dan ${v2} ${u2} = ${c2R} ${target}.<br><strong>Langkah 2:</strong> ${scenario.op === '+' ? 'Jumlahkan kedua nilai' : 'Cari selisih kedua nilai'}: ${c1R} ${scenario.op === '+' ? '+' : '−'} ${c2R} = <strong>${answerRounded} ${target}</strong>.`
+  };
+}
+
+function generateQuestions(studentId) {
+  const questions = [];
+  const seed = studentId * 7919 + 42;
+  const rng = mulberry32(seed);
+  
+  for (let i = 0; i < 20; i++) questions.push(generateType1(rng));
+  for (let i = 0; i < 20; i++) questions.push(generateType2(rng));
+  for (let i = 0; i < 20; i++) questions.push(generateType3(rng));
+  
+  return questions;
+}
+
+/* === COVER === */
+function showMaterial() {
+  document.getElementById('materialModal').classList.add('active');
+}
+
+function closeMaterial() {
+  document.getElementById('materialModal').classList.remove('active');
+}
+
+function startQuiz() {
+  const name1 = document.getElementById('name1').value.trim();
+  const name2 = document.getElementById('name2').value.trim();
+  
+  if (!name1 || !name2) {
+    showToast('Mohon isi nama kedua siswa terlebih dahulu', 'fa-exclamation-circle');
+    return;
+  }
+  
+  state.student1Name = name1;
+  state.student2Name = name2;
+  state.questions1 = generateQuestions(1);
+  state.questions2 = generateQuestions(2);
+  state.student1Results = Array.from({length: 60}, () => ({ selected: null, checked: false, isCorrect: false, timeTaken: 0 }));
+  state.student2Results = Array.from({length: 60}, () => ({ selected: null, checked: false, isCorrect: false, timeTaken: 0 }));
+  state.currentQuestionIdx = 0;
+  state.showExplanation1 = false;
+  state.showExplanation2 = false;
+  
+  document.getElementById('cover').classList.remove('active');
+  document.getElementById('quiz').classList.add('active');
+  
+  renderQuestion();
+  startTimer();
+  renderPalette();
+  
+  window.scrollTo(0, 0);
+}
+
+/* === QUIZ RENDER === */
+function renderQuestion() {
+  const idx = state.currentQuestionIdx;
+  const q1 = state.questions1[idx];
+  const q2 = state.questions2[idx];
+  
+  document.getElementById('qNum').textContent = idx + 1;
+  const badgeClass = q1.type === 1 ? '' : `t${q1.type}`;
+  document.getElementById('qType').innerHTML = `<span class="type-badge ${badgeClass}">Tipe ${q1.type}</span> ${q1.typeLabel}`;
+  
+  renderStudentPanel(1, q1);
+  renderStudentPanel(2, q2);
+  
+  document.getElementById('prevBtn').disabled = idx === 0;
+  document.getElementById('nextBtn').disabled = idx === 59;
+  
+  renderPalette();
+}
+
+function renderStudentPanel(studentId, q) {
+  const panel = document.getElementById(`panel${studentId}`);
+  const result = (studentId === 1 ? state.student1Results : state.student2Results)[state.currentQuestionIdx];
+  const name = studentId === 1 ? state.student1Name : state.student2Name;
+  
+  const statusHtml = !result.checked 
+    ? '<i class="fas fa-clock"></i> Belum diperiksa'
+    : (result.isCorrect 
+      ? '<i class="fas fa-check"></i> Benar' 
+      : '<i class="fas fa-times"></i> Salah');
+  const statusClass = !result.checked ? '' : (result.isCorrect ? 'correct' : 'wrong');
+  
+  const showExplanation = studentId === 1 ? state.showExplanation1 : state.showExplanation2;
+  
+  panel.innerHTML = `
+    <div class="panel-header">
+      <div class="student-avatar">${name.charAt(0).toUpperCase()}</div>
+      <div class="student-info">
+        <div class="student-label">Siswa ${studentId}</div>
+        <div class="student-name">${escapeHtml(name)}</div>
+      </div>
+      <div class="student-status ${statusClass}">${statusHtml}</div>
+    </div>
+    
+    <div class="question-box">
+      <div class="question-text">${q.questionText}</div>
+      <div class="options">
+        ${q.options.map((opt, i) => {
+          let cls = 'option';
+          if (result.selected === i) cls += ' selected';
+          if (result.checked) {
+            if (i === q.correctIdx) cls += ' correct';
+            else if (result.selected === i) cls += ' wrong';
+          }
+          let icon = '';
+          if (result.checked) {
+            if (i === q.correctIdx) icon = '<i class="fas fa-check option-icon"></i>';
+            else if (result.selected === i) icon = '<i class="fas fa-times option-icon"></i>';
+          }
+          return `<button class="${cls}" onclick="selectOption(${studentId}, ${i})" ${result.checked ? 'disabled' : ''}>
+            <span class="option-letter">${String.fromCharCode(65 + i)}</span>
+            <span class="option-text">${opt}</span>
+            ${icon}
+          </button>`;
+        }).join('')}
+      </div>
+    </div>
+    
+    <div class="panel-actions">
+      <button class="btn btn-primary" onclick="checkAnswer(${studentId})" ${result.checked || result.selected === null ? 'disabled' : ''}>
+        <i class="fas fa-check-circle"></i> Cek Jawaban
+      </button>
+      <button class="btn btn-secondary" onclick="toggleExplanation(${studentId})">
+        <i class="fas fa-lightbulb"></i> ${showExplanation ? 'Sembunyikan' : 'Pembahasan'}
+      </button>
+    </div>
+    
+    <div class="explanation" id="explanation${studentId}" style="display: ${showExplanation ? 'block' : 'none'};">
+      <div class="explanation-title"><i class="fas fa-lightbulb"></i> Pembahasan</div>
+      <div class="explanation-text">${q.explanation}</div>
+    </div>
+  `;
+}
+
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+function selectOption(studentId, optIdx) {
+  const results = studentId === 1 ? state.student1Results : state.student2Results;
+  const result = results[state.currentQuestionIdx];
+  if (result.checked) return;
+  result.selected = optIdx;
+  renderStudentPanel(studentId, (studentId === 1 ? state.questions1 : state.questions2)[state.currentQuestionIdx]);
+}
+
+function checkAnswer(studentId) {
+  const results = studentId === 1 ? state.student1Results : state.student2Results;
+  const result = results[state.currentQuestionIdx];
+  if (result.checked || result.selected === null) return;
+  
+  const q = (studentId === 1 ? state.questions1 : state.questions2)[state.currentQuestionIdx];
+  result.checked = true;
+  result.isCorrect = result.selected === q.correctIdx;
+  result.timeTaken = 120 - state.timer;
+  
+  renderStudentPanel(studentId, q);
+  
+  const r1 = state.student1Results[state.currentQuestionIdx];
+  const r2 = state.student2Results[state.currentQuestionIdx];
+  if (r1.checked && r2.checked && state.timerRunning) {
+    stopTimer();
+    const name = studentId === 1 ? state.student1Name : state.student2Name;
+    showToast(`Kedua siswa telah memeriksa jawaban. Waktu berhenti.`, 'fa-pause-circle');
+    updateTimerDisplay();
+  }
+  
+  renderPalette();
+}
+
+function toggleExplanation(studentId) {
+  if (studentId === 1) state.showExplanation1 = !state.showExplanation1;
+  else state.showExplanation2 = !state.showExplanation2;
+  renderStudentPanel(studentId, (studentId === 1 ? state.questions1 : state.questions2)[state.currentQuestionIdx]);
+}
+
+/* === TIMER === */
+function startTimer() {
+  const r1 = state.student1Results[state.currentQuestionIdx];
+  const r2 = state.student2Results[state.currentQuestionIdx];
+  
+  state.timer = 120;
+  
+  if (r1.checked && r2.checked) {
+    state.timerRunning = false;
+    updateTimerDisplay();
+    if (state.timerInterval) clearInterval(state.timerInterval);
+    return;
+  }
+  
+  state.timerRunning = true;
+  updateTimerDisplay();
+  
+  if (state.timerInterval) clearInterval(state.timerInterval);
+  state.timerInterval = setInterval(() => {
+    if (!state.timerRunning) return;
+    state.timer--;
+    updateTimerDisplay();
+    if (state.timer <= 0) {
+      state.timer = 0;
+      stopTimer();
+      showToast('Waktu habis untuk soal ini!', 'fa-clock');
+      updateTimerDisplay();
+    }
+  }, 1000);
+}
+
+function stopTimer() {
+  state.timerRunning = false;
+}
+
+function addTime() {
+  const r1 = state.student1Results[state.currentQuestionIdx];
+  const r2 = state.student2Results[state.currentQuestionIdx];
+  if (r1.checked && r2.checked) {
+    showToast('Waktu sudah berhenti — kedua siswa telah memeriksa jawaban', 'fa-info-circle');
+    return;
+  }
+  state.timer += 15;
+  if (!state.timerRunning) state.timerRunning = true;
+  if (!state.timerInterval) {
+    state.timerInterval = setInterval(() => {
+      if (!state.timerRunning) return;
+      state.timer--;
+      updateTimerDisplay();
+      if (state.timer <= 0) {
+        state.timer = 0;
+        stopTimer();
+        showToast('Waktu habis untuk soal ini!', 'fa-clock');
+        updateTimerDisplay();
+      }
+    }, 1000);
+  }
+  updateTimerDisplay();
+  showToast('+15 detik ditambahkan', 'fa-stopwatch');
+}
+
+function updateTimerDisplay() {
+  const mins = Math.floor(state.timer / 60);
+  const secs = state.timer % 60;
+  document.getElementById('timerText').textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
+  
+  const circle = document.getElementById('timerCircle');
+  const circumference = 2 * Math.PI * 34;
+  const totalForDisplay = Math.max(state.timer, 0);
+  const offset = circumference * (1 - Math.min(totalForDisplay, 120) / 120);
+  circle.style.strokeDasharray = circumference;
+  circle.style.strokeDashoffset = offset;
+  
+  const timerEl = document.getElementById('timer');
+  const labelEl = document.getElementById('timerLabel');
+  timerEl.classList.remove('warning', 'danger', 'stopped');
+  
+  const r1 = state.student1Results[state.currentQuestionIdx];
+  const r2 = state.student2Results[state.currentQuestionIdx];
+  
+  if (r1 && r2 && r1.checked && r2.checked) {
+    timerEl.classList.add('stopped');
+    labelEl.textContent = 'Dihentikan';
+  } else {
+    labelEl.textContent = 'Waktu';
+    if (state.timer <= 10) timerEl.classList.add('danger');
+    else if (state.timer <= 30) timerEl.classList.add('warning');
+  }
+}
+
+/* === NAVIGATION === */
+function prevQuestion() {
+  if (state.currentQuestionIdx > 0) {
+    state.currentQuestionIdx--;
+    state.showExplanation1 = false;
+    state.showExplanation2 = false;
+    renderQuestion();
+    startTimer();
+  }
+}
+
+function nextQuestion() {
+  if (state.currentQuestionIdx < 59) {
+    state.currentQuestionIdx++;
+    state.showExplanation1 = false;
+    state.showExplanation2 = false;
+    renderQuestion();
+    startTimer();
+  }
+}
+
+function jumpToQuestion(idx) {
+  if (idx === state.currentQuestionIdx) return;
+  state.currentQuestionIdx = idx;
+  state.showExplanation1 = false;
+  state.showExplanation2 = false;
+  renderQuestion();
+  startTimer();
+}
+
+function renderPalette() {
+  const grid = document.getElementById('paletteGrid');
+  let html = '';
+  for (let i = 0; i < 60; i++) {
+    const r1 = state.student1Results[i];
+    const r2 = state.student2Results[i];
+    const type = i < 20 ? 1 : (i < 40 ? 2 : 3);
+    let cls = `palette-item type-${type}`;
+    
+    if (i === state.currentQuestionIdx) {
+      cls += ' current';
+    } else if (r1.checked && r2.checked) {
+      if (r1.isCorrect && r2.isCorrect) cls += ' both-correct';
+      else if (!r1.isCorrect && !r2.isCorrect) cls += ' both-wrong';
+      else cls += ' mixed';
+    } else if (r1.checked || r2.checked) {
+      cls += ' partial';
+    }
+    
+    html += `<button class="${cls}" onclick="jumpToQuestion(${i})" title="Soal ${i+1}">${i + 1}</button>`;
+  }
+  grid.innerHTML = html;
+}
+
+/* === FINISH === */
+function finishQuiz() {
+  if (state.timerInterval) clearInterval(state.timerInterval);
+  state.timerRunning = false;
+  
+  for (let i = 0; i < 60; i++) {
+    if (!state.student1Results[i].checked) {
+      state.student1Results[i].isCorrect = false;
+      state.student1Results[i].timeTaken = 0;
+    }
+    if (!state.student2Results[i].checked) {
+      state.student2Results[i].isCorrect = false;
+      state.student2Results[i].timeTaken = 0;
+    }
+  }
+  
+  showResults();
+}
+
+/* === RESULTS === */
+function showResults() {
+  document.getElementById('quiz').classList.remove('active');
+  document.getElementById('results').classList.add('active');
+  
+  const stats1 = calculateStats(state.student1Results);
+  const stats2 = calculateStats(state.student2Results);
+  
+  const tie = stats1.correct === stats2.correct;
+  const s1Winner = !tie && stats1.correct > stats2.correct;
+  const s2Winner = !tie && stats2.correct > stats1.correct;
+  
+  const summary = document.getElementById('resultsSummary');
+  summary.innerHTML = `
+    ${renderResultCard(1, state.student1Name, stats1, s1Winner, tie)}
+    ${renderResultCard(2, state.student2Name, stats2, s2Winner, tie)}
+  `;
+  
+  document.getElementById('th1').textContent = state.student1Name;
+  document.getElementById('th2').textContent = state.student2Name;
+  const detailBody = document.getElementById('detailBody');
+  let detailHtml = '';
+  for (let i = 0; i < 60; i++) {
+    const r1 = state.student1Results[i];
+    const r2 = state.student2Results[i];
+    const type = i < 20 ? 1 : (i < 40 ? 2 : 3);
+    const s1Class = r1.checked ? (r1.isCorrect ? 'correct' : 'wrong') : 'neutral';
+    const s2Class = r2.checked ? (r2.isCorrect ? 'correct' : 'wrong') : 'neutral';
+    const s1Text = r1.checked ? (r1.isCorrect ? '✓ Benar' : '✗ Salah') : '—';
+    const s2Text = r2.checked ? (r2.isCorrect ? '✓ Benar' : '✗ Salah') : '—';
+    const t1Text = r1.checked ? r1.timeTaken + 's' : '—';
+    const t2Text = r2.checked ? r2.timeTaken + 's' : '—';
+    detailHtml += `<tr>
+      <td class="q-num">${i + 1}</td>
+      <td><span class="type-tag t${type}">Tipe ${type}</span></td>
+      <td class="${s1Class}">${s1Text}</td>
+      <td class="neutral">${t1Text}</td>
+      <td class="${s2Class}">${s2Text}</td>
+      <td class="neutral">${t2Text}</td>
+    </tr>`;
+  }
+  detailBody.innerHTML = detailHtml;
+  
+  const conclusion = document.getElementById('conclusion');
+  const winnerName = s1Winner ? state.student1Name : (s2Winner ? state.student2Name : null);
+  const avgTime1 = stats1.avgTime.toFixed(1);
+  const avgTime2 = stats2.avgTime.toFixed(1);
+  const acc1 = Math.round(stats1.correct/60*100);
+  const acc2 = Math.round(stats2.correct/60*100);
+  const hardest = getHardestType(stats1, stats2);
+  const hardestLabel = hardest === 1 ? 'Konversi Sederhana' : (hardest === 2 ? 'Operasi Konversi' : 'Soal Cerita');
+  
+  conclusion.innerHTML = `
+    <p>Dari 60 soal yang diberikan, <strong>${escapeHtml(state.student1Name)}</strong> berhasil menjawab benar <strong>${stats1.correct} soal</strong> (${acc1}%) dengan rata-rata waktu pengerjaan <strong>${avgTime1} detik per soal</strong>. Sementara itu, <strong>${escapeHtml(state.student2Name)}</strong> menjawab benar <strong>${stats2.correct} soal</strong> (${acc2}%) dengan rata-rata waktu <strong>${avgTime2} detik per soal</strong>.</p>
+    <p>${winnerName === null 
+      ? 'Hasil ini menunjukkan bahwa kedua siswa memiliki kemampuan yang setara dalam materi konversi satuan panjang. Pertahankan semangat belajar bersama!'
+      : `Selamat kepada <strong>${escapeHtml(winnerName)}</strong> yang berhasil meraih skor lebih tinggi pada latihan ini. Namun ingat, belajar bukan tentang menang atau kalah, melainkan tentang terus berkembang bersama.`}</p>
+    <p>Berdasarkan rincian jawaban, soal <strong>Tipe ${hardest} (${hardestLabel})</strong> tampaknya menjadi tantangan tersendiri bagi keduanya. Pelajari kembali tangga konversi dan berlatih lebih banyak pada tipe soal tersebut untuk hasil yang lebih baik di latihan berikutnya.</p>
+  `;
+  
+  window.scrollTo(0, 0);
+}
+
+function calculateStats(results) {
+  let correct = 0, wrong = 0, totalTime = 0, answeredCount = 0;
+  const typeStats = { 1: {correct: 0, total: 20}, 2: {correct: 0, total: 20}, 3: {correct: 0, total: 20} };
+  
+  for (let i = 0; i < 60; i++) {
+    const r = results[i];
+    const type = i < 20 ? 1 : (i < 40 ? 2 : 3);
+    if (r.checked) {
+      answeredCount++;
+      totalTime += r.timeTaken;
+      if (r.isCorrect) {
+        correct++;
+        typeStats[type].correct++;
+      } else {
+        wrong++;
+      }
+    } else {
+      wrong++;
+    }
+  }
+  
+  return {
+    correct,
+    wrong,
+    answeredCount,
+    avgTime: answeredCount > 0 ? totalTime / answeredCount : 0,
+    typeStats
+  };
+}
+
+function getHardestType(stats1, stats2) {
+  const acc1 = { 1: stats1.typeStats[1].correct / 20, 2: stats1.typeStats[2].correct / 20, 3: stats1.typeStats[3].correct / 20 };
+  const acc2 = { 1: stats2.typeStats[1].correct / 20, 2: stats2.typeStats[2].correct / 20, 3: stats2.typeStats[3].correct / 20 };
+  const combined = { 1: (acc1[1] + acc2[1]) / 2, 2: (acc1[2] + acc2[2]) / 2, 3: (acc1[3] + acc2[3]) / 2 };
+  let minType = 1, minVal = combined[1];
+  for (let t = 2; t <= 3; t++) {
+    if (combined[t] < minVal) { minVal = combined[t]; minType = t; }
+  }
+  return minType;
+}
+
+function renderResultCard(studentId, name, stats, isWinner, isTie) {
+  const acc1Pct = (stats.typeStats[1].correct / 20) * 100;
+  const acc2Pct = (stats.typeStats[2].correct / 20) * 100;
+  const acc3Pct = (stats.typeStats[3].correct / 20) * 100;
+  
+  return `
+    <div class="result-card s${studentId} ${isWinner ? 'winner' : ''}">
+      <div class="result-card-header">
+        <div class="student-avatar">${name.charAt(0).toUpperCase()}</div>
+        <div class="student-info">
+          <div class="student-label">Siswa ${studentId}</div>
+          <div class="student-name">${escapeHtml(name)}</div>
+        </div>
+        ${isWinner ? '<div class="winner-badge"><i class="fas fa-crown"></i> Skor Tertinggi</div>' : ''}
+        ${isTie ? '<div class="winner-badge" style="background: linear-gradient(135deg, #95b092, #5d7a5a);"><i class="fas fa-handshake"></i> Seri</div>' : ''}
+      </div>
+      <div class="result-stats">
+        <div class="stat">
+          <div class="stat-num correct">${stats.correct}</div>
+          <div class="stat-label">Benar</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num wrong">${stats.wrong}</div>
+          <div class="stat-label">Salah</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num time">${stats.avgTime.toFixed(0)}s</div>
+          <div class="stat-label">Rata-rata Waktu</div>
+        </div>
+      </div>
+      <div class="type-breakdown">
+        <div class="type-row">
+          <span><span class="type-tag t1">Tipe 1</span> Konversi Sederhana</span>
+          <strong>${stats.typeStats[1].correct}/20</strong>
+        </div>
+        <div class="progress-bar"><div class="progress-fill t1" style="width: ${acc1Pct}%"></div></div>
+        
+        <div class="type-row" style="margin-top: 0.5rem;">
+          <span><span class="type-tag t2">Tipe 2</span> Operasi Konversi</span>
+          <strong>${stats.typeStats[2].correct}/20</strong>
+        </div>
+        <div class="progress-bar"><div class="progress-fill t2" style="width: ${acc2Pct}%"></div></div>
+        
+        <div class="type-row" style="margin-top: 0.5rem;">
+          <span><span class="type-tag t3">Tipe 3</span> Soal Cerita</span>
+          <strong>${stats.typeStats[3].correct}/20</strong>
+        </div>
+        <div class="progress-bar"><div class="progress-fill t3" style="width: ${acc3Pct}%"></div></div>
+      </div>
+    </div>
+  `;
+}
+
+/* === TOAST === */
+let toastTimeout;
+function showToast(message, icon = 'fa-circle-info') {
+  const toast = document.getElementById('toast');
+  toast.innerHTML = `<i class="fas ${icon}"></i> ${message}`;
+  toast.classList.add('show');
+  clearTimeout(toastTimeout);
+  toastTimeout = setTimeout(() => toast.classList.remove('show'), 3000);
+}
+
+/* === EVENT LISTENERS === */
+document.getElementById('materialModal').addEventListener('click', (e) => {
+  if (e.target.id === 'materialModal') closeMaterial();
+});
+
+document.addEventListener('keydown', (e) => {
+  if (!document.getElementById('quiz').classList.contains('active')) return;
+  if (document.activeElement.tagName === 'INPUT') return;
+  if (e.key === 'ArrowLeft') prevQuestion();
+  if (e.key === 'ArrowRight') nextQuestion();
+});
+
+// Enter key to start
+document.getElementById('name1').addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') document.getElementById('name2').focus();
+});
+document.getElementById('name2').addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') startQuiz();
+});
+</script>
+</body>
+</html>
