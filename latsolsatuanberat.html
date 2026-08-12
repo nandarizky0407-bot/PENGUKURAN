@@ -1,0 +1,1838 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Latihan Konversi Satuan Baku Berat</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+  :root {
+    --bg: #0a0e1f;
+    --bg-2: #131a30;
+    --card: #1a2240;
+    --card-2: #232d52;
+    --border: #2d3760;
+    --fg: #f1f5f9;
+    --muted: #94a3b8;
+    --s1: #f59e0b;
+    --s1-2: #fbbf24;
+    --s1-soft: rgba(245, 158, 11, 0.12);
+    --s2: #06b6d4;
+    --s2-2: #22d3ee;
+    --s2-soft: rgba(6, 182, 212, 0.12);
+    --success: #10b981;
+    --error: #ef4444;
+  }
+  
+  * { box-sizing: border-box; }
+  
+  body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  
+  .font-display { font-family: 'Bricolage Grotesque', sans-serif; }
+  
+  .bg-pattern {
+    background: 
+      radial-gradient(ellipse 80% 60% at 20% 0%, rgba(245, 158, 11, 0.08), transparent 60%),
+      radial-gradient(ellipse 80% 60% at 80% 100%, rgba(6, 182, 212, 0.08), transparent 60%),
+      radial-gradient(ellipse 60% 40% at 50% 50%, rgba(168, 85, 247, 0.04), transparent 60%),
+      var(--bg);
+  }
+  
+  .grid-bg {
+    background-image: 
+      linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+  
+  .float-shape {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.4;
+    pointer-events: none;
+    animation: floatMove 15s ease-in-out infinite;
+  }
+  
+  @keyframes floatMove {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(30px, -30px) scale(1.1); }
+  }
+  
+  .tangga-step {
+    position: relative;
+    transition: all 0.3s;
+  }
+  
+  .tangga-step:hover {
+    transform: translateY(-4px);
+  }
+  
+  .tangga-step::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 12px 12px 0 0;
+    background: linear-gradient(180deg, transparent, rgba(255,255,255,0.05));
+    pointer-events: none;
+  }
+  
+  .timer-ring { transform: rotate(-90deg); }
+  .timer-progress { transition: stroke-dashoffset 0.5s linear; }
+  
+  .option-btn {
+    transition: all 0.2s ease;
+    cursor: pointer;
+  }
+  
+  .option-btn:hover {
+    transform: translateX(6px);
+  }
+  
+  .option-btn.s1.selected {
+    border-color: var(--s1);
+    background: var(--s1-soft);
+    box-shadow: 0 0 0 1px var(--s1), 0 8px 24px rgba(245, 158, 11, 0.2);
+  }
+  
+  .option-btn.s2.selected {
+    border-color: var(--s2);
+    background: var(--s2-soft);
+    box-shadow: 0 0 0 1px var(--s2), 0 8px 24px rgba(6, 182, 212, 0.2);
+  }
+  
+  .option-btn.correct {
+    border-color: var(--success) !important;
+    background: rgba(16, 185, 129, 0.15) !important;
+  }
+  
+  .option-btn.wrong {
+    border-color: var(--error) !important;
+    background: rgba(239, 68, 68, 0.15) !important;
+  }
+  
+  .option-btn:disabled {
+    cursor: not-allowed;
+  }
+  
+  .page { display: none; animation: fadeIn 0.5s ease-out; }
+  .page.active { display: block; }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  @keyframes pulse-warn {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+    50% { box-shadow: 0 0 0 12px rgba(239, 68, 68, 0); }
+  }
+  
+  .pulse-warn { animation: pulse-warn 1.5s infinite; }
+  
+  ::-webkit-scrollbar { width: 8px; height: 8px; }
+  ::-webkit-scrollbar-track { background: var(--bg-2); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--muted); }
+  
+  .modal-backdrop {
+    background: rgba(5, 8, 20, 0.85);
+    backdrop-filter: blur(12px);
+  }
+  
+  .toast {
+    position: fixed;
+    top: 24px;
+    right: 24px;
+    z-index: 1000;
+    transform: translateX(120%);
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .toast.show { transform: translateX(0); }
+  
+  .soal-dot {
+    transition: all 0.2s;
+    cursor: pointer;
+  }
+  
+  .soal-dot:hover { transform: scale(1.15); }
+  
+  .glow-amber { box-shadow: 0 0 40px rgba(245, 158, 11, 0.15); }
+  .glow-cyan { box-shadow: 0 0 40px rgba(6, 182, 212, 0.15); }
+  
+  .result-row {
+    transition: background 0.2s;
+  }
+  .result-row:hover { background: rgba(255,255,255,0.04); }
+  
+  @keyframes fall {
+    0% { transform: translateY(-100vh) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+  }
+  
+  .confetti {
+    position: fixed;
+    width: 10px;
+    height: 10px;
+    pointer-events: none;
+    z-index: 999;
+    animation: fall linear forwards;
+  }
+  
+  .input-field {
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid;
+    outline: none;
+    transition: all 0.2s;
+  }
+  
+  .input-field:focus { transform: translateY(-2px); }
+  
+  .btn-primary {
+    background: linear-gradient(135deg, var(--s1), var(--s2));
+    color: #0a0e1f;
+    font-weight: 700;
+    transition: all 0.2s;
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 30px rgba(245, 158, 11, 0.3); }
+  
+  @media (max-width: 1024px) {
+    .split-grid { grid-template-columns: 1fr !important; }
+  }
+</style>
+</head>
+<body class="bg-pattern grid-bg">
+
+<div class="float-shape" style="width: 400px; height: 400px; background: #f59e0b; top: -100px; left: -100px;"></div>
+<div class="float-shape" style="width: 500px; height: 500px; background: #06b6d4; bottom: -150px; right: -150px; animation-delay: -7s;"></div>
+
+<!-- =================== COVER PAGE =================== -->
+<section id="page-cover" class="page active min-h-screen flex items-center justify-center p-6 relative z-10">
+  <div class="max-w-6xl w-full">
+    
+    <div class="text-center mb-10">
+      <div class="inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-white/5 border border-white/10 text-sm mb-8 backdrop-blur-sm">
+        <span class="relative flex h-2 w-2">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
+        </span>
+        <span class="text-slate-300">Matematika • Kompetisi Berdua • 70 Soal</span>
+      </div>
+      
+      <h1 class="font-display text-5xl md:text-7xl lg:text-8xl font-extrabold leading-[0.95] tracking-tight mb-6">
+        Konversi<br>
+        <span class="bg-gradient-to-r from-amber-400 via-orange-400 to-cyan-400 bg-clip-text text-transparent">Satuan Berat</span>
+      </h1>
+      
+      <p class="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed">
+        Latihan interaktif untuk dua siswa. Berlomba menyelesaikan 70 soal konversi satuan baku berat — termasuk ton, kuintal, kg, ons, dan gram — dengan tingkat kesulitan setara, namun soal yang berbeda.
+      </p>
+    </div>
+    
+    <div class="bg-white/[0.03] border border-white/10 rounded-3xl p-6 md:p-8 mb-8 backdrop-blur-sm glow-amber">
+      <div class="flex items-center justify-between mb-6">
+        <h3 class="text-xs uppercase tracking-[0.3em] text-slate-400">Tangga Satuan</h3>
+        <span class="text-xs text-slate-500">7 tingkat hierarki + 3 satuan khusus</span>
+      </div>
+      <div class="flex items-end justify-center gap-1 md:gap-2 h-32 md:h-40" id="tanggaPreview"></div>
+    </div>
+    
+    <div class="grid md:grid-cols-2 gap-4 mb-8">
+      <div class="bg-gradient-to-br from-amber-500/10 to-transparent border border-amber-500/30 rounded-2xl p-6 glow-amber">
+        <div class="flex items-center justify-between mb-4">
+          <span class="text-xs font-bold uppercase tracking-widest text-amber-400">Siswa 1</span>
+          <div class="w-8 h-8 rounded-full bg-amber-500/20 border border-amber-500/40 flex items-center justify-center">
+            <i class="fas fa-user text-amber-400 text-xs"></i>
+          </div>
+        </div>
+        <input id="inputSiswa1" type="text" placeholder="Masukkan nama lengkap" maxlength="30"
+          class="input-field w-full text-2xl md:text-3xl font-bold text-amber-100 placeholder-slate-600 border-amber-500/30 focus:border-amber-400 pb-2">
+      </div>
+      
+      <div class="bg-gradient-to-br from-cyan-500/10 to-transparent border border-cyan-500/30 rounded-2xl p-6 glow-cyan">
+        <div class="flex items-center justify-between mb-4">
+          <span class="text-xs font-bold uppercase tracking-widest text-cyan-400">Siswa 2</span>
+          <div class="w-8 h-8 rounded-full bg-cyan-500/20 border border-cyan-500/40 flex items-center justify-center">
+            <i class="fas fa-user text-cyan-400 text-xs"></i>
+          </div>
+        </div>
+        <input id="inputSiswa2" type="text" placeholder="Masukkan nama lengkap" maxlength="30"
+          class="input-field w-full text-2xl md:text-3xl font-bold text-cyan-100 placeholder-slate-600 border-cyan-500/30 focus:border-cyan-400 pb-2">
+      </div>
+    </div>
+    
+    <div class="flex flex-col sm:flex-row gap-3 justify-center items-center">
+      <button id="btnMateri" class="px-8 py-4 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 hover:border-white/20 transition font-semibold w-full sm:w-auto">
+        <i class="fas fa-book-open mr-2 text-amber-400"></i> Lihat Materi
+      </button>
+      <button id="btnMulai" class="btn-primary px-10 py-4 rounded-xl w-full sm:w-auto text-lg">
+        <i class="fas fa-play mr-2"></i> Mulai Latihan
+      </button>
+    </div>
+    
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mt-10">
+      <div class="bg-white/[0.02] border border-white/5 rounded-xl p-4 text-center">
+        <i class="fas fa-stopwatch text-amber-400 text-xl mb-2"></i>
+        <div class="text-xs text-slate-400">2 menit per soal</div>
+      </div>
+      <div class="bg-white/[0.02] border border-white/5 rounded-xl p-4 text-center">
+        <i class="fas fa-plus-circle text-cyan-400 text-xl mb-2"></i>
+        <div class="text-xs text-slate-400">Bonus +15 detik</div>
+      </div>
+      <div class="bg-white/[0.02] border border-white/5 rounded-xl p-4 text-center">
+        <i class="fas fa-check-double text-emerald-400 text-xl mb-2"></i>
+        <div class="text-xs text-slate-400">Cek & pembahasan</div>
+      </div>
+      <div class="bg-white/[0.02] border border-white/5 rounded-xl p-4 text-center">
+        <i class="fas fa-chart-line text-purple-400 text-xl mb-2"></i>
+        <div class="text-xs text-slate-400">Statistik lengkap</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =================== SOAL PAGE =================== -->
+<section id="page-soal" class="page min-h-screen p-4 md:p-6 relative z-10">
+  
+  <div class="bg-white/[0.03] border border-white/10 rounded-2xl p-4 mb-4 backdrop-blur-sm sticky top-4 z-20">
+    <div class="flex flex-wrap items-center justify-between gap-4">
+      
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-500/20 to-cyan-500/20 border border-white/10 flex items-center justify-center">
+          <i class="fas fa-layer-group text-amber-400"></i>
+        </div>
+        <div>
+          <div class="text-xs text-slate-400 uppercase tracking-wider">Jenis Soal</div>
+          <div id="jenisSoalLabel" class="font-bold text-lg">Konversi Biasa</div>
+        </div>
+      </div>
+      
+      <div class="relative flex items-center gap-4">
+        <div class="relative w-20 h-20">
+          <svg class="timer-ring absolute inset-0" width="80" height="80" viewBox="0 0 80 80">
+            <circle cx="40" cy="40" r="34" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="5"/>
+            <circle id="timerProgress" class="timer-progress" cx="40" cy="40" r="34" fill="none" 
+              stroke="url(#timerGrad)" stroke-width="5" stroke-linecap="round"
+              stroke-dasharray="213.628" stroke-dashoffset="0"/>
+            <defs>
+              <linearGradient id="timerGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#f59e0b"/>
+                <stop offset="100%" stop-color="#06b6d4"/>
+              </linearGradient>
+            </defs>
+          </svg>
+          <div class="absolute inset-0 flex flex-col items-center justify-center">
+            <div id="timerText" class="font-display font-bold text-lg leading-none">2:00</div>
+            <div class="text-[9px] text-slate-500 uppercase tracking-wider mt-0.5">detik</div>
+          </div>
+        </div>
+        <button id="btnAddTime" class="px-3 py-2 bg-emerald-500/10 border border-emerald-500/30 rounded-lg text-emerald-400 hover:bg-emerald-500/20 transition text-sm font-semibold">
+          <i class="fas fa-plus mr-1"></i> 15s
+        </button>
+      </div>
+      
+      <div class="flex items-center gap-2">
+        <button id="btnPrev" class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition flex items-center justify-center">
+          <i class="fas fa-chevron-left text-sm"></i>
+        </button>
+        <div class="px-4 py-2 bg-white/5 border border-white/10 rounded-xl text-center min-w-[100px]">
+          <div class="text-[10px] text-slate-500 uppercase tracking-wider">Soal</div>
+          <div class="font-bold"><span id="soalCurrent">1</span><span class="text-slate-500">/70</span></div>
+        </div>
+        <button id="btnNext" class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition flex items-center justify-center">
+          <i class="fas fa-chevron-right text-sm"></i>
+        </button>
+        <button id="btnFinish" class="ml-2 px-4 py-2 bg-red-500/10 border border-red-500/30 rounded-xl text-red-400 hover:bg-red-500/20 transition text-sm font-semibold">
+          <i class="fas fa-flag-checkered mr-1"></i> Finish
+        </button>
+      </div>
+    </div>
+    
+    <div class="mt-4 pt-4 border-t border-white/5">
+      <div id="soalDots" class="flex flex-wrap gap-1.5"></div>
+    </div>
+  </div>
+  
+  <div class="split-grid grid grid-cols-2 gap-4">
+    
+    <!-- Panel Siswa 1 -->
+    <div id="panelSiswa1" class="bg-gradient-to-br from-amber-500/[0.04] to-transparent border border-amber-500/20 rounded-2xl p-5 md:p-6">
+      <div class="flex items-center justify-between mb-4 pb-4 border-b border-amber-500/10">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center font-bold text-amber-400">
+            1
+          </div>
+          <div>
+            <div class="text-xs text-amber-400/70 uppercase tracking-wider">Siswa 1</div>
+            <div id="namaSiswa1Display" class="font-bold text-lg">-</div>
+          </div>
+        </div>
+        <div id="statusSiswa1" class="px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-semibold">
+          <i class="fas fa-circle text-slate-500 text-[8px] mr-1"></i> Belum dicek
+        </div>
+      </div>
+      
+      <div class="mb-5">
+        <div class="text-xs text-slate-500 uppercase tracking-wider mb-2">Pertanyaan</div>
+        <div id="soalText1" class="text-lg md:text-xl leading-relaxed bg-white/[0.02] border border-white/5 rounded-xl p-4 min-h-[100px]">-</div>
+      </div>
+      
+      <div class="mb-5">
+        <div class="text-xs text-slate-500 uppercase tracking-wider mb-2">Pilihan Jawaban</div>
+        <div id="pilihan1" class="space-y-2"></div>
+      </div>
+      
+      <div id="pembahasan1" class="hidden mb-5 bg-amber-500/[0.05] border border-amber-500/20 rounded-xl p-4">
+        <div class="flex items-center gap-2 mb-2">
+          <i class="fas fa-lightbulb text-amber-400"></i>
+          <span class="font-bold text-amber-400 text-sm">Pembahasan</span>
+        </div>
+        <div id="pembahasanText1" class="text-sm text-slate-300 leading-relaxed">-</div>
+      </div>
+      
+      <div class="grid grid-cols-2 gap-2">
+        <button id="btnCek1" class="px-4 py-3 bg-amber-500/10 border border-amber-500/30 rounded-xl text-amber-400 hover:bg-amber-500/20 transition font-semibold text-sm">
+          <i class="fas fa-check mr-1"></i> Cek Jawaban
+        </button>
+        <button id="btnPembahasan1" class="px-4 py-3 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 transition font-semibold text-sm">
+          <i class="fas fa-lightbulb mr-1"></i> Pembahasan
+        </button>
+      </div>
+    </div>
+    
+    <!-- Panel Siswa 2 -->
+    <div id="panelSiswa2" class="bg-gradient-to-br from-cyan-500/[0.04] to-transparent border border-cyan-500/20 rounded-2xl p-5 md:p-6">
+      <div class="flex items-center justify-between mb-4 pb-4 border-b border-cyan-500/10">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-cyan-500/20 border border-cyan-500/40 flex items-center justify-center font-bold text-cyan-400">
+            2
+          </div>
+          <div>
+            <div class="text-xs text-cyan-400/70 uppercase tracking-wider">Siswa 2</div>
+            <div id="namaSiswa2Display" class="font-bold text-lg">-</div>
+          </div>
+        </div>
+        <div id="statusSiswa2" class="px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-semibold">
+          <i class="fas fa-circle text-slate-500 text-[8px] mr-1"></i> Belum dicek
+        </div>
+      </div>
+      
+      <div class="mb-5">
+        <div class="text-xs text-slate-500 uppercase tracking-wider mb-2">Pertanyaan</div>
+        <div id="soalText2" class="text-lg md:text-xl leading-relaxed bg-white/[0.02] border border-white/5 rounded-xl p-4 min-h-[100px]">-</div>
+      </div>
+      
+      <div class="mb-5">
+        <div class="text-xs text-slate-500 uppercase tracking-wider mb-2">Pilihan Jawaban</div>
+        <div id="pilihan2" class="space-y-2"></div>
+      </div>
+      
+      <div id="pembahasan2" class="hidden mb-5 bg-cyan-500/[0.05] border border-cyan-500/20 rounded-xl p-4">
+        <div class="flex items-center gap-2 mb-2">
+          <i class="fas fa-lightbulb text-cyan-400"></i>
+          <span class="font-bold text-cyan-400 text-sm">Pembahasan</span>
+        </div>
+        <div id="pembahasanText2" class="text-sm text-slate-300 leading-relaxed">-</div>
+      </div>
+      
+      <div class="grid grid-cols-2 gap-2">
+        <button id="btnCek2" class="px-4 py-3 bg-cyan-500/10 border border-cyan-500/30 rounded-xl text-cyan-400 hover:bg-cyan-500/20 transition font-semibold text-sm">
+          <i class="fas fa-check mr-1"></i> Cek Jawaban
+        </button>
+        <button id="btnPembahasan2" class="px-4 py-3 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 transition font-semibold text-sm">
+          <i class="fas fa-lightbulb mr-1"></i> Pembahasan
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =================== HASIL PAGE =================== -->
+<section id="page-hasil" class="page min-h-screen p-4 md:p-6 relative z-10">
+  <div class="max-w-6xl mx-auto">
+    
+    <div class="text-center mb-8 mt-4">
+      <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-sm mb-4">
+        <i class="fas fa-check-circle"></i> Latihan Selesai
+      </div>
+      <h2 class="font-display text-4xl md:text-6xl font-extrabold mb-3">
+        Hasil <span class="bg-gradient-to-r from-amber-400 to-cyan-400 bg-clip-text text-transparent">Akhir</span>
+      </h2>
+      <p class="text-slate-400">Berikut rekapitulasi pengerjaan kedua siswa</p>
+    </div>
+    
+    <div class="grid md:grid-cols-2 gap-4 mb-8">
+      <div id="ringkasanSiswa1" class="bg-gradient-to-br from-amber-500/10 to-transparent border border-amber-500/30 rounded-2xl p-6 glow-amber"></div>
+      <div id="ringkasanSiswa2" class="bg-gradient-to-br from-cyan-500/10 to-transparent border border-cyan-500/30 rounded-2xl p-6 glow-cyan"></div>
+    </div>
+    
+    <div class="bg-white/[0.03] border border-white/10 rounded-2xl p-6 md:p-8 mb-6">
+      <div class="flex items-start gap-4">
+        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-500/20 to-cyan-500/20 border border-white/10 flex items-center justify-center flex-shrink-0">
+          <i class="fas fa-trophy text-amber-400 text-lg"></i>
+        </div>
+        <div class="flex-1">
+          <h3 class="font-display text-2xl font-bold mb-2">Kesimpulan</h3>
+          <div id="kesimpulanText" class="text-slate-300 leading-relaxed"></div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="flex gap-2 mb-4">
+      <button class="tab-btn px-5 py-2.5 rounded-xl bg-amber-500/20 border border-amber-500/40 text-amber-400 font-semibold text-sm" data-siswa="1">Siswa 1</button>
+      <button class="tab-btn px-5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-slate-400 font-semibold text-sm" data-siswa="2">Siswa 2</button>
+    </div>
+    
+    <div class="bg-white/[0.03] border border-white/10 rounded-2xl overflow-hidden mb-8">
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="bg-white/5 border-b border-white/10">
+              <th class="text-left p-3 font-semibold text-slate-300">No</th>
+              <th class="text-left p-3 font-semibold text-slate-300">Jenis</th>
+              <th class="text-left p-3 font-semibold text-slate-300">Soal</th>
+              <th class="text-left p-3 font-semibold text-slate-300">Jawaban Siswa</th>
+              <th class="text-left p-3 font-semibold text-slate-300">Jawaban Benar</th>
+              <th class="text-center p-3 font-semibold text-slate-300">Status</th>
+              <th class="text-right p-3 font-semibold text-slate-300">Waktu</th>
+            </tr>
+          </thead>
+          <tbody id="detailTable"></tbody>
+        </table>
+      </div>
+    </div>
+    
+    <div class="bg-gradient-to-br from-purple-500/5 to-transparent border border-purple-500/20 rounded-2xl p-6 md:p-8 mb-6">
+      <div class="flex items-start gap-4">
+        <div class="w-12 h-12 rounded-xl bg-purple-500/20 border border-purple-500/40 flex items-center justify-center flex-shrink-0">
+          <i class="fas fa-brain text-purple-400 text-lg"></i>
+        </div>
+        <div class="flex-1">
+          <h3 class="font-display text-2xl font-bold mb-4">Refleksi Pembelajaran</h3>
+          <div class="space-y-3 text-slate-300 leading-relaxed">
+            <p>Setelah menyelesaikan latihan ini, luangkan waktu sejenak untuk merenungkan pengalaman belajarmu:</p>
+            <ul class="space-y-2 ml-4">
+              <li class="flex gap-2"><i class="fas fa-circle text-purple-400 text-[6px] mt-2.5"></i><span>Bagian konversi mana yang paling sering membuatmu keliru? Apakah dari unit besar ke kecil atau sebaliknya?</span></li>
+              <li class="flex gap-2"><i class="fas fa-circle text-purple-400 text-[6px] mt-2.5"></i><span>Soal jenis apa yang paling menantang bagimu: konversi biasa, operasi, soal cerita, atau konversi ton/kuintal/ons? Mengapa?</span></li>
+              <li class="flex gap-2"><i class="fas fa-circle text-purple-400 text-[6px] mt-2.5"></i><span>Strategi apa yang kamu gunakan untuk mengingat tangga satuan kg–hg–dag–g–dg–cg–mg serta hubungan ton, kuintal, dan ons?</span></li>
+              <li class="flex gap-2"><i class="fas fa-circle text-purple-400 text-[6px] mt-2.5"></i><span>Apakah manajemen waktu sudah baik? Adakah soal yang seharusnya bisa lebih cepat diselesaikan?</span></li>
+              <li class="flex gap-2"><i class="fas fa-circle text-purple-400 text-[6px] mt-2.5"></i><span>Apa yang akan kamu lakukan berbeda pada latihan berikutnya untuk meningkatkan hasil?</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="text-center py-12 px-6 bg-gradient-to-br from-white/[0.03] to-transparent border border-white/10 rounded-2xl mb-6">
+      <div class="inline-block mb-4">
+        <div class="w-20 h-20 rounded-full bg-gradient-to-br from-amber-500/30 to-cyan-500/30 border border-white/20 flex items-center justify-center mx-auto">
+          <i class="fas fa-heart text-2xl bg-gradient-to-r from-amber-400 to-cyan-400 bg-clip-text text-transparent"></i>
+        </div>
+      </div>
+      <h3 class="font-display text-3xl md:text-4xl font-bold mb-3">
+        Thank You <span class="bg-gradient-to-r from-amber-400 to-cyan-400 bg-clip-text text-transparent">for Today</span>
+      </h3>
+      <p class="text-slate-400 max-w-xl mx-auto leading-relaxed">
+        Terima kasih sudah belajar dengan sungguh-sungguh hari ini. Setiap soal yang kamu kerjakan adalah langkah kecil menuju pemahaman yang lebih dalam. Tetap semangat, tetap curious, dan sampai jumpa di petualangan matematika berikutnya.
+      </p>
+      <button id="btnUlang" class="mt-6 px-6 py-3 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 transition font-semibold text-sm">
+        <i class="fas fa-redo mr-2"></i> Mulai Latihan Baru
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- =================== MODAL MATERI =================== -->
+<div id="modalMateri" class="fixed inset-0 z-50 hidden items-center justify-center p-4">
+  <div class="modal-backdrop absolute inset-0" id="modalBackdrop"></div>
+  <div class="relative bg-gradient-to-br from-[#1a2240] to-[#131a30] border border-white/10 rounded-3xl p-6 md:p-8 max-w-3xl w-full max-h-[90vh] overflow-y-auto">
+    <button id="closeMateri" class="absolute top-4 right-4 w-9 h-9 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-center">
+      <i class="fas fa-times text-sm"></i>
+    </button>
+    
+    <div class="mb-6">
+      <div class="text-xs text-amber-400 uppercase tracking-widest mb-2">Materi Pembelajaran</div>
+      <h2 class="font-display text-3xl font-bold mb-3">Tangga Satuan Baku Berat</h2>
+      <p class="text-slate-400 leading-relaxed">
+        Satuan baku berat adalah satuan yang telah disepakati secara internasional untuk menyatakan ukuran berat/massa suatu benda. Satuan standar untuk berat adalah <strong class="text-amber-300">gram (g)</strong>. Dari gram, diturunkan satuan-satuan lain yang membentuk tangga satuan.
+      </p>
+    </div>
+    
+    <div class="bg-white/[0.02] border border-white/5 rounded-2xl p-6 mb-6">
+      <div class="text-xs text-slate-400 uppercase tracking-wider mb-4 text-center">Tangga Satuan (dari terbesar ke terkecil)</div>
+      <div id="tanggaMateri" class="flex items-end justify-center gap-1 md:gap-2 h-48"></div>
+    </div>
+    
+    <div class="bg-rose-500/[0.05] border border-rose-500/20 rounded-2xl p-6 mb-6">
+      <div class="flex items-center gap-2 mb-3">
+        <i class="fas fa-truck-loading text-rose-400"></i>
+        <h4 class="font-bold text-rose-400">Satuan Berat Khusus (Ton, Kuintal, Ons)</h4>
+      </div>
+      <p class="text-sm text-slate-300 mb-3">Di samping tangga kg–hg–dag–g–dg–cg–mg, ada satuan berat khusus yang sering dipakai di Indonesia:</p>
+      <div class="grid md:grid-cols-3 gap-3">
+        <div class="bg-rose-500/10 rounded-lg p-3 text-center">
+          <div class="text-2xl font-bold text-rose-300 mb-1">Ton</div>
+          <div class="text-xs text-slate-400">1 ton = 1.000 kg</div>
+          <div class="text-xs text-slate-500 mt-1">= 10 kuintal</div>
+        </div>
+        <div class="bg-orange-500/10 rounded-lg p-3 text-center">
+          <div class="text-2xl font-bold text-orange-300 mb-1">Kuintal</div>
+          <div class="text-xs text-slate-400">1 kuintal = 100 kg</div>
+          <div class="text-xs text-slate-500 mt-1">= 100.000 g</div>
+        </div>
+        <div class="bg-pink-500/10 rounded-lg p-3 text-center">
+          <div class="text-2xl font-bold text-pink-300 mb-1">Ons</div>
+          <div class="text-xs text-slate-400">1 ons = 100 g</div>
+          <div class="text-xs text-slate-500 mt-1">= 0,1 kg</div>
+        </div>
+      </div>
+      <div class="mt-3 bg-rose-500/10 rounded-lg p-3 text-sm font-mono text-center">
+        1 ton = 10 kuintal = 1.000 kg = 10.000 ons = 1.000.000 g
+      </div>
+    </div>
+    
+    <div class="grid md:grid-cols-2 gap-4 mb-6">
+      <div class="bg-emerald-500/[0.05] border border-emerald-500/20 rounded-xl p-5">
+        <div class="flex items-center gap-2 mb-2">
+          <i class="fas fa-arrow-down text-emerald-400"></i>
+          <h4 class="font-bold text-emerald-400">Turun Tangga</h4>
+        </div>
+        <p class="text-sm text-slate-300 mb-2">Dari unit besar ke unit kecil (mis. kg → g)</p>
+        <p class="text-sm text-slate-400">Operasi: <strong class="text-emerald-300">dikali 10</strong> setiap turun 1 tingkat</p>
+        <div class="mt-3 bg-emerald-500/10 rounded-lg p-3 text-sm font-mono">
+          1 kg = 10 hg = 100 dag = 1000 g
+        </div>
+      </div>
+      
+      <div class="bg-orange-500/[0.05] border border-orange-500/20 rounded-xl p-5">
+        <div class="flex items-center gap-2 mb-2">
+          <i class="fas fa-arrow-up text-orange-400"></i>
+          <h4 class="font-bold text-orange-400">Naik Tangga</h4>
+        </div>
+        <p class="text-sm text-slate-300 mb-2">Dari unit kecil ke unit besar (mis. g → kg)</p>
+        <p class="text-sm text-slate-400">Operasi: <strong class="text-orange-300">dibagi 10</strong> setiap naik 1 tingkat</p>
+        <div class="mt-3 bg-orange-500/10 rounded-lg p-3 text-sm font-mono">
+          1000 g = 100 dag = 10 hg = 1 kg
+        </div>
+      </div>
+    </div>
+    
+    <div class="bg-amber-500/[0.05] border border-amber-500/20 rounded-xl p-5">
+      <div class="flex items-center gap-2 mb-3">
+        <i class="fas fa-lightbulb text-amber-400"></i>
+        <h4 class="font-bold text-amber-400">Tips Mengingat</h4>
+      </div>
+      <ul class="space-y-2 text-sm text-slate-300">
+        <li class="flex gap-2"><span class="text-amber-400">•</span> <strong>K</strong>ilo = 1000 (ribu)</li>
+        <li class="flex gap-2"><span class="text-amber-400">•</span> <strong>H</strong>ekto = 100 (ratus)</li>
+        <li class="flex gap-2"><span class="text-amber-400">•</span> <strong>D</strong>eka = 10 (puluhan)</li>
+        <li class="flex gap-2"><span class="text-amber-400">•</span> <strong>g</strong>ram = 1 (satuan dasar)</li>
+        <li class="flex gap-2"><span class="text-amber-400">•</span> <strong>d</strong>esi = 1/10 (sepers puluh)</li>
+        <li class="flex gap-2"><span class="text-amber-400">•</span> <strong>c</strong>enti = 1/100 (seper ratus)</li>
+        <li class="flex gap-2"><span class="text-amber-400">•</span> <strong>m</strong>ili = 1/1000 (seper ribu)</li>
+        <li class="flex gap-2"><span class="text-rose-400">•</span> <strong>T</strong>on = 1.000 kg, <strong>K</strong>uintal = 100 kg, <strong>O</strong>ns = 100 g</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- =================== TOAST =================== -->
+<div id="toast" class="toast bg-[#1a2240] border border-white/10 rounded-xl px-5 py-3 shadow-2xl flex items-center gap-3 max-w-sm">
+  <div id="toastIcon" class="w-8 h-8 rounded-full flex items-center justify-center">
+    <i class="fas fa-info-circle text-sm"></i>
+  </div>
+  <div id="toastText" class="text-sm font-medium">Pesan toast</div>
+</div>
+
+<script>
+/* ============================================================
+   KONSTANTA & UTILITAS
+   ============================================================ */
+const UNITS = ['kg', 'hg', 'dag', 'g', 'dg', 'cg', 'mg'];
+const UNIT_FULL = {
+  kg: 'kilogram', hg: 'hektogram', dag: 'dekagram', g: 'gram',
+  dg: 'desigram', cg: 'centigram', mg: 'miligram'
+};
+const UNIT_COLORS = {
+  kg: '#f59e0b', hg: '#fb923c', dag: '#fbbf24', g: '#ffffff',
+  dg: '#67e8f9', cg: '#22d3ee', mg: '#06b6d4'
+};
+const TIME_PER_SOAL = 120;
+
+// Satuan khusus dengan faktor konversi ke gram
+const SPECIAL_UNITS = [
+  { simbol: 'ton', keGram: 1000000, nama: 'ton' },
+  { simbol: 'kuintal', keGram: 100000, nama: 'kuintal' },
+  { simbol: 'kg', keGram: 1000, nama: 'kilogram' },
+  { simbol: 'ons', keGram: 100, nama: 'ons' },
+  { simbol: 'g', keGram: 1, nama: 'gram' }
+];
+
+function mulberry32(a) {
+  return function() {
+    var t = a += 0x6D2B79F5;
+    t = Math.imul(t ^ t >>> 15, t | 1);
+    t ^= t + Math.imul(t ^ t >>> 7, t | 61);
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  }
+}
+
+function konversi(nilai, dariUnit, keUnit) {
+  const dariIdx = UNITS.indexOf(dariUnit);
+  const keIdx = UNITS.indexOf(keUnit);
+  return nilai * Math.pow(10, keIdx - dariIdx);
+}
+
+function konversiKhusus(nilai, dariSimbol, keSimbol) {
+  const dari = SPECIAL_UNITS.find(u => u.simbol === dariSimbol);
+  const ke = SPECIAL_UNITS.find(u => u.simbol === keSimbol);
+  if (!dari || !ke) return null;
+  // Konversi via gram
+  const dalamGram = nilai * dari.keGram;
+  return dalamGram / ke.keGram;
+}
+
+function formatAngka(n) {
+  if (n === 0) return '0';
+  if (Math.abs(n) < 1) return n.toString();
+  if (Number.isInteger(n)) {
+    return n.toLocaleString('id-ID');
+  }
+  return n.toString();
+}
+
+function formatWaktu(detik) {
+  if (detik === null || detik === undefined) return '-';
+  if (detik < 60) return detik.toFixed(1) + 's';
+  const m = Math.floor(detik / 60);
+  const s = (detik % 60).toFixed(0);
+  return `${m}m ${s}s`;
+}
+
+function showToast(pesan, tipe = 'info') {
+  const toast = document.getElementById('toast');
+  const text = document.getElementById('toastText');
+  const icon = document.getElementById('toastIcon');
+  text.textContent = pesan;
+  const colors = {
+    info: { bg: 'bg-cyan-500/20', fg: 'text-cyan-400', icon: 'fa-info-circle' },
+    success: { bg: 'bg-emerald-500/20', fg: 'text-emerald-400', icon: 'fa-check-circle' },
+    warning: { bg: 'bg-amber-500/20', fg: 'text-amber-400', icon: 'fa-exclamation-circle' },
+    error: { bg: 'bg-red-500/20', fg: 'text-red-400', icon: 'fa-times-circle' }
+  };
+  const c = colors[tipe] || colors.info;
+  icon.className = `w-8 h-8 rounded-full flex items-center justify-center ${c.bg} ${c.fg}`;
+  icon.innerHTML = `<i class="fas ${c.icon} text-sm"></i>`;
+  toast.classList.add('show');
+  clearTimeout(showToast._t);
+  showToast._t = setTimeout(() => toast.classList.remove('show'), 2800);
+}
+
+/* ============================================================
+   GENERATOR PILIHAN
+   ============================================================ */
+function generatePilihan(jawaban, rng) {
+  const pilihan = new Set([jawaban]);
+  let attempts = 0;
+  while (pilihan.size < 4 && attempts < 100) {
+    let offset;
+    if (Math.abs(jawaban) < 10) {
+      offset = Math.floor(rng() * 11) - 5;
+    } else if (Math.abs(jawaban) < 100) {
+      offset = (Math.floor(rng() * 20) - 10);
+    } else if (Math.abs(jawaban) < 1000) {
+      offset = (Math.floor(rng() * 40) - 20) * 5;
+    } else {
+      offset = (Math.floor(rng() * 40) - 20) * Math.max(10, Math.floor(Math.abs(jawaban) / 100));
+    }
+    if (offset !== 0) {
+      const kandidat = jawaban + offset;
+      if (kandidat > 0 && kandidat !== jawaban) pilihan.add(kandidat);
+    }
+    attempts++;
+  }
+  while (pilihan.size < 4) {
+    pilihan.add(jawaban + pilihan.size * 7 + 3);
+  }
+  const arr = [...pilihan];
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(rng() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+/* ============================================================
+   GENERATOR SOAL JENIS 1: KONVERSI BIASA
+   ============================================================ */
+function generateKonversiBiasa(seed) {
+  const rng = mulberry32(seed);
+  const dariIdx = Math.floor(rng() * 7);
+  let keIdx = Math.floor(rng() * 7);
+  while (keIdx === dariIdx) keIdx = Math.floor(rng() * 7);
+  
+  let nilai, jawaban;
+  if (keIdx > dariIdx) {
+    nilai = Math.floor(rng() * 18) + 2;
+    jawaban = nilai * Math.pow(10, keIdx - dariIdx);
+  } else {
+    const diff = dariIdx - keIdx;
+    const factor = Math.pow(10, diff);
+    const multiplier = Math.floor(rng() * 18) + 2;
+    nilai = multiplier * factor;
+    jawaban = multiplier;
+  }
+  
+  const selisih = Math.abs(keIdx - dariIdx);
+  const arah = keIdx > dariIdx ? 'turun' : 'naik';
+  const operasi = arah === 'turun' ? 'dikali' : 'dibagi';
+  const faktorVal = Math.pow(10, selisih);
+  
+  const pembahasan = `Untuk mengkonversi dari ${UNITS[dariIdx]} ke ${UNITS[keIdx]}, kita perlu ${arah} ${selisih} tangga. ${arah === 'turun' ? 'Turun' : 'Naik'} tangga berarti ${operasi} 10 sebanyak ${selisih} kali (10^${selisih} = ${faktorVal}). ` +
+    `Sehingga: ${formatAngka(nilai)} ${UNITS[dariIdx]} = ${formatAngka(nilai)} ${arah === 'turun' ? '×' : '÷'} ${formatAngka(faktorVal)} = ${formatAngka(jawaban)} ${UNITS[keIdx]}.`;
+  
+  return {
+    jenis: 'Konversi Biasa',
+    soal: `${formatAngka(nilai)} ${UNITS[dariIdx]} = ... ${UNITS[keIdx]}`,
+    soalSingkat: `${formatAngka(nilai)} ${UNITS[dariIdx]} = ? ${UNITS[keIdx]}`,
+    jawaban: jawaban,
+    satuan: UNITS[keIdx],
+    pilihan: generatePilihan(jawaban, rng),
+    pembahasan: pembahasan
+  };
+}
+
+/* ============================================================
+   GENERATOR SOAL JENIS 2: OPERASI (+/−)
+   ============================================================ */
+function generateOperasi(seed) {
+  const rng = mulberry32(seed);
+  const op = rng() > 0.5 ? '+' : '−';
+  const targetIdx = Math.floor(rng() * 5) + 1;
+  
+  let unit1Idx = Math.floor(rng() * 7);
+  let unit2Idx = Math.floor(rng() * 7);
+  while (unit2Idx === unit1Idx) unit2Idx = Math.floor(rng() * 7);
+  
+  function pilihNilai(unitIdx) {
+    if (unitIdx <= targetIdx) {
+      return Math.floor(rng() * 18) + 2;
+    } else {
+      const factor = Math.pow(10, unitIdx - targetIdx);
+      return (Math.floor(rng() * 8) + 2) * factor;
+    }
+  }
+  
+  let nilai1 = pilihNilai(unit1Idx);
+  let nilai2 = pilihNilai(unit2Idx);
+  
+  let v1 = konversi(nilai1, UNITS[unit1Idx], UNITS[targetIdx]);
+  let v2 = konversi(nilai2, UNITS[unit2Idx], UNITS[targetIdx]);
+  
+  let jawaban, n1, n2, u1, u2, opReal;
+  if (op === '+') {
+    jawaban = v1 + v2;
+    n1 = nilai1; n2 = nilai2; u1 = unit1Idx; u2 = unit2Idx; opReal = '+';
+  } else {
+    if (v1 >= v2) {
+      jawaban = v1 - v2;
+      n1 = nilai1; n2 = nilai2; u1 = unit1Idx; u2 = unit2Idx; opReal = '−';
+    } else {
+      jawaban = v2 - v1;
+      n1 = nilai2; n2 = nilai1; u1 = unit2Idx; u2 = unit1Idx; opReal = '−';
+    }
+  }
+  
+  const v1Final = konversi(n1, UNITS[u1], UNITS[targetIdx]);
+  const v2Final = konversi(n2, UNITS[u2], UNITS[targetIdx]);
+  
+  const pembahasan = `Langkah 1: Konversi kedua nilai ke ${UNITS[targetIdx]}. ` +
+    `${formatAngka(n1)} ${UNITS[u1]} = ${formatAngka(v1Final)} ${UNITS[targetIdx]} dan ${formatAngka(n2)} ${UNITS[u2]} = ${formatAngka(v2Final)} ${UNITS[targetIdx]}. ` +
+    `Langkah 2: Lakukan operasi ${opReal}. ${formatAngka(v1Final)} ${opReal} ${formatAngka(v2Final)} = ${formatAngka(jawaban)} ${UNITS[targetIdx]}.`;
+  
+  return {
+    jenis: 'Operasi Konversi',
+    soal: `${formatAngka(n1)} ${UNITS[u1]} ${opReal} ${formatAngka(n2)} ${UNITS[u2]} = ... ${UNITS[targetIdx]}`,
+    soalSingkat: `${formatAngka(n1)} ${UNITS[u1]} ${opReal} ${formatAngka(n2)} ${UNITS[u2]} = ? ${UNITS[targetIdx]}`,
+    jawaban: jawaban,
+    satuan: UNITS[targetIdx],
+    pilihan: generatePilihan(jawaban, rng),
+    pembahasan: pembahasan
+  };
+}
+
+/* ============================================================
+   GENERATOR SOAL JENIS 3: SOAL CERITA
+   ============================================================ */
+function generateCerita(seed) {
+  const rng = mulberry32(seed);
+  const tipe = Math.floor(rng() * 4);
+  
+  if (tipe === 0) {
+    const item = ['beras', 'gula', 'tepung', 'apel', 'jeruk', 'cokelat', 'kacang', 'biskuit'][Math.floor(rng() * 8)];
+    const unit1Idx = Math.floor(rng() * 4);
+    const unit2Idx = Math.floor(rng() * 4);
+    const minTarget = Math.max(unit1Idx, unit2Idx);
+    const targetIdx = minTarget + Math.floor(rng() * (6 - minTarget + 1));
+    
+    const nilai1 = Math.floor(rng() * 8) + 2;
+    const nilai2 = Math.floor(rng() * 8) + 2;
+    
+    const v1 = nilai1 * Math.pow(10, targetIdx - unit1Idx);
+    const v2 = nilai2 * Math.pow(10, targetIdx - unit2Idx);
+    const jawaban = v1 + v2;
+    
+    return {
+      jenis: 'Soal Cerita',
+      soal: `Ibu membeli ${formatAngka(nilai1)} ${UNITS[unit1Idx]} ${item} di toko pertama dan ${formatAngka(nilai2)} ${UNITS[unit2Idx]} ${item} di toko kedua. Berapa total berat ${item} yang dibeli ibu dalam satuan ${UNITS[targetIdx]}?`,
+      soalSingkat: `${formatAngka(nilai1)} ${UNITS[unit1Idx]} + ${formatAngka(nilai2)} ${UNITS[unit2Idx]} = ? ${UNITS[targetIdx]}`,
+      jawaban: jawaban,
+      satuan: UNITS[targetIdx],
+      pilihan: generatePilihan(jawaban, rng),
+      pembahasan: `Langkah 1: Konversi ke ${UNITS[targetIdx]}. ${formatAngka(nilai1)} ${UNITS[unit1Idx]} = ${formatAngka(v1)} ${UNITS[targetIdx]}, ${formatAngka(nilai2)} ${UNITS[unit2Idx]} = ${formatAngka(v2)} ${UNITS[targetIdx]}. Langkah 2: Jumlahkan. ${formatAngka(v1)} + ${formatAngka(v2)} = ${formatAngka(jawaban)} ${UNITS[targetIdx]}.`
+    };
+  } else if (tipe === 1) {
+    const orang1 = ['Andi', 'Budi', 'Citra', 'Dewi', 'Eka', 'Fajar', 'Gilang'][Math.floor(rng() * 7)];
+    const orang2 = ['Hadi', 'Indah', 'Joko', 'Kirana', 'Lukman', 'Maya', 'Nadia'][Math.floor(rng() * 7)];
+    let berat1 = Math.floor(rng() * 35) + 30;
+    let berat2 = Math.floor(rng() * 35) + 30;
+    if (Math.abs(berat1 - berat2) < 3) berat2 += 7;
+    const [besar, kecil] = berat1 > berat2 ? [berat1, berat2] : [berat2, berat1];
+    const targetIdx = Math.floor(rng() * 4) + 1;
+    
+    const selisih = besar - kecil;
+    const jawaban = selisih * Math.pow(10, targetIdx);
+    
+    return {
+      jenis: 'Soal Cerita',
+      soal: `Berat badan ${orang1} adalah ${berat1} kg dan berat badan ${orang2} adalah ${berat2} kg. Berapakah selisih berat badan mereka dalam satuan ${UNITS[targetIdx]}?`,
+      soalSingkat: `|${berat1} − ${berat2}| kg = ? ${UNITS[targetIdx]}`,
+      jawaban: jawaban,
+      satuan: UNITS[targetIdx],
+      pilihan: generatePilihan(jawaban, rng),
+      pembahasan: `Langkah 1: Hitung selisih dalam kg. ${besar} − ${kecil} = ${selisih} kg. Langkah 2: Konversi ke ${UNITS[targetIdx]} (turun ${targetIdx} tangga, dikali ${Math.pow(10, targetIdx)}). ${selisih} kg = ${formatAngka(jawaban)} ${UNITS[targetIdx]}.`
+    };
+  } else if (tipe === 2) {
+    const item = ['tepung', 'gula', 'beras', 'cokelat', 'kacang', 'susu bubuk'][Math.floor(rng() * 6)];
+    const jumlah = Math.floor(rng() * 4) + 2;
+    const unitBeratIdx = Math.floor(rng() * 4);
+    const berat = Math.floor(rng() * 8) + 2;
+    const targetIdx = unitBeratIdx + Math.floor(rng() * (6 - unitBeratIdx + 1));
+    
+    const totalBerat = berat * jumlah;
+    const jawaban = totalBerat * Math.pow(10, targetIdx - unitBeratIdx);
+    
+    return {
+      jenis: 'Soal Cerita',
+      soal: `Sebuah kardus berisi ${jumlah} pak ${item}. Setiap pak berbobot ${formatAngka(berat)} ${UNITS[unitBeratIdx]}. Berapakah total berat seluruh ${item} dalam kardus tersebut, dinyatakan dalam ${UNITS[targetIdx]}?`,
+      soalSingkat: `${jumlah} × ${formatAngka(berat)} ${UNITS[unitBeratIdx]} = ? ${UNITS[targetIdx]}`,
+      jawaban: jawaban,
+      satuan: UNITS[targetIdx],
+      pilihan: generatePilihan(jawaban, rng),
+      pembahasan: `Langkah 1: Hitung total berat. ${jumlah} × ${formatAngka(berat)} ${UNITS[unitBeratIdx]} = ${formatAngka(totalBerat)} ${UNITS[unitBeratIdx]}. Langkah 2: Konversi ke ${UNITS[targetIdx]} (turun ${targetIdx - unitBeratIdx} tangga). ${formatAngka(totalBerat)} ${UNITS[unitBeratIdx]} = ${formatAngka(jawaban)} ${UNITS[targetIdx]}.`
+    };
+  } else {
+    const bahan = ['gula', 'tepung', 'mentega', 'cokelat', 'keju', 'susu'][Math.floor(rng() * 6)];
+    const unit1Idx = Math.floor(rng() * 3);
+    const unit2Idx = Math.floor(rng() * 4) + 3;
+    const targetIdx = Math.max(unit1Idx, unit2Idx) + Math.floor(rng() * (6 - Math.max(unit1Idx, unit2Idx) + 1));
+    
+    const nilai1 = Math.floor(rng() * 5) + 2;
+    const nilai2 = Math.floor(rng() * 200) + 50;
+    
+    const v1 = nilai1 * Math.pow(10, targetIdx - unit1Idx);
+    const v2 = nilai2 * Math.pow(10, targetIdx - unit2Idx);
+    const op = rng() > 0.5 ? '+' : '−';
+    let jawaban, op2;
+    if (op === '+') {
+      jawaban = v1 + v2;
+      op2 = 'ditambahkan';
+    } else {
+      jawaban = Math.abs(v1 - v2);
+      op2 = v1 > v2 ? 'dikurangi' : 'mengurangi';
+    }
+    
+    return {
+      jenis: 'Soal Cerita',
+      soal: `Sebuah resep kue membutuhkan ${formatAngka(nilai1)} ${UNITS[unit1Idx]} ${bahan} untuk adonan utama. Kemudian ${formatAngka(nilai2)} ${UNITS[unit2Idx]} ${bahan} ${op2} untuk topping. Berapakah ${op === '+' ? 'total' : 'selisih'} ${bahan} yang digunakan, dalam satuan ${UNITS[targetIdx]}?`,
+      soalSingkat: `${formatAngka(nilai1)} ${UNITS[unit1Idx]} ${op} ${formatAngka(nilai2)} ${UNITS[unit2Idx]} = ? ${UNITS[targetIdx]}`,
+      jawaban: jawaban,
+      satuan: UNITS[targetIdx],
+      pilihan: generatePilihan(jawaban, rng),
+      pembahasan: `Langkah 1: Konversi ke ${UNITS[targetIdx]}. ${formatAngka(nilai1)} ${UNITS[unit1Idx]} = ${formatAngka(v1)} ${UNITS[targetIdx]}, ${formatAngka(nilai2)} ${UNITS[unit2Idx]} = ${formatAngka(v2)} ${UNITS[targetIdx]}. Langkah 2: ${op === '+' ? 'Jumlahkan' : 'Hitung selisih'}. Hasil = ${formatAngka(jawaban)} ${UNITS[targetIdx]}.`
+    };
+  }
+}
+
+/* ============================================================
+   GENERATOR SOAL JENIS 4: KONVERSI BERAT KHUSUS
+   (Ton, Kuintal, Ons, kg, g)
+   ============================================================ */
+function generateBeratKhusus(seed) {
+  const rng = mulberry32(seed);
+  const tipe = Math.floor(rng() * 3); // 0: biasa, 1: operasi, 2: cerita
+  
+  if (tipe === 0) {
+    // Konversi biasa antar satuan khusus
+    let dariIdx, keIdx;
+    dariIdx = Math.floor(rng() * 5);
+    keIdx = Math.floor(rng() * 5);
+    while (keIdx === dariIdx) keIdx = Math.floor(rng() * 5);
+    
+    const dariUnit = SPECIAL_UNITS[dariIdx];
+    const keUnit = SPECIAL_UNITS[keIdx];
+    
+    let nilai, jawaban;
+    if (dariUnit.keGram >= keUnit.keGram) {
+      // Turun (nilai besar → nilai lebih besar)
+      nilai = Math.floor(rng() * 18) + 2;
+      jawaban = konversiKhusus(nilai, dariUnit.simbol, keUnit.simbol);
+    } else {
+      // Naik (hasil makin kecil) — pilih nilai agar hasil bulat
+      const faktor = keUnit.keGram / dariUnit.keGram;
+      nilai = (Math.floor(rng() * 18) + 2) * faktor;
+      jawaban = konversiKhusus(nilai, dariUnit.simbol, keUnit.simbol);
+    }
+    
+    const rasio = dariUnit.keGram / keUnit.keGram;
+    
+    const pembahasan = `Ingat: 1 ${dariUnit.simbol} = ${formatAngka(rasio)} ${keUnit.simbol}. ` +
+      `Sehingga ${formatAngka(nilai)} ${dariUnit.simbol} = ${formatAngka(nilai)} × ${formatAngka(rasio)} = ${formatAngka(jawaban)} ${keUnit.simbol}.`;
+    
+    return {
+      jenis: 'Konversi Berat Khusus',
+      soal: `${formatAngka(nilai)} ${dariUnit.simbol} = ... ${keUnit.simbol}`,
+      soalSingkat: `${formatAngka(nilai)} ${dariUnit.simbol} = ? ${keUnit.simbol}`,
+      jawaban: jawaban,
+      satuan: keUnit.simbol,
+      pilihan: generatePilihan(jawaban, rng),
+      pembahasan: pembahasan
+    };
+  } else if (tipe === 1) {
+    // Operasi antar satuan khusus
+    const op = rng() > 0.5 ? '+' : '−';
+    let idx1 = Math.floor(rng() * 5);
+    let idx2 = Math.floor(rng() * 5);
+    while (idx2 === idx1) idx2 = Math.floor(rng() * 5);
+    let targetIdx = Math.floor(rng() * 5);
+    
+    const u1 = SPECIAL_UNITS[idx1];
+    const u2 = SPECIAL_UNITS[idx2];
+    const ut = SPECIAL_UNITS[targetIdx];
+    
+    // Pilih nilai agar konversi bulat
+    function pilihNilai(u) {
+      if (u.keGram >= ut.keGram) {
+        return Math.floor(rng() * 15) + 2;
+      } else {
+        const faktor = ut.keGram / u.keGram;
+        return (Math.floor(rng() * 8) + 2) * faktor;
+      }
+    }
+    
+    let n1 = pilihNilai(u1);
+    let n2 = pilihNilai(u2);
+    let v1 = konversiKhusus(n1, u1.simbol, ut.simbol);
+    let v2 = konversiKhusus(n2, u2.simbol, ut.simbol);
+    
+    let jawaban, opReal, nA, uA, nB, uB;
+    if (op === '+') {
+      jawaban = v1 + v2;
+      nA = n1; uA = u1; nB = n2; uB = u2; opReal = '+';
+    } else {
+      if (v1 >= v2) {
+        jawaban = v1 - v2;
+        nA = n1; uA = u1; nB = n2; uB = u2; opReal = '−';
+      } else {
+        jawaban = v2 - v1;
+        nA = n2; uA = u2; nB = n1; uB = u1; opReal = '−';
+      }
+    }
+    
+    const v1Final = konversiKhusus(nA, uA.simbol, ut.simbol);
+    const v2Final = konversiKhusus(nB, uB.simbol, ut.simbol);
+    
+    const pembahasan = `Langkah 1: Konversi kedua nilai ke ${ut.simbol}. ${formatAngka(nA)} ${uA.simbol} = ${formatAngka(v1Final)} ${ut.simbol} dan ${formatAngka(nB)} ${uB.simbol} = ${formatAngka(v2Final)} ${ut.simbol}. ` +
+      `Langkah 2: Lakukan operasi ${opReal}. ${formatAngka(v1Final)} ${opReal} ${formatAngka(v2Final)} = ${formatAngka(jawaban)} ${ut.simbol}.`;
+    
+    return {
+      jenis: 'Konversi Berat Khusus',
+      soal: `${formatAngka(nA)} ${uA.simbol} ${opReal} ${formatAngka(nB)} ${uB.simbol} = ... ${ut.simbol}`,
+      soalSingkat: `${formatAngka(nA)} ${uA.simbol} ${opReal} ${formatAngka(nB)} ${uB.simbol} = ? ${ut.simbol}`,
+      jawaban: jawaban,
+      satuan: ut.simbol,
+      pilihan: generatePilihan(jawaban, rng),
+      pembahasan: pembahasan
+    };
+  } else {
+    // Soal cerita dengan satuan khusus
+    const ceritaTipe = Math.floor(rng() * 3);
+    
+    if (ceritaTipe === 0) {
+      // Pengangkutan barang
+      const barang = ['semen', 'baja', 'pasir', 'batu', 'tepung', 'gula', 'beras', 'kayu', 'baja'][Math.floor(rng() * 9)];
+      const kendaraan = ['truk', 'kapal', 'kereta', 'kapal tongkang', 'kontainer'][Math.floor(rng() * 5)];
+      const jumlah = Math.floor(rng() * 8) + 2;
+      const beratPerUnit = Math.floor(rng() * 8) + 2;
+      const unitBeratSimbol = ['ton', 'kuintal', 'kg'][Math.floor(rng() * 3)];
+      const targetSimbol = ['ton', 'kuintal', 'kg', 'ons', 'g'][Math.floor(rng() * 5)];
+      
+      const unitBeratObj = SPECIAL_UNITS.find(u => u.simbol === unitBeratSimbol);
+      const targetUnitObj = SPECIAL_UNITS.find(u => u.simbol === targetSimbol);
+      
+      const totalBerat = beratPerUnit * jumlah;
+      const jawaban = konversiKhusus(totalBerat, unitBeratSimbol, targetSimbol);
+      const rasio = unitBeratObj.keGram / targetUnitObj.keGram;
+      
+      return {
+        jenis: 'Konversi Berat Khusus',
+        soal: `Sebuah ${kendaraan} mengangkut ${jumlah} kontainer ${barang}. Setiap kontainer berbobot ${formatAngka(beratPerUnit)} ${unitBeratSimbol}. Berapakah total berat muatan ${kendaraan} tersebut dalam satuan ${targetSimbol}?`,
+        soalSingkat: `${jumlah} × ${formatAngka(beratPerUnit)} ${unitBeratSimbol} = ? ${targetSimbol}`,
+        jawaban: jawaban,
+        satuan: targetSimbol,
+        pilihan: generatePilihan(jawaban, rng),
+        pembahasan: `Langkah 1: Hitung total berat. ${jumlah} × ${formatAngka(beratPerUnit)} ${unitBeratSimbol} = ${formatAngka(totalBerat)} ${unitBeratSimbol}. Langkah 2: Konversi ke ${targetSimbol} (1 ${unitBeratSimbol} = ${formatAngka(rasio)} ${targetSimbol}). ${formatAngka(totalBerat)} ${unitBeratSimbol} = ${formatAngka(jawaban)} ${targetSimbol}.`
+      };
+    } else if (ceritaTipe === 1) {
+      // Panen pertanian
+      const komoditas = ['padi', 'jagung', 'kedelai', 'sayuran', 'buah', 'kopi', 'teh', 'cabai'][Math.floor(rng() * 8)];
+      const panen1 = Math.floor(rng() * 15) + 5;
+      const panen2 = Math.floor(rng() * 15) + 5;
+      const unitPanenSimbol = ['kuintal', 'ton'][Math.floor(rng() * 2)];
+      const targetSimbol = ['kg', 'ons', 'g', 'kuintal'][Math.floor(rng() * 4)];
+      
+      const unitPanenObj = SPECIAL_UNITS.find(u => u.simbol === unitPanenSimbol);
+      const targetUnitObj = SPECIAL_UNITS.find(u => u.simbol === targetSimbol);
+      
+      const total = panen1 + panen2;
+      const jawaban = konversiKhusus(total, unitPanenSimbol, targetSimbol);
+      const rasio = unitPanenObj.keGram / targetUnitObj.keGram;
+      
+      return {
+        jenis: 'Konversi Berat Khusus',
+        soal: `Pak Tani memanen ${formatAngka(panen1)} ${unitPanenSimbol} ${komoditas} di lahan pertama dan ${formatAngka(panen2)} ${unitPanenSimbol} di lahan kedua. Berapakah total hasil panen dalam satuan ${targetSimbol}?`,
+        soalSingkat: `(${panen1} + ${panen2}) ${unitPanenSimbol} = ? ${targetSimbol}`,
+        jawaban: jawaban,
+        satuan: targetSimbol,
+        pilihan: generatePilihan(jawaban, rng),
+        pembahasan: `Langkah 1: Jumlahkan hasil panen. ${panen1} + ${panen2} = ${total} ${unitPanenSimbol}. Langkah 2: Konversi ke ${targetSimbol} (1 ${unitPanenSimbol} = ${formatAngka(rasio)} ${targetSimbol}). ${total} ${unitPanenSimbol} = ${formatAngka(jawaban)} ${targetSimbol}.`
+      };
+    } else {
+      // Pembelian di pasar dengan satuan khusus
+      const item = ['daging', 'ayam', 'ikan', 'sayur', 'buah', 'keju', 'mentega'][Math.floor(rng() * 7)];
+      const pembeli = ['Bu Sari', 'Bu Ani', 'Pak Joko', 'Bu Dewi', 'Pak Hadi', 'Bu Rina'][Math.floor(rng() * 6)];
+      const berat = Math.floor(rng() * 8) + 2;
+      const unitBeliSimbol = ['ons', 'kg'][Math.floor(rng() * 2)];
+      const targetSimbol = ['g', 'ons', 'kg', 'kuintal'][Math.floor(rng() * 4)];
+      
+      const unitBeliObj = SPECIAL_UNITS.find(u => u.simbol === unitBeliSimbol);
+      const targetUnitObj = SPECIAL_UNITS.find(u => u.simbol === targetSimbol);
+      
+      const jawaban = konversiKhusus(berat, unitBeliSimbol, targetSimbol);
+      const rasio = unitBeliObj.keGram / targetUnitObj.keGram;
+      
+      return {
+        jenis: 'Konversi Berat Khusus',
+        soal: `${pembeli} membeli ${formatAngka(berat)} ${unitBeliSimbol} ${item} di pasar tradisional. Berapakah berat ${item} yang dibeli ${pembeli} jika dinyatakan dalam satuan ${targetSimbol}?`,
+        soalSingkat: `${formatAngka(berat)} ${unitBeliSimbol} = ? ${targetSimbol}`,
+        jawaban: jawaban,
+        satuan: targetSimbol,
+        pilihan: generatePilihan(jawaban, rng),
+        pembahasan: `Konversi: 1 ${unitBeliSimbol} = ${formatAngka(rasio)} ${targetSimbol}. Sehingga ${formatAngka(berat)} ${unitBeliSimbol} = ${formatAngka(berat)} × ${formatAngka(rasio)} = ${formatAngka(jawaban)} ${targetSimbol}.`
+      };
+    }
+  }
+}
+
+/* ============================================================
+   GENERATE SEMUA SOAL SISWA
+   ============================================================ */
+function generateSoalSiswa(siswaId) {
+  const seedBase = siswaId === 1 ? 73219 : 94587;
+  const soal = [];
+  // 20 soal konversi biasa
+  for (let i = 0; i < 20; i++) {
+    soal.push(generateKonversiBiasa(seedBase + i * 17 + 3));
+  }
+  // 20 soal operasi
+  for (let i = 0; i < 20; i++) {
+    soal.push(generateOperasi(seedBase + 10000 + i * 17 + 5));
+  }
+  // 20 soal cerita
+  for (let i = 0; i < 20; i++) {
+    soal.push(generateCerita(seedBase + 20000 + i * 17 + 7));
+  }
+  // 10 soal konversi berat khusus (ton, kuintal, ons)
+  for (let i = 0; i < 10; i++) {
+    soal.push(generateBeratKhusus(seedBase + 30000 + i * 17 + 11));
+  }
+  return soal;
+}
+
+/* ============================================================
+   STATE MANAGEMENT
+   ============================================================ */
+let state = {
+  siswa1: { 
+    nama: '', 
+    soal: [], 
+    jawaban: Array(70).fill(null), 
+    terjawab: Array(70).fill(false),
+    benar: Array(70).fill(false),
+    waktu: Array(70).fill(null),
+    pembahasanDitampilkan: Array(70).fill(false)
+  },
+  siswa2: { 
+    nama: '', 
+    soal: [], 
+    jawaban: Array(70).fill(null), 
+    terjawab: Array(70).fill(false),
+    benar: Array(70).fill(false),
+    waktu: Array(70).fill(null),
+    pembahasanDitampilkan: Array(70).fill(false)
+  },
+  currentSoal: 0,
+  timer: {
+    seconds: TIME_PER_SOAL,
+    interval: null,
+    startTime: null,
+    running: false
+  },
+  selectedSiswaDetail: 1,
+  latihanSelesai: false
+};
+
+/* ============================================================
+   RENDER TANGGA SATUAN
+   ============================================================ */
+function renderTanggaPreview() {
+  const container = document.getElementById('tanggaPreview');
+  container.innerHTML = '';
+  UNITS.forEach((unit, idx) => {
+    const height = 30 + idx * 12;
+    const div = document.createElement('div');
+    div.className = 'tangga-step flex-1 max-w-[80px] flex flex-col items-center justify-end';
+    div.innerHTML = `
+      <div style="height: ${height}px; background: linear-gradient(180deg, ${UNIT_COLORS[unit]}40, ${UNIT_COLORS[unit]}20); border: 1px solid ${UNIT_COLORS[unit]}60; border-bottom: none;" class="rounded-t-lg flex items-center justify-center font-bold" >
+        <span style="color: ${UNIT_COLORS[unit]}">${unit}</span>
+      </div>
+    `;
+    container.appendChild(div);
+  });
+}
+
+function renderTanggaMateri() {
+  const container = document.getElementById('tanggaMateri');
+  container.innerHTML = '';
+  UNITS.forEach((unit, idx) => {
+    const height = 60 + (6 - idx) * 18;
+    const div = document.createElement('div');
+    div.className = 'tangga-step flex-1 max-w-[100px] flex flex-col items-center justify-end';
+    div.innerHTML = `
+      <div class="text-[10px] text-slate-500 uppercase tracking-wider mb-1">${UNIT_FULL[unit]}</div>
+      <div style="height: ${height}px; background: linear-gradient(180deg, ${UNIT_COLORS[unit]}40, ${UNIT_COLORS[unit]}15); border: 1px solid ${UNIT_COLORS[unit]}60; border-bottom: none;" class="rounded-t-lg flex items-center justify-center font-bold text-lg w-full" >
+        <span style="color: ${UNIT_COLORS[unit]}">${unit}</span>
+      </div>
+    `;
+    container.appendChild(div);
+  });
+}
+
+/* ============================================================
+   TIMER
+   ============================================================ */
+function startTimer() {
+  state.timer.seconds = TIME_PER_SOAL;
+  state.timer.startTime = Date.now();
+  state.timer.running = true;
+  if (state.timer.interval) clearInterval(state.timer.interval);
+  state.timer.interval = setInterval(() => {
+    if (state.timer.running) {
+      state.timer.seconds--;
+      updateTimerDisplay();
+      if (state.timer.seconds <= 0) {
+        state.timer.running = false;
+        showToast('Waktu habis! Silakan cek jawaban atau pindah ke soal berikutnya.', 'warning');
+      }
+    }
+  }, 1000);
+  updateTimerDisplay();
+}
+
+function stopTimer() {
+  state.timer.running = false;
+}
+
+function addTime(seconds) {
+  state.timer.seconds += seconds;
+  updateTimerDisplay();
+  showToast(`+${seconds} detik ditambahkan!`, 'success');
+}
+
+function updateTimerDisplay() {
+  const text = document.getElementById('timerText');
+  const progress = document.getElementById('timerProgress');
+  const m = Math.floor(state.timer.seconds / 60);
+  const s = state.timer.seconds % 60;
+  text.textContent = `${m}:${s.toString().padStart(2, '0')}`;
+  
+  const circumference = 213.628;
+  const offset = circumference * (1 - state.timer.seconds / TIME_PER_SOAL);
+  progress.style.strokeDashoffset = offset;
+  
+  if (state.timer.seconds <= 30) {
+    text.classList.add('text-red-400', 'pulse-warn');
+    progress.style.stroke = '#ef4444';
+  } else if (state.timer.seconds <= 60) {
+    text.classList.remove('text-red-400', 'pulse-warn');
+    text.classList.add('text-amber-400');
+    progress.style.stroke = '#f59e0b';
+  } else {
+    text.classList.remove('text-red-400', 'pulse-warn', 'text-amber-400');
+    progress.style.stroke = 'url(#timerGrad)';
+  }
+}
+
+/* ============================================================
+   RENDER SOAL
+   ============================================================ */
+function getJenisSoal(idx) {
+  if (idx < 20) return 'Konversi Biasa';
+  if (idx < 40) return 'Operasi Konversi';
+  if (idx < 60) return 'Soal Cerita';
+  return 'Konversi Berat Khusus';
+}
+
+function getJenisColor(jenis) {
+  if (jenis === 'Konversi Biasa') return 'amber';
+  if (jenis === 'Operasi Konversi') return 'purple';
+  if (jenis === 'Soal Cerita') return 'cyan';
+  return 'rose';
+}
+
+function renderSoal() {
+  const idx = state.currentSoal;
+  const jenis = getJenisSoal(idx);
+  document.getElementById('jenisSoalLabel').textContent = jenis;
+  document.getElementById('soalCurrent').textContent = idx + 1;
+  
+  renderPanel(1, idx);
+  renderPanel(2, idx);
+  
+  renderSoalDots();
+  startTimer();
+}
+
+function renderPanel(siswaId, idx) {
+  const siswa = siswaId === 1 ? state.siswa1 : state.siswa2;
+  const soal = siswa.soal[idx];
+  if (!soal) return;
+  
+  document.getElementById(`namaSiswa${siswaId}Display`).textContent = siswa.nama;
+  document.getElementById(`soalText${siswaId}`).textContent = soal.soal;
+  
+  const pilihanContainer = document.getElementById(`pilihan${siswaId}`);
+  pilihanContainer.innerHTML = '';
+  
+  const selected = siswa.jawaban[idx];
+  const terjawab = siswa.terjawab[idx];
+  
+  soal.pilihan.forEach((pil, pIdx) => {
+    const btn = document.createElement('button');
+    btn.className = `option-btn s${siswaId} w-full text-left px-4 py-3 rounded-xl bg-white/[0.02] border border-white/10 hover:border-white/20 flex items-center gap-3`;
+    
+    let stateClass = '';
+    if (terjawab) {
+      btn.disabled = true;
+      if (pil === soal.jawaban) {
+        stateClass = 'correct';
+      } else if (pil === selected && pil !== soal.jawaban) {
+        stateClass = 'wrong';
+      }
+    } else if (selected === pil) {
+      stateClass = 'selected';
+    }
+    
+    if (stateClass) btn.classList.add(stateClass);
+    
+    const letter = String.fromCharCode(65 + pIdx);
+    btn.innerHTML = `
+      <span class="w-7 h-7 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-xs font-bold flex-shrink-0">${letter}</span>
+      <span class="flex-1 font-medium">${formatAngka(pil)} ${soal.satuan}</span>
+      ${terjawab && pil === soal.jawaban ? '<i class="fas fa-check text-emerald-400"></i>' : ''}
+      ${terjawab && pil === selected && pil !== soal.jawaban ? '<i class="fas fa-times text-red-400"></i>' : ''}
+    `;
+    
+    btn.addEventListener('click', () => {
+      if (siswa.terjawab[idx]) return;
+      siswa.jawaban[idx] = pil;
+      renderPanel(siswaId, idx);
+    });
+    
+    pilihanContainer.appendChild(btn);
+  });
+  
+  const statusEl = document.getElementById(`statusSiswa${siswaId}`);
+  if (terjawab) {
+    const benar = siswa.benar[idx];
+    statusEl.innerHTML = `<i class="fas fa-circle text-[8px] mr-1 ${benar ? 'text-emerald-400' : 'text-red-400'}"></i> ${benar ? 'Benar' : 'Salah'}`;
+    statusEl.className = `px-3 py-1.5 rounded-full text-xs font-semibold border ${benar ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400' : 'bg-red-500/10 border-red-500/30 text-red-400'}`;
+  } else {
+    statusEl.innerHTML = `<i class="fas fa-circle text-slate-500 text-[8px] mr-1"></i> Belum dicek`;
+    statusEl.className = 'px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-semibold text-slate-400';
+  }
+  
+  const pembahasanEl = document.getElementById(`pembahasan${siswaId}`);
+  const pembahasanText = document.getElementById(`pembahasanText${siswaId}`);
+  if (siswa.pembahasanDitampilkan[idx]) {
+    pembahasanEl.classList.remove('hidden');
+    pembahasanText.textContent = soal.pembahasan;
+  } else {
+    pembahasanEl.classList.add('hidden');
+  }
+}
+
+function renderSoalDots() {
+  const container = document.getElementById('soalDots');
+  container.innerHTML = '';
+  for (let i = 0; i < 70; i++) {
+    const dot = document.createElement('div');
+    const isCurrent = i === state.currentSoal;
+    const jenis = getJenisSoal(i);
+    const warna = getJenisColor(jenis);
+    
+    let bg = `bg-${warna}-500/10 border-${warna}-500/30`;
+    
+    const terjawab1 = state.siswa1.terjawab[i];
+    const terjawab2 = state.siswa2.terjawab[i];
+    
+    let status = '';
+    if (terjawab1 && terjawab2) {
+      const benar1 = state.siswa1.benar[i];
+      const benar2 = state.siswa2.benar[i];
+      if (benar1 && benar2) status = 'ring-2 ring-emerald-400';
+      else if (!benar1 && !benar2) status = 'ring-2 ring-red-400';
+      else status = 'ring-2 ring-amber-400';
+    }
+    
+    dot.className = `soal-dot w-7 h-7 rounded-lg border ${bg} ${isCurrent ? 'ring-2 ring-white scale-110' : ''} ${status} flex items-center justify-center text-[10px] font-bold cursor-pointer`;
+    dot.textContent = i + 1;
+    dot.addEventListener('click', () => {
+      state.currentSoal = i;
+      renderSoal();
+    });
+    container.appendChild(dot);
+  }
+}
+
+/* ============================================================
+   CEK JAWABAN
+   ============================================================ */
+function cekJawaban(siswaId) {
+  const siswa = siswaId === 1 ? state.siswa1 : state.siswa2;
+  const idx = state.currentSoal;
+  
+  if (siswa.terjawab[idx]) {
+    showToast(`Siswa ${siswaId} sudah cek jawaban soal ini.`, 'info');
+    return;
+  }
+  
+  if (siswa.jawaban[idx] === null) {
+    showToast(`Pilih jawaban dulu sebelum cek, ${siswa.nama}!`, 'warning');
+    return;
+  }
+  
+  const soal = siswa.soal[idx];
+  const benar = siswa.jawaban[idx] === soal.jawaban;
+  
+  siswa.terjawab[idx] = true;
+  siswa.benar[idx] = benar;
+  siswa.waktu[idx] = (Date.now() - state.timer.startTime) / 1000;
+  siswa.pembahasanDitampilkan[idx] = true;
+  
+  showToast(`${siswa.nama}: ${benar ? 'Jawaban benar!' : 'Jawaban kurang tepat.'}`, benar ? 'success' : 'error');
+  
+  if (state.siswa1.terjawab[idx] && state.siswa2.terjawab[idx]) {
+    stopTimer();
+    showToast('Kedua siswa sudah cek jawaban. Timer dihentikan.', 'info');
+  }
+  
+  renderPanel(siswaId, idx);
+  renderSoalDots();
+}
+
+function togglePembahasan(siswaId) {
+  const siswa = siswaId === 1 ? state.siswa1 : state.siswa2;
+  const idx = state.currentSoal;
+  siswa.pembahasanDitampilkan[idx] = !siswa.pembahasanDitampilkan[idx];
+  renderPanel(siswaId, idx);
+}
+
+/* ============================================================
+   HASIL AKHIR
+   ============================================================ */
+function showHasil() {
+  stopTimer();
+  state.latihanSelesai = true;
+  
+  function hitungStat(siswa) {
+    let benar = 0, salah = 0, totalWaktu = 0, jumlahWaktu = 0;
+    const perJenis = { 
+      'Konversi Biasa': { b: 0, s: 0, total: 20 }, 
+      'Operasi Konversi': { b: 0, s: 0, total: 20 }, 
+      'Soal Cerita': { b: 0, s: 0, total: 20 },
+      'Konversi Berat Khusus': { b: 0, s: 0, total: 10 }
+    };
+    
+    for (let i = 0; i < 70; i++) {
+      if (siswa.terjawab[i]) {
+        if (siswa.benar[i]) benar++;
+        else salah++;
+        if (siswa.waktu[i] !== null) {
+          totalWaktu += siswa.waktu[i];
+          jumlahWaktu++;
+        }
+        const j = getJenisSoal(i);
+        if (siswa.benar[i]) perJenis[j].b++;
+        else perJenis[j].s++;
+      } else {
+        const j = getJenisSoal(i);
+        perJenis[j].s++;
+        salah++;
+      }
+    }
+    
+    return {
+      benar, salah,
+      persen: Math.round((benar / 70) * 100),
+      rataWaktu: jumlahWaktu > 0 ? (totalWaktu / jumlahWaktu) : 0,
+      perJenis
+    };
+  }
+  
+  const stat1 = hitungStat(state.siswa1);
+  const stat2 = hitungStat(state.siswa2);
+  
+  renderRingkasan(1, stat1);
+  renderRingkasan(2, stat2);
+  
+  let kesimpulan = '';
+  if (stat1.benar > stat2.benar) {
+    kesimpulan = `<strong class="text-amber-400">${state.siswa1.nama}</strong> memenangkan latihan ini dengan ${stat1.benar} jawaban benar, unggul ${stat1.benar - stat2.benar} soal dari <strong class="text-cyan-400">${state.siswa2.nama}</strong> (${stat2.benar} benar). `;
+  } else if (stat2.benar > stat1.benar) {
+    kesimpulan = `<strong class="text-cyan-400">${state.siswa2.nama}</strong> memenangkan latihan ini dengan ${stat2.benar} jawaban benar, unggul ${stat2.benar - stat1.benar} soal dari <strong class="text-amber-400">${state.siswa1.nama}</strong> (${stat1.benar} benar). `;
+  } else {
+    kesimpulan = `Pertandingan berakhir seri! Kedua siswa sama-sama menjawab benar ${stat1.benar} dari 70 soal. `;
+  }
+  
+  kesimpulan += `Rata-rata waktu pengerjaan: ${state.siswa1.nama} ${stat1.rataWaktu.toFixed(1)} detik/soal, ${state.siswa2.nama} ${stat2.rataWaktu.toFixed(1)} detik/soal. `;
+  
+  const jenis = ['Konversi Biasa', 'Operasi Konversi', 'Soal Cerita', 'Konversi Berat Khusus'];
+  let terlemah1 = jenis[0], terlemah2 = jenis[0];
+  let minPersen1 = 100, minPersen2 = 100;
+  jenis.forEach(j => {
+    const p1 = (stat1.perJenis[j].b / stat1.perJenis[j].total) * 100;
+    const p2 = (stat2.perJenis[j].b / stat2.perJenis[j].total) * 100;
+    if (p1 < minPersen1) { minPersen1 = p1; terlemah1 = j; }
+    if (p2 < minPersen2) { minPersen2 = p2; terlemah2 = j; }
+  });
+  kesimpulan += `${state.siswa1.nama} perlu meningkatkan kemampuan pada <strong>${terlemah1}</strong>, sedangkan ${state.siswa2.nama} perlu fokus pada <strong>${terlemah2}</strong>.`;
+  
+  document.getElementById('kesimpulanText').innerHTML = kesimpulan;
+  
+  state.selectedSiswaDetail = 1;
+  renderDetailTable(1);
+  
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-hasil').classList.add('active');
+  
+  launchConfetti();
+}
+
+function renderRingkasan(siswaId, stat) {
+  const siswa = siswaId === 1 ? state.siswa1 : state.siswa2;
+  const warna = siswaId === 1 ? 'amber' : 'cyan';
+  const container = document.getElementById(`ringkasanSiswa${siswaId}`);
+  
+  container.innerHTML = `
+    <div class="flex items-center justify-between mb-5">
+      <div class="flex items-center gap-3">
+        <div class="w-12 h-12 rounded-xl bg-${warna}-500/20 border border-${warna}-500/40 flex items-center justify-center font-bold text-${warna}-400 text-lg">
+          ${siswaId}
+        </div>
+        <div>
+          <div class="text-xs text-${warna}-400/70 uppercase tracking-wider">Siswa ${siswaId}</div>
+          <div class="font-bold text-xl">${siswa.nama}</div>
+        </div>
+      </div>
+      <div class="text-right">
+        <div class="text-3xl font-display font-extrabold text-${warna}-400">${stat.persen}%</div>
+        <div class="text-xs text-slate-400">Skor Akhir</div>
+      </div>
+    </div>
+    
+    <div class="grid grid-cols-2 gap-3 mb-4">
+      <div class="bg-emerald-500/10 border border-emerald-500/20 rounded-xl p-3 text-center">
+        <div class="text-2xl font-bold text-emerald-400">${stat.benar}</div>
+        <div class="text-xs text-slate-400 mt-1">Benar</div>
+      </div>
+      <div class="bg-red-500/10 border border-red-500/20 rounded-xl p-3 text-center">
+        <div class="text-2xl font-bold text-red-400">${stat.salah}</div>
+        <div class="text-xs text-slate-400 mt-1">Salah/Kosong</div>
+      </div>
+    </div>
+    
+    <div class="bg-white/[0.02] border border-white/5 rounded-xl p-3 mb-3">
+      <div class="flex items-center justify-between text-sm">
+        <span class="text-slate-400">Rata-rata waktu/soal</span>
+        <span class="font-bold">${stat.rataWaktu.toFixed(1)} detik</span>
+      </div>
+    </div>
+    
+    <div class="space-y-2">
+      ${Object.entries(stat.perJenis).map(([j, data]) => {
+        const persen = Math.round((data.b / data.total) * 100);
+        const warnaBar = getJenisColor(j);
+        return `
+          <div>
+            <div class="flex items-center justify-between text-xs mb-1">
+              <span class="text-slate-400">${j}</span>
+              <span class="font-semibold">${data.b}/${data.total}</span>
+            </div>
+            <div class="h-1.5 bg-white/5 rounded-full overflow-hidden">
+              <div class="h-full bg-${warnaBar}-400 rounded-full transition-all" style="width: ${persen}%"></div>
+            </div>
+          </div>
+        `;
+      }).join('')}
+    </div>
+  `;
+}
+
+function renderDetailTable(siswaId) {
+  const siswa = siswaId === 1 ? state.siswa1 : state.siswa2;
+  const tbody = document.getElementById('detailTable');
+  tbody.innerHTML = '';
+  
+  for (let i = 0; i < 70; i++) {
+    const soal = siswa.soal[i];
+    const terjawab = siswa.terjawab[i];
+    const jawabanSiswa = siswa.jawaban[i];
+    const benar = siswa.benar[i];
+    const waktu = siswa.waktu[i];
+    
+    const row = document.createElement('tr');
+    row.className = 'result-row border-b border-white/5';
+    
+    const jenis = getJenisSoal(i);
+    const warna = getJenisColor(jenis);
+    
+    const jenisBadge = {
+      'Konversi Biasa': 'bg-amber-500/10 text-amber-400 border-amber-500/20',
+      'Operasi Konversi': 'bg-purple-500/10 text-purple-400 border-purple-500/20',
+      'Soal Cerita': 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20',
+      'Konversi Berat Khusus': 'bg-rose-500/10 text-rose-400 border-rose-500/20'
+    }[jenis];
+    
+    row.innerHTML = `
+      <td class="p-3 font-semibold">${i + 1}</td>
+      <td class="p-3"><span class="text-[10px] px-2 py-1 rounded-full border ${jenisBadge} whitespace-nowrap">${jenis}</span></td>
+      <td class="p-3 text-slate-300 text-xs">${soal.soalSingkat}</td>
+      <td class="p-3 font-mono text-sm ${terjawab ? (benar ? 'text-emerald-400' : 'text-red-400') : 'text-slate-600'}">
+        ${terjawab ? `${formatAngka(jawabanSiswa)} ${soal.satuan}` : '—'}
+      </td>
+      <td class="p-3 font-mono text-sm text-emerald-400">${formatAngka(soal.jawaban)} ${soal.satuan}</td>
+      <td class="p-3 text-center">
+        ${terjawab ? (
+          benar 
+            ? '<span class="inline-flex items-center gap-1 text-xs px-2 py-1 rounded-full bg-emerald-500/10 text-emerald-400"><i class="fas fa-check"></i> Benar</span>'
+            : '<span class="inline-flex items-center gap-1 text-xs px-2 py-1 rounded-full bg-red-500/10 text-red-400"><i class="fas fa-times"></i> Salah</span>'
+        ) : '<span class="text-xs text-slate-500">Kosong</span>'}
+      </td>
+      <td class="p-3 text-right font-mono text-sm text-slate-300">${formatWaktu(waktu)}</td>
+    `;
+    tbody.appendChild(row);
+  }
+}
+
+function launchConfetti() {
+  const colors = ['#f59e0b', '#06b6d4', '#10b981', '#a855f7', '#ef4444', '#fbbf24', '#f43f5e'];
+  for (let i = 0; i < 60; i++) {
+    setTimeout(() => {
+      const c = document.createElement('div');
+      c.className = 'confetti';
+      c.style.left = Math.random() * 100 + 'vw';
+      c.style.background = colors[Math.floor(Math.random() * colors.length)];
+      c.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+      c.style.animationDuration = (2 + Math.random() * 2) + 's';
+      c.style.width = (5 + Math.random() * 8) + 'px';
+      c.style.height = (5 + Math.random() * 8) + 'px';
+      document.body.appendChild(c);
+      setTimeout(() => c.remove(), 4500);
+    }, i * 50);
+  }
+}
+
+/* ============================================================
+   NAVIGATION
+   ============================================================ */
+function gantiSoal(idx) {
+  if (idx < 0 || idx >= 70) return;
+  state.currentSoal = idx;
+  renderSoal();
+}
+
+function showPage(pageId) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById(pageId).classList.add('active');
+}
+
+/* ============================================================
+   INIT & EVENT LISTENERS
+   ============================================================ */
+function init() {
+  renderTanggaPreview();
+  renderTanggaMateri();
+  
+  document.getElementById('btnMateri').addEventListener('click', () => {
+    document.getElementById('modalMateri').classList.remove('hidden');
+    document.getElementById('modalMateri').classList.add('flex');
+  });
+  
+  document.getElementById('closeMateri').addEventListener('click', () => {
+    document.getElementById('modalMateri').classList.add('hidden');
+    document.getElementById('modalMateri').classList.remove('flex');
+  });
+  
+  document.getElementById('modalBackdrop').addEventListener('click', () => {
+    document.getElementById('modalMateri').classList.add('hidden');
+    document.getElementById('modalMateri').classList.remove('flex');
+  });
+  
+  document.getElementById('btnMulai').addEventListener('click', () => {
+    const nama1 = document.getElementById('inputSiswa1').value.trim();
+    const nama2 = document.getElementById('inputSiswa2').value.trim();
+    
+    if (!nama1 || !nama2) {
+      showToast('Isi nama kedua siswa terlebih dahulu!', 'warning');
+      return;
+    }
+    
+    if (nama1.toLowerCase() === nama2.toLowerCase()) {
+      showToast('Nama siswa harus berbeda!', 'warning');
+      return;
+    }
+    
+    state.siswa1.nama = nama1;
+    state.siswa2.nama = nama2;
+    state.siswa1.soal = generateSoalSiswa(1);
+    state.siswa2.soal = generateSoalSiswa(2);
+    state.currentSoal = 0;
+    state.latihanSelesai = false;
+    
+    showPage('page-soal');
+    renderSoal();
+    showToast('Selamat mengerjakan! Semoga sukses.', 'success');
+  });
+  
+  document.getElementById('btnPrev').addEventListener('click', () => gantiSoal(state.currentSoal - 1));
+  document.getElementById('btnNext').addEventListener('click', () => gantiSoal(state.currentSoal + 1));
+  
+  document.getElementById('btnAddTime').addEventListener('click', () => addTime(15));
+  
+  document.getElementById('btnFinish').addEventListener('click', () => {
+    const totalTerjawab1 = state.siswa1.terjawab.filter(t => t).length;
+    const totalTerjawab2 = state.siswa2.terjawab.filter(t => t).length;
+    
+    if (totalTerjawab1 + totalTerjawab2 < 20) {
+      showToast('Yakin ingin finish? Masih banyak soal belum dikerjakan.', 'warning');
+    }
+    
+    if (document.getElementById('btnFinish').dataset.confirm === 'yes') {
+      showHasil();
+    } else {
+      document.getElementById('btnFinish').dataset.confirm = 'yes';
+      document.getElementById('btnFinish').innerHTML = '<i class="fas fa-exclamation-triangle mr-1"></i> Klik lagi untuk finish!';
+      setTimeout(() => {
+        document.getElementById('btnFinish').dataset.confirm = 'no';
+        document.getElementById('btnFinish').innerHTML = '<i class="fas fa-flag-checkered mr-1"></i> Finish';
+      }, 3000);
+    }
+  });
+  
+  document.getElementById('btnCek1').addEventListener('click', () => cekJawaban(1));
+  document.getElementById('btnCek2').addEventListener('click', () => cekJawaban(2));
+  
+  document.getElementById('btnPembahasan1').addEventListener('click', () => togglePembahasan(1));
+  document.getElementById('btnPembahasan2').addEventListener('click', () => togglePembahasan(2));
+  
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const siswaId = parseInt(btn.dataset.siswa);
+      state.selectedSiswaDetail = siswaId;
+      
+      document.querySelectorAll('.tab-btn').forEach(b => {
+        if (parseInt(b.dataset.siswa) === siswaId) {
+          if (siswaId === 1) {
+            b.className = 'tab-btn px-5 py-2.5 rounded-xl bg-amber-500/20 border border-amber-500/40 text-amber-400 font-semibold text-sm';
+          } else {
+            b.className = 'tab-btn px-5 py-2.5 rounded-xl bg-cyan-500/20 border border-cyan-500/40 text-cyan-400 font-semibold text-sm';
+          }
+        } else {
+          b.className = 'tab-btn px-5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-slate-400 font-semibold text-sm';
+        }
+      });
+      
+      renderDetailTable(siswaId);
+    });
+  });
+  
+  document.getElementById('btnUlang').addEventListener('click', () => {
+    state = {
+      siswa1: { 
+        nama: '', soal: [], jawaban: Array(70).fill(null), 
+        terjawab: Array(70).fill(false), benar: Array(70).fill(false),
+        waktu: Array(70).fill(null), pembahasanDitampilkan: Array(70).fill(false)
+      },
+      siswa2: { 
+        nama: '', soal: [], jawaban: Array(70).fill(null), 
+        terjawab: Array(70).fill(false), benar: Array(70).fill(false),
+        waktu: Array(70).fill(null), pembahasanDitampilkan: Array(70).fill(false)
+      },
+      currentSoal: 0,
+      timer: { seconds: TIME_PER_SOAL, interval: null, startTime: null, running: false },
+      selectedSiswaDetail: 1,
+      latihanSelesai: false
+    };
+    
+    document.getElementById('inputSiswa1').value = '';
+    document.getElementById('inputSiswa2').value = '';
+    showPage('page-cover');
+  });
+  
+  document.addEventListener('keydown', (e) => {
+    if (document.getElementById('page-soal').classList.contains('active')) {
+      if (e.key === 'ArrowLeft') gantiSoal(state.currentSoal - 1);
+      else if (e.key === 'ArrowRight') gantiSoal(state.currentSoal + 1);
+      else if (e.key === '1') cekJawaban(1);
+      else if (e.key === '2') cekJawaban(2);
+    }
+  });
+}
+
+init();
+</script>
+
+</body>
+</html>
