@@ -1354,9 +1354,9 @@ body {
 
 .memory-grid {
   display: grid;
-  gap: 0.8rem;
+  gap: 0.5rem; 
   margin: 1.5rem auto;
-  max-width: 800px;
+  max-width: 450px; 
   perspective: 1000px;
 }
 
@@ -1391,31 +1391,32 @@ body {
   width: 100%;
   height: 100%;
   backface-visibility: hidden;
-  border-radius: 15px;
+  border-radius: 12px; 
   display: flex;
   align-items: center;
   justify-content: center;
   font-family: 'Fredoka', sans-serif;
   font-weight: 700;
-  padding: 0.5rem;
+  padding: 0.3rem; 
   text-align: center;
-  font-size: 0.95rem;
+  font-size: 0.85rem; 
 }
 
 .memory-card-front {
   background: linear-gradient(135deg, var(--rose), var(--rose-deep));
   color: white;
-  font-size: 2rem;
-  border: 3px solid white;
+  font-size: 1.5rem; 
+  border: 2px solid white; 
   box-shadow: var(--shadow-soft);
 }
 
 .memory-card-back {
   background: linear-gradient(135deg, white, var(--pink-soft));
   color: var(--rose-deep);
-  border: 3px solid var(--pink);
+  border: 2px solid var(--pink); 
   transform: rotateY(180deg);
   box-shadow: var(--shadow-soft);
+  word-break: break-word;
 }
 
 .memory-card.matched .memory-card-back {
@@ -1587,6 +1588,7 @@ body {
   .vs-symbol { transform: rotate(90deg); }
   .options-grid { grid-template-columns: 1fr; }
   .memory-grid.cols-5 { grid-template-columns: repeat(4, 1fr); }
+  .memory-grid { max-width: 100%; }
 }
 
 /* Progress bar */
@@ -2007,124 +2009,154 @@ function toolImg(key, alt = 'Alat ukur', cls = 'tool-img') {
   return `<img src="${toolImages[key]}" alt="${alt}" class="${cls}" loading="lazy" onerror="this.style.display='none'">`;
 }
 
-// ============ SVG Ruler for practice problems (kept) ============
-const svgRuler = (length = 10) => `<svg viewBox="0 0 ${length*20 + 20} 50" xmlns="http://www.w3.org/2000/svg" style="width:100%; max-width:400px;">
-  <rect x="5" y="10" width="${length*20 + 10}" height="30" fill="#fff5f8" stroke="#e8829b" stroke-width="2" rx="3"/>
-  ${Array.from({length: length+1}, (_, i) => 
-    `<line x1="${10 + i*20}" y1="10" x2="${10 + i*20}" y2="${i%5===0?22:18}" stroke="#e8829b" stroke-width="1.5"/>
-    ${i%5===0 ? `<text x="${10 + i*20}" y="35" font-size="9" fill="#5d3a4a" font-family="Quicksand" font-weight="600" text-anchor="middle">${i}</text>` : ''}`
-  ).join('')}
-</svg>`;
+// ============ DYNAMIC SVG: OBJECT ON RULER ============
+function renderObjectOnRuler(objKey, startCm, lengthCm) {
+  const u = 20; // 20 svg units per cm
+  const startX = 10 + startCm * u;
+  const endX = startX + lengthCm * u;
+  const w_obj = endX - startX;
+  const y1 = 15; // top of object
+  const h = 10; // height of object
+  const y2 = y1 + h;
+  
+  let shape = '';
+  switch(objKey) {
+    case 'pencil':
+      shape = `
+        <rect x="${startX}" y="${y1}" width="${w_obj - 15}" height="${h}" fill="#ffd700" stroke="#c2185b" stroke-width="1.5" rx="2"/>
+        <polygon points="${endX-15},${y1} ${endX},${y1+h/2} ${endX-15},${y2}" fill="#ffd4c4" stroke="#c2185b" stroke-width="1.5"/>
+        <rect x="${startX}" y="${y1}" width="10" height="${h}" fill="#ff8fb1" rx="2"/>
+      `;
+      break;
+    case 'eraser':
+      shape = `<rect x="${startX}" y="${y1}" width="${w_obj}" height="${h}" fill="#ff8fb1" stroke="#c2185b" stroke-width="1.5" rx="3"/>`;
+      break;
+    case 'book':
+      shape = `
+        <rect x="${startX}" y="${y1}" width="${w_obj}" height="${h}" fill="#d4c1e0" stroke="#7c5fa0" stroke-width="1.5" rx="2"/>
+        <line x1="${(startX+endX)/2}" y1="${y1}" x2="${(startX+endX)/2}" y2="${y2}" stroke="#7c5fa0" stroke-width="1.5"/>
+      `;
+      break;
+    case 'pen':
+      shape = `
+        <rect x="${startX}" y="${y1}" width="${w_obj-12}" height="${h}" fill="#9c80b8" stroke="#5d3a4a" stroke-width="1.5"/>
+        <polygon points="${endX-12},${y1} ${endX},${y1+h/2} ${endX-12},${y2}" fill="#5d3a4a" stroke="#5d3a4a" stroke-width="1"/>
+        <rect x="${startX}" y="${y1}" width="8" height="${h}" fill="#c2185b"/>
+      `;
+      break;
+    case 'key':
+      shape = `
+        <circle cx="${startX+8}" cy="${y1+h/2}" r="6" fill="none" stroke="#e6b87e" stroke-width="3"/>
+        <rect x="${startX+14}" y="${y1+2}" width="${w_obj-14}" height="${h-4}" fill="#e6b87e" stroke="#c2185b" stroke-width="1"/>
+      `;
+      break;
+    case 'scissor':
+      shape = `
+        <circle cx="${startX+8}" cy="${y1+3}" r="5" fill="none" stroke="#9c80b8" stroke-width="2"/>
+        <circle cx="${startX+8}" cy="${y2-3}" r="5" fill="none" stroke="#9c80b8" stroke-width="2"/>
+        <line x1="${startX+13}" y1="${y1+4}" x2="${endX}" y2="${y2-4}" stroke="#5d3a4a" stroke-width="2"/>
+        <line x1="${startX+13}" y1="${y2-4}" x2="${endX}" y2="${y1+4}" stroke="#5d3a4a" stroke-width="2"/>
+      `;
+      break;
+    case 'marker':
+      shape = `
+        <rect x="${startX}" y="${y1}" width="${w_obj-12}" height="${h}" fill="#ff8fb1" stroke="#c2185b" stroke-width="1.5"/>
+        <rect x="${endX-12}" y="${y1-2}" width="12" height="${h+4}" fill="#5d3a4a" rx="2"/>
+        <rect x="${startX}" y="${y1}" width="8" height="${h}" fill="#c2185b"/>
+      `;
+      break;
+    case 'brush':
+      shape = `
+        <rect x="${startX}" y="${y1}" width="${w_obj-15}" height="${h}" fill="#e6b87e" stroke="#5d3a4a" stroke-width="1.5"/>
+        <rect x="${endX-15}" y="${y1-1}" width="8" height="${h+2}" fill="#9c80b8"/>
+        <rect x="${endX-8}" y="${y1-3}" width="8" height="${h+6}" fill="#ffd4c4" rx="1"/>
+      `;
+      break;
+    case 'spoon':
+      shape = `
+        <ellipse cx="${startX+8}" cy="${y1+h/2}" rx="8" ry="6" fill="#e6b87e" stroke="#5d3a4a" stroke-width="1"/>
+        <rect x="${startX+15}" y="${y1+2}" width="${w_obj-15}" height="${h-4}" fill="#e6b87e" stroke="#5d3a4a" stroke-width="1" rx="2"/>
+      `;
+      break;
+    case 'fork':
+      shape = `
+        <rect x="${startX}" y="${y1}" width="2" height="${h}" fill="#e6b87e"/>
+        <rect x="${startX+3}" y="${y1}" width="2" height="${h/2}" fill="#e6b87e"/>
+        <rect x="${startX+6}" y="${y1}" width="2" height="${h/2}" fill="#e6b87e"/>
+        <rect x="${startX+9}" y="${y1}" width="2" height="${h/2}" fill="#e6b87e"/>
+        <rect x="${startX+12}" y="${y1+2}" width="${w_obj-12}" height="2" fill="#e6b87e"/>
+        <rect x="${startX+12}" y="${y1+h/2}" width="${w_obj-12}" height="2" fill="#e6b87e"/>
+        <rect x="${startX+12}" y="${y1+2}" width="${w_obj-12}" height="${h-4}" fill="#e6b87e"/>
+      `;
+      break;
+    case 'clip':
+      shape = `
+        <rect x="${startX}" y="${y1+2}" width="${w_obj}" height="3" fill="#9c80b8" rx="1"/>
+        <rect x="${startX}" y="${y1+5}" width="3" height="5" fill="#9c80b8"/>
+        <rect x="${endX-3}" y="${y1+5}" width="3" height="5" fill="#9c80b8"/>
+      `;
+      break;
+    case 'straw':
+      shape = `<rect x="${startX}" y="${y1+3}" width="${w_obj}" height="4" fill="#ff8fb1" stroke="#c2185b" stroke-width="1" rx="1"/>`;
+      break;
+    case 'battery':
+      shape = `
+        <rect x="${startX}" y="${y1}" width="${w_obj-5}" height="${h}" fill="#9c80b8" stroke="#5d3a4a" stroke-width="1.5" rx="1"/>
+        <rect x="${endX-5}" y="${y1+2}" width="5" height="${h-4}" fill="#5d3a4a"/>
+        <rect x="${startX+3}" y="${y1+2}" width="3" height="${h-4}" fill="#c2185b"/>
+      `;
+      break;
+    case 'crayon':
+      shape = `
+        <rect x="${startX}" y="${y1}" width="${w_obj-10}" height="${h}" fill="#ff8fb1" stroke="#c2185b" stroke-width="1.5"/>
+        <polygon points="${endX-10},${y1} ${endX},${y1+h/2} ${endX-10},${y2}" fill="#5d3a4a"/>
+        <rect x="${startX}" y="${y1}" width="6" height="${h}" fill="#c2185b"/>
+      `;
+      break;
+    case 'screw':
+      shape = `
+        <circle cx="${startX+8}" cy="${y1+h/2}" r="5" fill="#9c80b8" stroke="#5d3a4a" stroke-width="1"/>
+        <line x1="${startX+4}" y1="${y1+h/2}" x2="${startX+12}" y2="${y1+h/2}" stroke="#5d3a4a" stroke-width="1"/>
+        <line x1="${startX+8}" y1="${y1-1}" x2="${startX+8}" y2="${y2+1}" stroke="#5d3a4a" stroke-width="1"/>
+        <rect x="${startX+14}" y="${y1+3}" width="${w_obj-14}" height="${h-6}" fill="#e6b87e" stroke="#5d3a4a" stroke-width="0.5"/>
+        <path d="M ${startX+16} ${y1+3} L ${startX+18} ${y1+h-3} M ${startX+20} ${y1+3} L ${startX+22} ${y1+h-3} M ${startX+24} ${y1+3} L ${startX+26} ${y1+h-3}" stroke="#5d3a4a" stroke-width="0.5" fill="none"/>
+      `;
+      break;
+    case 'needle':
+      shape = `
+        <line x1="${startX}" y1="${y1+h/2}" x2="${endX-5}" y2="${y1+h/2}" stroke="#9c80b8" stroke-width="2"/>
+        <circle cx="${endX-3}" cy="${y1+h/2}" r="3" fill="#9c80b8"/>
+      `;
+      break;
+    case 'match':
+      shape = `
+        <rect x="${startX}" y="${y1+3}" width="${w_obj-8}" height="4" fill="#e6b87e" stroke="#5d3a4a" stroke-width="0.5"/>
+        <rect x="${endX-8}" y="${y1}" width="8" height="${h}" fill="#c2185b" rx="1"/>
+      `;
+      break;
+    case 'nail':
+      shape = `
+        <circle cx="${startX+8}" cy="${y1+h/2}" r="5" fill="#9c80b8" stroke="#5d3a4a" stroke-width="1"/>
+        <polygon points="${startX+13},${y1+3} ${endX},${y1+h/2} ${startX+13},${y2-3}" fill="#e6b87e" stroke="#5d3a4a" stroke-width="0.5"/>
+      `;
+      break;
+    case 'toothpick':
+      shape = `<polygon points="${startX},${y1+h/2} ${startX+5},${y1+3} ${endX-5},${y1+3} ${endX},${y1+h/2} ${endX-5},${y2-3} ${startX+5},${y2-3}" fill="#e6b87e" stroke="#5d3a4a" stroke-width="0.5"/>`;
+      break;
+  }
 
-// Object SVGs (for measurement problems)
-const objectSvgs = {
-  pencil: `<svg viewBox="0 0 60 20" xmlns="http://www.w3.org/2000/svg">
-    <rect x="5" y="6" width="40" height="8" fill="#ffd700" stroke="#c2185b" stroke-width="1"/>
-    <polygon points="45,6 45,14 55,10" fill="#ffd4c4" stroke="#c2185b" stroke-width="1"/>
-    <rect x="5" y="6" width="3" height="8" fill="#c2185b"/>
-    <line x1="15" y1="6" x2="15" y2="14" stroke="#c2185b" stroke-width="0.5"/>
-    <line x1="25" y1="6" x2="25" y2="14" stroke="#c2185b" stroke-width="0.5"/>
-    <line x1="35" y1="6" x2="35" y2="14" stroke="#c2185b" stroke-width="0.5"/>
-  </svg>`,
-  eraser: `<svg viewBox="0 0 50 25" xmlns="http://www.w3.org/2000/svg">
-    <rect x="5" y="5" width="40" height="15" fill="#ff8fb1" stroke="#c2185b" stroke-width="1.5" rx="2"/>
-    <rect x="5" y="5" width="20" height="15" fill="#ffd9e8"/>
-  </svg>`,
-  book: `<svg viewBox="0 0 80 30" xmlns="http://www.w3.org/2000/svg">
-    <rect x="5" y="5" width="70" height="20" fill="#d4c1e0" stroke="#7c5fa0" stroke-width="1.5" rx="2"/>
-    <line x1="40" y1="5" x2="40" y2="25" stroke="#7c5fa0" stroke-width="1"/>
-    <rect x="10" y="8" width="25" height="14" fill="none" stroke="#7c5fa0" stroke-width="0.8"/>
-    <rect x="45" y="8" width="25" height="14" fill="none" stroke="#7c5fa0" stroke-width="0.8"/>
-  </svg>`,
-  pen: `<svg viewBox="0 0 70 18" xmlns="http://www.w3.org/2000/svg">
-    <rect x="5" y="5" width="50" height="8" fill="#9c80b8" stroke="#5d3a4a" stroke-width="1"/>
-    <polygon points="55,5 55,13 65,9" fill="#5d3a4a"/>
-    <rect x="5" y="5" width="6" height="8" fill="#c2185b"/>
-  </svg>`,
-  key: `<svg viewBox="0 0 60 20" xmlns="http://www.w3.org/2000/svg">
-    <circle cx="12" cy="10" r="7" fill="none" stroke="#e6b87e" stroke-width="3"/>
-    <rect x="18" y="7" width="35" height="6" fill="#e6b87e" stroke="#c2185b" stroke-width="1"/>
-    <rect x="45" y="3" width="3" height="4" fill="#e6b87e" stroke="#c2185b" stroke-width="1"/>
-    <rect x="50" y="3" width="3" height="4" fill="#e6b87e" stroke="#c2185b" stroke-width="1"/>
-  </svg>`,
-  scissor: `<svg viewBox="0 0 70 30" xmlns="http://www.w3.org/2000/svg">
-    <circle cx="12" cy="10" r="6" fill="none" stroke="#9c80b8" stroke-width="2"/>
-    <circle cx="12" cy="20" r="6" fill="none" stroke="#9c80b8" stroke-width="2"/>
-    <line x1="17" y1="13" x2="60" y2="22" stroke="#5d3a4a" stroke-width="2"/>
-    <line x1="17" y1="17" x2="60" y2="8" stroke="#5d3a4a" stroke-width="2"/>
-  </svg>`,
-  marker: `<svg viewBox="0 0 70 25" xmlns="http://www.w3.org/2000/svg">
-    <rect x="5" y="8" width="50" height="10" fill="#ff8fb1" stroke="#c2185b" stroke-width="1"/>
-    <rect x="55" y="6" width="10" height="14" fill="#5d3a4a" rx="2"/>
-    <rect x="5" y="8" width="8" height="10" fill="#c2185b"/>
-  </svg>`,
-  brush: `<svg viewBox="0 0 60 25" xmlns="http://www.w3.org/2000/svg">
-    <rect x="5" y="9" width="35" height="7" fill="#e6b87e" stroke="#5d3a4a" stroke-width="1"/>
-    <rect x="40" y="6" width="8" height="13" fill="#9c80b8"/>
-    <rect x="48" y="2" width="8" height="20" fill="#ffd4c4" rx="1"/>
-    <line x1="50" y1="2" x2="50" y2="22" stroke="#c2185b" stroke-width="0.5"/>
-    <line x1="53" y1="2" x2="53" y2="22" stroke="#c2185b" stroke-width="0.5"/>
-  </svg>`,
-  spoon: `<svg viewBox="0 0 60 20" xmlns="http://www.w3.org/2000/svg">
-    <ellipse cx="12" cy="10" rx="8" ry="6" fill="#e6b87e" stroke="#5d3a4a" stroke-width="1"/>
-    <rect x="20" y="8" width="35" height="4" fill="#e6b87e" stroke="#5d3a4a" stroke-width="1" rx="2"/>
-  </svg>`,
-  fork: `<svg viewBox="0 0 50 25" xmlns="http://www.w3.org/2000/svg">
-    <rect x="20" y="10" width="3" height="13" fill="#e6b87e" stroke="#5d3a4a" stroke-width="0.5"/>
-    <rect x="23" y="2" width="2" height="11" fill="#e6b87e" stroke="#5d3a4a" stroke-width="0.5"/>
-    <rect x="26" y="2" width="2" height="11" fill="#e6b87e" stroke="#5d3a4a" stroke-width="0.5"/>
-    <rect x="29" y="2" width="2" height="11" fill="#e6b87e" stroke="#5d3a4a" stroke-width="0.5"/>
-    <rect x="23" y="13" width="8" height="2" fill="#e6b87e" stroke="#5d3a4a" stroke-width="0.5"/>
-  </svg>`,
-  clip: `<svg viewBox="0 0 60 20" xmlns="http://www.w3.org/2000/svg">
-    <rect x="5" y="5" width="50" height="3" fill="#9c80b8" rx="1"/>
-    <rect x="5" y="8" width="3" height="9" fill="#9c80b8"/>
-    <rect x="52" y="8" width="3" height="9" fill="#9c80b8"/>
-  </svg>`,
-  straw: `<svg viewBox="0 0 80 12" xmlns="http://www.w3.org/2000/svg">
-    <rect x="5" y="4" width="70" height="4" fill="#ff8fb1" stroke="#c2185b" stroke-width="1"/>
-    <line x1="20" y1="4" x2="20" y2="8" stroke="#c2185b" stroke-width="0.5"/>
-    <line x1="35" y1="4" x2="35" y2="8" stroke="#c2185b" stroke-width="0.5"/>
-    <line x1="50" y1="4" x2="50" y2="8" stroke="#c2185b" stroke-width="0.5"/>
-    <line x1="65" y1="4" x2="65" y2="8" stroke="#c2185b" stroke-width="0.5"/>
-  </svg>`,
-  battery: `<svg viewBox="0 0 50 22" xmlns="http://www.w3.org/2000/svg">
-    <rect x="5" y="3" width="40" height="16" fill="#9c80b8" stroke="#5d3a4a" stroke-width="1.5" rx="1"/>
-    <rect x="45" y="7" width="4" height="8" fill="#5d3a4a"/>
-    <rect x="8" y="6" width="3" height="10" fill="#c2185b"/>
-  </svg>`,
-  crayon: `<svg viewBox="0 0 50 25" xmlns="http://www.w3.org/2000/svg">
-    <rect x="5" y="5" width="35" height="15" fill="#ff8fb1" stroke="#c2185b" stroke-width="1"/>
-    <polygon points="40,5 50,12 40,20" fill="#5d3a4a"/>
-    <rect x="5" y="5" width="6" height="15" fill="#c2185b"/>
-  </svg>`,
-  screw: `<svg viewBox="0 0 60 20" xmlns="http://www.w3.org/2000/svg">
-    <circle cx="8" cy="10" r="6" fill="#9c80b8" stroke="#5d3a4a" stroke-width="1"/>
-    <line x1="4" y1="10" x2="12" y2="10" stroke="#5d3a4a" stroke-width="1"/>
-    <line x1="8" y1="6" x2="8" y2="14" stroke="#5d3a4a" stroke-width="1"/>
-    <rect x="14" y="8" width="40" height="4" fill="#e6b87e" stroke="#5d3a4a" stroke-width="1"/>
-    <line x1="20" y1="8" x2="18" y2="12" stroke="#5d3a4a" stroke-width="0.5"/>
-    <line x1="28" y1="8" x2="26" y2="12" stroke="#5d3a4a" stroke-width="0.5"/>
-    <line x1="36" y1="8" x2="34" y2="12" stroke="#5d3a4a" stroke-width="0.5"/>
-    <line x1="44" y1="8" x2="42" y2="12" stroke="#5d3a4a" stroke-width="0.5"/>
-  </svg>`,
-  needle: `<svg viewBox="0 0 60 12" xmlns="http://www.w3.org/2000/svg">
-    <line x1="5" y1="6" x2="50" y2="6" stroke="#9c80b8" stroke-width="2"/>
-    <circle cx="50" cy="6" r="3" fill="#9c80b8"/>
-    <line x1="50" y1="6" x2="55" y2="3" stroke="#9c80b8" stroke-width="1.5"/>
-  </svg>`,
-  match: `<svg viewBox="0 0 50 15" xmlns="http://www.w3.org/2000/svg">
-    <rect x="5" y="6" width="35" height="3" fill="#e6b87e" stroke="#5d3a4a" stroke-width="0.5"/>
-    <rect x="40" y="3" width="8" height="9" fill="#c2185b" rx="1"/>
-  </svg>`,
-  nail: `<svg viewBox="0 0 50 18" xmlns="http://www.w3.org/2000/svg">
-    <circle cx="8" cy="9" r="5" fill="#9c80b8" stroke="#5d3a4a" stroke-width="1"/>
-    <polygon points="13,7 45,9 13,11" fill="#e6b87e" stroke="#5d3a4a" stroke-width="0.5"/>
-  </svg>`,
-  toothpick: `<svg viewBox="0 0 70 8" xmlns="http://www.w3.org/2000/svg">
-    <polygon points="5,4 65,3 65,5 5,4" fill="#e6b87e" stroke="#5d3a4a" stroke-width="0.5"/>
-  </svg>`
-};
+  const rulerLengthCm = 30;
+  const w = rulerLengthCm * 20 + 20; // 620 total width
+  
+  return `<svg viewBox="0 0 ${w} 50" xmlns="http://www.w3.org/2000/svg" style="width:100%; max-width:400px;">
+    <rect x="5" y="10" width="${w-10}" height="30" fill="#fff5f8" stroke="#e8829b" stroke-width="2" rx="3"/>
+    ${Array.from({length: rulerLengthCm+1}, (_, i) => 
+      `<line x1="${10 + i*20}" y1="10" x2="${10 + i*20}" y2="${i%5===0?22:18}" stroke="#e8829b" stroke-width="1.5"/>
+      ${i%5===0 ? `<text x="${10 + i*20}" y="38" font-size="9" fill="#5d3a4a" font-family="Quicksand" font-weight="600" text-anchor="middle">${i}</text>` : ''}`
+    ).join('')}
+    ${shape}
+  </svg>`;
+}
 
 // ============ DATA: Life Examples ============
 const lifeExamples = [
@@ -2153,32 +2185,30 @@ const tools = [
 
 // ============ DATA: 20 Practice Problems ============
 const practiceProblems = [
-  { obj: 'pencil', name: 'Pensil', length: 12, unit: 'cm' },
-  { obj: 'eraser', name: 'Penghapus', length: 5, unit: 'cm' },
-  { obj: 'book', name: 'Buku', length: 25, unit: 'cm' },
-  { obj: 'pen', name: 'Pulpen', length: 14, unit: 'cm' },
-  { obj: 'key', name: 'Kunci', length: 8, unit: 'cm' },
-  { obj: 'scissor', name: 'Gunting', length: 17, unit: 'cm' },
-  { obj: 'marker', name: 'Spidol', length: 13, unit: 'cm' },
-  { obj: 'brush', name: 'Kuas', length: 20, unit: 'cm' },
-  { obj: 'spoon', name: 'Sendok', length: 18, unit: 'cm' },
-  { obj: 'fork', name: 'Garpu', length: 16, unit: 'cm' },
-  { obj: 'clip', name: 'Klip Kertas', length: 4, unit: 'cm' },
-  { obj: 'straw', name: 'Sedotan', length: 21, unit: 'cm' },
-  { obj: 'battery', name: 'Baterai', length: 5, unit: 'cm' },
-  { obj: 'crayon', name: 'Krayon', length: 9, unit: 'cm' },
-  { obj: 'screw', name: 'Sekrup', length: 5, unit: 'cm' },
-  { obj: 'needle', name: 'Jarum', length: 6, unit: 'cm' },
-  { obj: 'match', name: 'Korek Api', length: 5, unit: 'cm' },
-  { obj: 'nail', name: 'Paku', length: 7, unit: 'cm' },
-  { obj: 'toothpick', name: 'Tusuk Gigi', length: 6, unit: 'cm' },
-  { obj: 'pencil', name: 'Pensil Pendek', length: 8, unit: 'cm' }
+  { obj: 'pencil', name: 'Pensil', length: 12, unit: 'cm', start: 3 },
+  { obj: 'eraser', name: 'Penghapus', length: 5, unit: 'cm', start: 10 },
+  { obj: 'book', name: 'Buku', length: 25, unit: 'cm', start: 2 },
+  { obj: 'pen', name: 'Pulpen', length: 14, unit: 'cm', start: 7 },
+  { obj: 'key', name: 'Kunci', length: 8, unit: 'cm', start: 4 },
+  { obj: 'scissor', name: 'Gunting', length: 17, unit: 'cm', start: 5 },
+  { obj: 'marker', name: 'Spidol', length: 13, unit: 'cm', start: 8 },
+  { obj: 'brush', name: 'Kuas', length: 20, unit: 'cm', start: 1 },
+  { obj: 'spoon', name: 'Sendok', length: 18, unit: 'cm', start: 4 },
+  { obj: 'fork', name: 'Garpu', length: 16, unit: 'cm', start: 6 },
+  { obj: 'clip', name: 'Klip Kertas', length: 4, unit: 'cm', start: 12 },
+  { obj: 'straw', name: 'Sedotan', length: 21, unit: 'cm', start: 5 },
+  { obj: 'battery', name: 'Baterai', length: 5, unit: 'cm', start: 15 },
+  { obj: 'crayon', name: 'Krayon', length: 9, unit: 'cm', start: 2 },
+  { obj: 'screw', name: 'Sekrup', length: 5, unit: 'cm', start: 20 },
+  { obj: 'needle', name: 'Jarum', length: 6, unit: 'cm', start: 14 },
+  { obj: 'match', name: 'Korek Api', length: 5, unit: 'cm', start: 9 },
+  { obj: 'nail', name: 'Paku', length: 7, unit: 'cm', start: 11 },
+  { obj: 'toothpick', name: 'Tusuk Gigi', length: 6, unit: 'cm', start: 3 },
+  { obj: 'pencil', name: 'Pensil Pendek', length: 8, unit: 'cm', start: 16 }
 ];
 
 // ============ DATA: 30 Flash Cards ============
-// 15 image-based questions + 15 scenario-based questions
 const flashcards = [
-  // ===== 15 IMAGE-BASED (Tebak nama alat dari gambar) =====
   { type: 'image', q: 'Apa nama alat ukur pada gambar di bawah ini?', img: 'meteranRol', options: ['Meteran Rol', 'Penggaris Lurus', 'Jangka Sorong', 'Mikrometer'], answer: 0 },
   { type: 'image', q: 'Apa nama alat ukur pada gambar di bawah ini?', img: 'meteranSaku', options: ['Meteran Saku', 'Meteran Rol', 'Penggaris Segitiga', 'Busur'], answer: 0 },
   { type: 'image', q: 'Apa nama alat ukur pada gambar di bawah ini?', img: 'penggarisLurus', options: ['Penggaris Lurus', 'Meteran Saku', 'Jangka Sorong', 'Busur'], answer: 0 },
@@ -2194,7 +2224,6 @@ const flashcards = [
   { type: 'image', q: 'Alat apa yang paling presisi untuk mengukur kawat tipis?', img: 'mikrometerManual', options: ['Penggaris Lurus', 'Meteran Rol', 'Mikrometer Sekrup', 'Busur'], answer: 2 },
   { type: 'image', q: 'Alat ukur apa yang digunakan untuk mengukur sudut?', img: 'busur', options: ['Busur', 'Penggaris Lurus', 'Meteran Saku', 'Jangka Sorong'], answer: 0 },
   { type: 'image', q: 'Alat ukur apa yang mudah dibawa di saku?', img: 'meteranSaku', options: ['Meteran Rol', 'Meteran Saku', 'Jangka Sorong', 'Mikrometer'], answer: 1 },
-  // ===== 15 SCENARIO-BASED =====
   { type: 'scenario', q: 'Bu Guru ingin mengukur panjang papan tulis yang panjang. Alat apa yang sebaiknya digunakan?', options: ['Penggaris Lurus 30 cm', 'Meteran Rol', 'Mikrometer', 'Jengkal'], answer: 1 },
   { type: 'scenario', q: 'Adik ingin mengukur panjang pensilnya. Alat apa yang paling tepat?', options: ['Penggaris Lurus', 'Meteran Rol', 'Jangka Sorong', 'Mikrometer'], answer: 0 },
   { type: 'scenario', q: 'Pak Tani ingin mengukur diameter jeruk dengan presisi. Alat apa yang dipakai?', options: ['Penggaris Lurus', 'Meteran Rol', 'Jangka Sorong', 'Langkah'], answer: 2 },
@@ -2275,12 +2304,14 @@ const quiz2Data = [
 ];
 
 // ============ DATA: Memory Game Rounds ============
+// Setiap pasangan di dalam ronde memiliki angka depan yang berbeda-beda (1, 2, 3, dst.)
+// sehingga siswa tidak bingung dan tidak ada teks yang sama persis di satu ronde.
 const memoryRounds = [
-  { pairs: [['1 m', '100 cm'], ['1 dm', '10 cm'], ['1 km', '1000 m'], ['1 m', '10 dm'], ['1 cm', '10 mm'], ['1 dam', '10 m']], cols: 4 },
-  { pairs: [['2 m', '200 cm'], ['5 dm', '50 cm'], ['3 km', '3000 m'], ['1 m', '1000 mm'], ['1 hm', '100 m'], ['4 dam', '40 m']], cols: 4 },
-  { pairs: [['10 cm', '1 dm'], ['20 cm', '2 dm'], ['300 cm', '3 m'], ['1000 m', '1 km'], ['5 m', '50 dm'], ['10 mm', '1 cm'], ['7 dam', '70 m'], ['6 hm', '600 m']], cols: 4 },
-  { pairs: [['1 m', '100 cm'], ['2 dm', '20 cm'], ['3 km', '3000 m'], ['5 cm', '50 mm'], ['4 m', '40 dm'], ['1 dam', '10 m'], ['2 hm', '200 m'], ['10 dm', '1 m']], cols: 4 },
-  { pairs: [['1 m', '100 cm'], ['1 km', '10 hm'], ['1 dm', '10 cm'], ['1 dam', '10 m'], ['1 hm', '100 m'], ['1 cm', '10 mm'], ['1 km', '1000 m'], ['1 m', '10 dm'], ['5 dm', '50 cm'], ['3 m', '30 dm']], cols: 5 }
+  { pairs: [['1 m', '100 cm'], ['2 dm', '20 cm'], ['3 km', '3000 m'], ['4 dam', '40 m'], ['5 hm', '500 m'], ['6 m', '60 dm']], cols: 4 },
+  { pairs: [['1 dm', '10 cm'], ['2 m', '200 cm'], ['3 dam', '30 m'], ['4 km', '4000 m'], ['6 hm', '600 m'], ['7 m', '70 dm']], cols: 4 },
+  { pairs: [['1 km', '1000 m'], ['2 cm', '20 mm'], ['3 m', '300 cm'], ['4 dm', '40 cm'], ['5 dam', '50 m'], ['6 hm', '600 m'], ['8 m', '80 dm'], ['9 dam', '90 m']], cols: 4 },
+  { pairs: [['10 mm', '1 cm'], ['2 hm', '200 m'], ['3 dm', '30 cm'], ['4 m', '400 cm'], ['5 km', '5000 m'], ['6 dam', '60 m'], ['7 dm', '70 cm'], ['8 km', '8000 m']], cols: 4 },
+  { pairs: [['1 cm', '10 mm'], ['2 km', '2000 m'], ['3 hm', '300 m'], ['4 dam', '40 m'], ['5 m', '50 dm'], ['6 cm', '60 mm'], ['7 m', '700 cm'], ['9 dam', '90 m'], ['10 cm', '1 dm']], cols: 5 }
 ];
 
 // ============ NAVIGATION ============
@@ -2436,9 +2467,8 @@ function showPractice() {
     </div>
     <div class="problem-question">Berapakah panjang <strong>${p.name}</strong> di bawah ini?</div>
     <div class="problem-visual">
-      <div style="display:flex; justify-content:center; align-items:flex-end; gap:1rem; flex-wrap:wrap;">
-        <div style="flex-shrink:0;">${objectSvgs[p.obj]}</div>
-        ${svgRuler(30)}
+      <div style="position: relative; width: 100%; max-width: 400px; margin: 0 auto;">
+        ${renderObjectOnRuler(p.obj, p.start, p.length)}
       </div>
       <div style="margin-top:0.5rem; color:var(--muted); font-size:0.85rem;">📏 Penggaris berskala cm</div>
     </div>
