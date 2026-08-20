@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Latihan Konversi Satuan Panjang</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+:root {
+  --pink-light: #ffe4ee;
+  --pink: #ff8fb1;
+  --pink-deep: #e85d8a;
+  --lavender: #c8a8e9;
+  --lavender-deep: #9d70d8;
+  --peach: #ffb996;
+  --mint: #b8e6d2;
+  --cream: #fff5f7;
+  --text: #5a3d4e;
+  --text-light: #8a6b7a;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  font-family: 'Quicksand', sans-serif;
+  background: linear-gradient(135deg, #ffe4ee 0%, #fff5f7 40%, #f3e8ff 100%);
+  background-attachment: fixed;
+  min-height: 100vh;
+  color: var(--text);
+  overflow-x: hidden;
+  margin: 0;
+}
+
+.font-display { font-family: 'Fredoka', sans-serif; }
+
+.bg-pattern {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.deco { position: absolute; pointer-events: none; user-select: none; }
+
+@keyframes float {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-25px) rotate(8deg); }
+}
+@keyframes sparkle {
+  0%, 100% { opacity: 0.2; transform: scale(0.7) rotate(0deg); }
+  50% { opacity: 0.7; transform: scale(1.2) rotate(180deg); }
+}
+
+.float-anim { animation: float 7s ease-in-out infinite; }
+.sparkle-anim { animation: sparkle 5s ease-in-out infinite; }
+
+.slide { display: none; opacity: 0; }
+.slide.active { display: block; animation: fadeInUp 0.6s ease forwards; }
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.card {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 143, 177, 0.25);
+  border-radius: 28px;
+  box-shadow: 0 20px 60px -20px rgba(232, 93, 138, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.5) inset;
+}
+
+.option {
+  background: rgba(255, 255, 255, 0.7);
+  border: 2px solid #ffd4e3;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  user-select: none;
+}
+.option:hover { border-color: var(--pink); background: #fff5f9; transform: translateX(4px); }
+.option.selected { border-color: var(--pink-deep); background: linear-gradient(135deg, #ffe4ee, #fff5f9); box-shadow: 0 4px 16px rgba(232, 93, 138, 0.2); }
+.option.correct { border-color: #5fb88a; background: linear-gradient(135deg, #d9f5e3, #f0fcf4); color: #2d6e44; }
+.option.wrong { border-color: #e85d8a; background: linear-gradient(135deg, #ffd4e3, #fff0f5); color: #a8264e; }
+.option.disabled { cursor: not-allowed; }
+.option.disabled:hover { transform: none; }
+
+.btn-primary {
+  background: linear-gradient(135deg, #ff8fb1, #e85d8a);
+  color: white;
+  font-weight: 600;
+  padding: 12px 28px;
+  border-radius: 999px;
+  box-shadow: 0 8px 20px -6px rgba(232, 93, 138, 0.5);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  border: none;
+  font-family: 'Quicksand', sans-serif;
+  font-size: 1rem;
+}
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 28px -6px rgba(232, 93, 138, 0.6); }
+.btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+.btn-secondary {
+  background: rgba(200, 168, 233, 0.15);
+  color: var(--lavender-deep);
+  font-weight: 600;
+  padding: 12px 28px;
+  border-radius: 999px;
+  border: 2px solid rgba(200, 168, 233, 0.4);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  font-family: 'Quicksand', sans-serif;
+  font-size: 1rem;
+}
+.btn-secondary:hover { background: rgba(200, 168, 233, 0.3); border-color: var(--lavender); transform: translateY(-1px); }
+
+.btn-ghost {
+  background: rgba(255, 255, 255, 0.6);
+  color: var(--text-light);
+  padding: 10px 20px;
+  border-radius: 999px;
+  border: 2px solid #ffd4e3;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  font-family: 'Quicksand', sans-serif;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+.btn-ghost:hover { background: #ffe4ee; color: var(--pink-deep); border-color: var(--pink); }
+.btn-ghost:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.progress-track {
+  background: rgba(255, 143, 177, 0.15);
+  border-radius: 999px;
+  height: 12px;
+  overflow: hidden;
+  position: relative;
+}
+.progress-fill {
+  background: linear-gradient(90deg, #ff8fb1, #c8a8e9);
+  height: 100%;
+  transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 999px;
+  position: relative;
+}
+.progress-fill::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+  animation: shimmer 2s infinite;
+}
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.equation {
+  font-family: 'Fredoka', sans-serif;
+  font-size: 1.9rem;
+  font-weight: 500;
+  text-align: center;
+  padding: 1.75rem 1rem;
+  background: linear-gradient(135deg, #fff5f9, #f9f0ff);
+  border-radius: 20px;
+  border: 2px dashed #ffc1d6;
+  margin: 1.5rem 0;
+  letter-spacing: 0.02em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+.equation .unit { color: var(--pink-deep); font-weight: 600; }
+.equation .value { color: var(--text); font-weight: 600; }
+.equation .equals { color: var(--text-light); margin: 0 0.5rem; }
+.equation .question { color: var(--lavender-deep); font-weight: 700; font-size: 2.2rem; }
+
+.ladder {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin: 1rem 0;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.ladder-step {
+  background: linear-gradient(135deg, #ffd4e3, #fff5f9);
+  border: 2px solid #ff8fb1;
+  border-radius: 14px;
+  padding: 10px 14px;
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 500;
+  color: var(--pink-deep);
+  min-width: 56px;
+  text-align: center;
+  transition: all 0.3s ease;
+  font-size: 0.95rem;
+}
+.ladder-step.active-step {
+  background: linear-gradient(135deg, #ff8fb1, #e85d8a);
+  color: white;
+  transform: scale(1.15);
+  box-shadow: 0 8px 20px rgba(232, 93, 138, 0.4);
+}
+.ladder-arrow {
+  font-size: 0.7rem;
+  color: var(--pink);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.explanation-box {
+  background: linear-gradient(135deg, rgba(184, 230, 210, 0.25), rgba(200, 168, 233, 0.2));
+  border: 2px solid rgba(184, 230, 210, 0.6);
+  border-radius: 20px;
+  padding: 1.5rem;
+  margin-top: 1rem;
+  display: none;
+}
+.explanation-box.show { display: block; animation: fadeInUp 0.4s ease forwards; }
+
+.stat-card {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 228, 238, 0.5));
+  border: 2px solid rgba(255, 143, 177, 0.3);
+  border-radius: 24px;
+  padding: 1.5rem;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+.stat-card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px -12px rgba(232, 93, 138, 0.3); }
+
+.q-dot {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Fredoka', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.6);
+  border: 2px solid #ffd4e3;
+  color: var(--text-light);
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+.q-dot:hover { background: #ffe4ee; border-color: var(--pink); transform: scale(1.1); }
+.q-dot.current { background: linear-gradient(135deg, #ff8fb1, #e85d8a); color: white; border-color: var(--pink-deep); transform: scale(1.15); box-shadow: 0 4px 12px rgba(232, 93, 138, 0.4); }
+.q-dot.correct { background: #d9f5e3; border-color: #5fb88a; color: #2d6e44; }
+.q-dot.wrong { background: #ffd4e3; border-color: #e85d8a; color: #a8264e; }
+
+.input-field {
+  background: rgba(255, 255, 255, 0.85);
+  border: 2px solid #ffd4e3;
+  border-radius: 16px;
+  padding: 14px 20px;
+  font-size: 1.05rem;
+  font-family: 'Quicksand', sans-serif;
+  font-weight: 500;
+  color: var(--text);
+  transition: all 0.3s ease;
+  width: 100%;
+  outline: none;
+}
+.input-field:focus { border-color: var(--pink); background: white; box-shadow: 0 0 0 4px rgba(255, 143, 177, 0.15); }
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: rgba(90, 61, 78, 0.4);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+.modal-overlay.show { display: flex; animation: fadeIn 0.3s ease; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+::-webkit-scrollbar { width: 10px; }
+::-webkit-scrollbar-track { background: #ffe4ee; }
+::-webkit-scrollbar-thumb { background: #ff8fb1; border-radius: 5px; }
+::-webkit-scrollbar-thumb:hover { background: #e85d8a; }
+
+.toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background: linear-gradient(135deg, #ff8fb1, #e85d8a);
+  color: white;
+  padding: 12px 24px;
+  border-radius: 999px;
+  font-weight: 600;
+  box-shadow: 0 8px 24px rgba(232, 93, 138, 0.4);
+  z-index: 200;
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  font-size: 0.9rem;
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
+
+@media (max-width: 640px) {
+  .equation { font-size: 1.5rem; padding: 1.25rem 0.75rem; }
+  .equation .question { font-size: 1.8rem; }
+  .ladder-step { min-width: 44px; padding: 8px 10px; font-size: 0.85rem; }
+  .q-dot { width: 28px; height: 28px; font-size: 0.7rem; }
+}
+</style>
+</head>
+<body>
+
+<div class="bg-pattern">
+  <div class="deco float-anim" style="top: 8%; left: 4%; font-size: 32px; color: #ff8fb1; opacity: 0.5;">♥</div>
+  <div class="deco sparkle-anim" style="top: 18%; right: 6%; font-size: 26px; color: #c8a8e9; opacity: 0.6;">✦</div>
+  <div class="deco float-anim" style="top: 45%; left: 2%; font-size: 28px; color: #ffb996; opacity: 0.5; animation-delay: 1.5s;">♥</div>
+  <div class="deco sparkle-anim" style="top: 65%; right: 4%; font-size: 24px; color: #ff8fb1; opacity: 0.5; animation-delay: 1s;">✦</div>
+  <div class="deco float-anim" style="bottom: 12%; left: 6%; font-size: 22px; color: #c8a8e9; opacity: 0.6; animation-delay: 2s;">♥</div>
+  <div class="deco sparkle-anim" style="bottom: 25%; right: 8%; font-size: 20px; color: #ffb996; opacity: 0.5; animation-delay: 2.5s;">✦</div>
+  <div class="deco float-anim" style="top: 30%; left: 10%; font-size: 18px; color: #c8a8e9; opacity: 0.4; animation-delay: 3s;">✦</div>
+  <div class="deco sparkle-anim" style="top: 75%; left: 5%; font-size: 24px; color: #ff8fb1; opacity: 0.4; animation-delay: 0.5s;">♥</div>
+</div>
+
+<div class="relative z-10 max-w-4xl mx-auto px-4 py-6 md:py-10">
+  
+  <!-- SLIDE 1: WELCOME -->
+  <section class="slide active" id="slide-welcome">
+    <div class="card p-6 md:p-12 text-center">
+      <div class="text-6xl mb-4">🎀</div>
+      <h1 class="font-display text-3xl md:text-5xl font-bold mb-3" style="background: linear-gradient(135deg, #e85d8a, #9d70d8); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">Latihan Konversi Satuan Panjang</h1>
+      <p class="text-base md:text-lg mb-6" style="color: var(--text-light);">Yuk kita belajar mengubah satuan panjang dengan tangga konversi yang lucu!</p>
+      
+      <div class="mb-2 text-sm font-semibold uppercase tracking-wide" style="color: var(--pink-deep);">Tangga Konversi</div>
+      <div id="welcome-ladder" class="mb-3"></div>
+      <p class="text-sm mb-8" style="color: var(--text-light);">Turun 1 tangga = dikali 10 &nbsp;•&nbsp; Naik 1 tangga = dibagi 10</p>
+      
+      <div class="max-w-md mx-auto text-left mb-6">
+        <label class="block font-display font-semibold mb-2 text-base" style="color: var(--pink-deep);">Nama Siswa</label>
+        <input type="text" id="student-name" class="input-field" placeholder="Tulis namamu di sini..." maxlength="40" />
+        <p id="name-error" class="text-sm mt-2 hidden" style="color: #e85d8a;">Isi namamu dulu ya, sayang!</p>
+      </div>
+      
+      <button class="btn-primary text-lg" onclick="startQuiz()">Mulai Latihan</button>
+      
+      <div class="mt-8 pt-6 border-t" style="border-color: rgba(255, 143, 177, 0.2);">
+        <p class="text-sm" style="color: var(--text-light);">30 Soal Pilihan Ganda • Konversi km, hm, dam, m, dm, cm, mm</p>
+      </div>
+    </div>
+  </section>
+  
+  <!-- SLIDE 2: QUESTIONS -->
+  <section class="slide" id="slide-questions">
+    <div class="flex items-center justify-between mb-4 flex-wrap gap-3">
+      <div class="flex items-center gap-2">
+        <span class="font-display font-semibold text-base md:text-lg" style="color: var(--pink-deep);" id="student-display">Siswa</span>
+        <span class="text-sm" style="color: var(--text-light);">• Latihan Konversi</span>
+      </div>
+      <div class="text-sm font-semibold" style="color: var(--text-light);">
+        Soal <span id="q-current" class="font-display text-lg" style="color: var(--pink-deep);">1</span> / 30
+      </div>
+    </div>
+    
+    <div class="progress-track mb-6">
+      <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+    </div>
+    
+    <div class="card p-5 md:p-8" id="question-card"></div>
+    
+    <div class="flex items-center justify-between mt-5 gap-3">
+      <button class="btn-ghost" id="prev-btn" onclick="prevQuestion()">← Sebelumnya</button>
+      <button class="btn-ghost" id="next-btn" onclick="nextQuestion()">Selanjutnya →</button>
+    </div>
+    
+    <div class="mt-8">
+      <div class="text-xs text-center mb-3 font-semibold tracking-wider" style="color: var(--text-light);">NAVIGASI SOAL</div>
+      <div class="flex flex-wrap gap-2 justify-center" id="q-dots"></div>
+    </div>
+    
+    <div class="text-center mt-8">
+      <button class="btn-primary text-lg" onclick="confirmFinish()">Selesai & Lihat Hasil</button>
+    </div>
+  </section>
+  
+  <!-- SLIDE 3: STATS -->
+  <section class="slide" id="slide-stats">
+    <div class="card p-5 md:p-10">
+      <div class="text-center mb-8">
+        <div class="text-5xl mb-3">📊</div>
+        <h2 class="font-display text-2xl md:text-4xl font-bold mb-2" style="color: var(--pink-deep);">Statistik Hasil Latihan</h2>
+        <p class="text-base md:text-lg" style="color: var(--text-light);"><span id="stats-name">Siswa</span></p>
+      </div>
+      
+      <div class="grid grid-cols-3 gap-3 md:gap-4 mb-8">
+        <div class="stat-card">
+          <div class="text-3xl md:text-5xl font-display font-bold mb-1" style="color: #5fb88a;" id="stat-correct">0</div>
+          <div class="text-xs md:text-sm font-semibold uppercase tracking-wide" style="color: var(--text-light);">Benar</div>
+        </div>
+        <div class="stat-card">
+          <div class="text-3xl md:text-5xl font-display font-bold mb-1" style="color: #e85d8a;" id="stat-wrong">0</div>
+          <div class="text-xs md:text-sm font-semibold uppercase tracking-wide" style="color: var(--text-light);">Salah</div>
+        </div>
+        <div class="stat-card">
+          <div class="text-3xl md:text-5xl font-display font-bold mb-1" style="color: #9d70d8;" id="stat-accuracy">0%</div>
+          <div class="text-xs md:text-sm font-semibold uppercase tracking-wide" style="color: var(--text-light);">Kebenaran</div>
+        </div>
+      </div>
+      
+      <div class="mb-6">
+        <h3 class="font-display font-semibold text-base md:text-lg mb-3" style="color: var(--pink-deep);">Detail per Soal</h3>
+        <div class="grid grid-cols-6 md:grid-cols-10 gap-2" id="stats-grid"></div>
+        <div class="flex gap-4 mt-4 text-xs justify-center" style="color: var(--text-light);">
+          <span><span style="display:inline-block;width:12px;height:12px;background:#d9f5e3;border-radius:3px;vertical-align:middle;margin-right:4px;"></span>Benar</span>
+          <span><span style="display:inline-block;width:12px;height:12px;background:#ffd4e3;border-radius:3px;vertical-align:middle;margin-right:4px;"></span>Salah</span>
+          <span><span style="display:inline-block;width:12px;height:12px;background:#f5e8ed;border-radius:3px;vertical-align:middle;margin-right:4px;"></span>Tidak Dijawab</span>
+        </div>
+      </div>
+      
+      <div class="flex gap-3 justify-center flex-wrap">
+        <button class="btn-secondary" onclick="reviewAnswers()">Lihat Pembahasan</button>
+        <button class="btn-primary" onclick="goToReflection()">Lanjut ke Refleksi →</button>
+      </div>
+    </div>
+  </section>
+  
+  <!-- SLIDE 4: REFLECTION -->
+  <section class="slide" id="slide-reflection">
+    <div class="card p-5 md:p-10">
+      <div class="text-center mb-8">
+        <div class="text-5xl mb-3">🌟</div>
+        <h2 class="font-display text-2xl md:text-4xl font-bold mb-2" style="color: var(--pink-deep);">Refleksi & Kesimpulan</h2>
+      </div>
+      
+      <div class="space-y-6">
+        <div>
+          <h3 class="font-display font-semibold text-lg md:text-xl mb-3" style="color: var(--lavender-deep);">Tangga Konversi Satuan Panjang</h3>
+          <div id="reflection-ladder"></div>
+          <p class="text-center text-sm mt-3" style="color: var(--text-light);">
+            Setiap turun 1 tangga = dikali 10 &nbsp;•&nbsp; Setiap naik 1 tangga = dibagi 10
+          </p>
+        </div>
+        
+        <div class="grid md:grid-cols-2 gap-4">
+          <div class="stat-card text-left">
+            <div class="text-3xl mb-2">💡</div>
+            <h4 class="font-display font-semibold mb-2" style="color: var(--pink-deep);">Tips Konversi</h4>
+            <ul class="text-sm space-y-1.5" style="color: var(--text);">
+              <li>• Tentukan satuan awal dan tujuan</li>
+              <li>• Hitung jumlah tangga yang dilewati</li>
+              <li>• Turun = dikali 10 per tangga</li>
+              <li>• Naik = dibagi 10 per tangga</li>
+              <li>• Periksa hasil dengan akal sehat</li>
+            </ul>
+          </div>
+          <div class="stat-card text-left">
+            <div class="text-3xl mb-2">🎯</div>
+            <h4 class="font-display font-semibold mb-2" style="color: var(--pink-deep);">Kesimpulan</h4>
+            <p class="text-sm leading-relaxed" style="color: var(--text);">
+              Konversi satuan panjang menggunakan tangga km-hm-dam-m-dm-cm-mm. Setiap langkah bernilai 10 kali. Dengan memahami tangga konversi, kita dapat mengubah satuan panjang dengan mudah dan akurat.
+            </p>
+          </div>
+        </div>
+        
+        <div class="stat-card text-left">
+          <h4 class="font-display font-semibold mb-2" style="color: var(--lavender-deep);">💭 Refleksi Diri</h4>
+          <p class="text-sm mb-3" style="color: var(--text);">
+            Bagaimana perasaanmu setelah mengerjakan latihan ini? Apakah ada materi yang perlu kamu pelajari lagi? Yuk tulis di sini:
+          </p>
+          <textarea id="reflection-input" class="input-field" rows="3" placeholder="Tulis refleksimu..." style="resize: vertical; font-family: 'Quicksand', sans-serif;"></textarea>
+        </div>
+      </div>
+      
+      <div class="text-center mt-8">
+        <button class="btn-primary text-lg" onclick="goToThanks()">Selesai</button>
+      </div>
+    </div>
+  </section>
+  
+  <!-- SLIDE 5: THANK YOU -->
+  <section class="slide" id="slide-thanks">
+    <div class="card p-6 md:p-16 text-center">
+      <div class="text-7xl mb-6">🌷</div>
+      <h2 class="font-display text-3xl md:text-5xl font-bold mb-4" style="background: linear-gradient(135deg, #e85d8a, #9d70d8); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">Thank You for Today!</h2>
+      <p class="text-base md:text-lg mb-2" style="color: var(--text);">Terima kasih sudah belajar dengan semangat, <span class="font-semibold" style="color: var(--pink-deep);" id="thanks-name">Siswa</span>!</p>
+      <p class="text-sm md:text-base mb-8" style="color: var(--text-light);">Kamu sudah menyelesaikan 30 soal konversi satuan panjang. Hebat sekali!</p>
+      
+      <div class="max-w-md mx-auto p-6 rounded-2xl" style="background: linear-gradient(135deg, rgba(255, 228, 238, 0.6), rgba(200, 168, 233, 0.3)); border: 2px solid rgba(255, 143, 177, 0.3);">
+        <p class="font-display text-base md:text-lg mb-2" style="color: var(--pink-deep);">Skor Akhirmu</p>
+        <p class="font-display text-4xl md:text-5xl font-bold mb-1" style="color: var(--lavender-deep);" id="final-score">0/30</p>
+        <p class="text-sm" style="color: var(--text-light);" id="final-message">Pertahankan semangat belajarmu!</p>
+      </div>
+      
+      <div class="mt-8">
+        <button class="btn-secondary" onclick="restartQuiz()">Ulangi Latihan</button>
+      </div>
+      
+      <p class="text-sm mt-10" style="color: var(--text-light);">Sampai jumpa di latihan berikutnya! ✨</p>
+    </div>
+  </section>
+  
+</div>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modal">
+  <div class="card p-6 md:p-8 max-w-sm w-full text-center">
+    <div class="text-4xl mb-3">🌸</div>
+    <p id="modal-message" class="mb-6 text-base" style="color: var(--text);">Pesan</p>
+    <div class="flex gap-3 justify-center">
+      <button class="btn-ghost" onclick="closeModal()">Belum</button>
+      <button class="btn-primary" id="modal-confirm-btn">Ya, Lanjut</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast">Pesan</div>
+
+<script>
+// Data 30 soal konversi satuan panjang
+const questions = [
+  { val: 1, from: "km", to: "hm", options: ["10 hm", "100 hm", "1 hm", "0,1 hm"], correct: 0, exp: "Dari km ke hm: turun 1 tangga.\nSetiap turun 1 tangga dikali 10.\n1 × 10 = 10 hm" },
+  { val: 5, from: "km", to: "m", options: ["500 m", "50 m", "5000 m", "5 m"], correct: 2, exp: "Dari km ke m: turun 3 tangga (km → hm → dam → m).\nDikali 10³ = 1000.\n5 × 1000 = 5000 m" },
+  { val: 200, from: "cm", to: "m", options: ["2 m", "20 m", "0,2 m", "2000 m"], correct: 0, exp: "Dari cm ke m: naik 2 tangga (cm → dm → m).\nSetiap naik 1 tangga dibagi 10.\n200 ÷ 100 = 2 m" },
+  { val: 3, from: "dam", to: "m", options: ["30 m", "300 m", "0,3 m", "3 m"], correct: 0, exp: "Dari dam ke m: turun 1 tangga.\nDikali 10.\n3 × 10 = 30 m" },
+  { val: 1, from: "m", to: "cm", options: ["10 cm", "100 cm", "1000 cm", "1 cm"], correct: 1, exp: "Dari m ke cm: turun 2 tangga (m → dm → cm).\nDikali 10² = 100.\n1 × 100 = 100 cm" },
+  { val: 5000, from: "m", to: "km", options: ["50 km", "5 km", "500 km", "0,5 km"], correct: 1, exp: "Dari m ke km: naik 3 tangga (m → dam → hm → km).\nDibagi 1000.\n5000 ÷ 1000 = 5 km" },
+  { val: 2, from: "hm", to: "dam", options: ["20 dam", "200 dam", "0,2 dam", "2 dam"], correct: 0, exp: "Dari hm ke dam: turun 1 tangga.\nDikali 10.\n2 × 10 = 20 dam" },
+  { val: 50, from: "dm", to: "m", options: ["5 m", "50 m", "500 m", "0,5 m"], correct: 0, exp: "Dari dm ke m: naik 1 tangga.\nDibagi 10.\n50 ÷ 10 = 5 m" },
+  { val: 1, from: "dam", to: "dm", options: ["10 dm", "100 dm", "1000 dm", "1 dm"], correct: 1, exp: "Dari dam ke dm: turun 2 tangga (dam → m → dm).\nDikali 100.\n1 × 100 = 100 dm" },
+  { val: 7500, from: "mm", to: "m", options: ["75 m", "7,5 m", "750 m", "0,75 m"], correct: 1, exp: "Dari mm ke m: naik 3 tangga (mm → cm → dm → m).\nDibagi 1000.\n7500 ÷ 1000 = 7,5 m" },
+  { val: 4, from: "km", to: "dam", options: ["40 dam", "400 dam", "4000 dam", "4 dam"], correct: 1, exp: "Dari km ke dam: turun 2 tangga (km → hm → dam).\nDikali 100.\n4 × 100 = 400 dam" },
+  { val: "1,5", from: "km", to: "m", options: ["150 m", "15 m", "1500 m", "1,5 m"], correct: 2, exp: "Dari km ke m: turun 3 tangga.\nDikali 1000.\n1,5 × 1000 = 1500 m" },
+  { val: 350, from: "cm", to: "dm", options: ["3,5 dm", "35 dm", "3500 dm", "0,35 dm"], correct: 1, exp: "Dari cm ke dm: naik 1 tangga.\nDibagi 10.\n350 ÷ 10 = 35 dm" },
+  { val: 2, from: "m", to: "mm", options: ["20 mm", "200 mm", "2000 mm", "2 mm"], correct: 2, exp: "Dari m ke mm: turun 3 tangga (m → dm → cm → mm).\nDikali 1000.\n2 × 1000 = 2000 mm" },
+  { val: 8, from: "hm", to: "m", options: ["80 m", "800 m", "8 m", "8000 m"], correct: 1, exp: "Dari hm ke m: turun 2 tangga (hm → dam → m).\nDikali 100.\n8 × 100 = 800 m" },
+  { val: 60, from: "dm", to: "cm", options: ["6 cm", "60 cm", "600 cm", "0,6 cm"], correct: 2, exp: "Dari dm ke cm: turun 1 tangga.\nDikali 10.\n60 × 10 = 600 cm" },
+  { val: "0,5", from: "km", to: "m", options: ["5 m", "50 m", "500 m", "5000 m"], correct: 2, exp: "Dari km ke m: turun 3 tangga.\nDikali 1000.\n0,5 × 1000 = 500 m" },
+  { val: 1500, from: "cm", to: "dam", options: ["1,5 dam", "15 dam", "150 dam", "0,15 dam"], correct: 0, exp: "Dari cm ke dam: naik 3 tangga (cm → dm → m → dam).\nDibagi 1000.\n1500 ÷ 1000 = 1,5 dam" },
+  { val: "3,5", from: "m", to: "cm", options: ["35 cm", "350 cm", "3500 cm", "0,35 cm"], correct: 1, exp: "Dari m ke cm: turun 2 tangga.\nDikali 100.\n3,5 × 100 = 350 cm" },
+  { val: 25, from: "mm", to: "cm", options: ["2,5 cm", "25 cm", "250 cm", "0,25 cm"], correct: 0, exp: "Dari mm ke cm: naik 1 tangga.\nDibagi 10.\n25 ÷ 10 = 2,5 cm" },
+  { val: 12, from: "km", to: "hm", options: ["120 hm", "12 hm", "1200 hm", "1,2 hm"], correct: 0, exp: "Dari km ke hm: turun 1 tangga.\nDikali 10.\n12 × 10 = 120 hm" },
+  { val: 4500, from: "m", to: "hm", options: ["450 hm", "45 hm", "4,5 hm", "4500 hm"], correct: 1, exp: "Dari m ke hm: naik 2 tangga (m → dam → hm).\nDibagi 100.\n4500 ÷ 100 = 45 hm" },
+  { val: 7, from: "dam", to: "m", options: ["70 m", "700 m", "0,7 m", "7 m"], correct: 0, exp: "Dari dam ke m: turun 1 tangga.\nDikali 10.\n7 × 10 = 70 m" },
+  { val: 90, from: "cm", to: "mm", options: ["9 mm", "90 mm", "900 mm", "0,9 mm"], correct: 2, exp: "Dari cm ke mm: turun 1 tangga.\nDikali 10.\n90 × 10 = 900 mm" },
+  { val: "2,5", from: "dam", to: "dm", options: ["25 dm", "250 dm", "2,5 dm", "2500 dm"], correct: 1, exp: "Dari dam ke dm: turun 2 tangga (dam → m → dm).\nDikali 100.\n2,5 × 100 = 250 dm" },
+  { val: 8000, from: "mm", to: "m", options: ["80 m", "8 m", "800 m", "0,8 m"], correct: 1, exp: "Dari mm ke m: naik 3 tangga.\nDibagi 1000.\n8000 ÷ 1000 = 8 m" },
+  { val: "1,2", from: "km", to: "dam", options: ["12 dam", "120 dam", "1200 dam", "1,2 dam"], correct: 1, exp: "Dari km ke dam: turun 2 tangga.\nDikali 100.\n1,2 × 100 = 120 dam" },
+  { val: 3500, from: "dm", to: "hm", options: ["35 hm", "3,5 hm", "350 hm", "0,35 hm"], correct: 1, exp: "Dari dm ke hm: naik 3 tangga (dm → m → dam → hm).\nDibagi 1000.\n3500 ÷ 1000 = 3,5 hm" },
+  { val: "5,5", from: "m", to: "mm", options: ["55 mm", "550 mm", "5500 mm", "55000 mm"], correct: 2, exp: "Dari m ke mm: turun 3 tangga.\nDikali 1000.\n5,5 × 1000 = 5500 mm" },
+  { val: 12000, from: "m", to: "km", options: ["120 km", "12 km", "1200 km", "1,2 km"], correct: 1, exp: "Dari m ke km: naik 3 tangga.\nDibagi 1000.\n12000 ÷ 1000 = 12 km" }
+];
+
+let state = {
+  currentQ: 0,
+  studentName: "",
+  answers: new Array(30).fill(null),
+  checked: new Array(30).fill(false),
+  explanationsShown: new Array(30).fill(false)
+};
+
+// Utilitas
+function showSlide(id) {
+  document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function renderLadder(activeFrom, activeTo, container, allActive = false) {
+  const units = ['km', 'hm', 'dam', 'm', 'dm', 'cm', 'mm'];
+  let html = '<div class="ladder">';
+  units.forEach(u => {
+    const isActive = allActive || u === activeFrom || u === activeTo;
+    html += `<div class="ladder-step ${isActive ? 'active-step' : ''}">${u}</div>`;
+  });
+  html += '</div>';
+  if (container) container.innerHTML = html;
+  return html;
+}
+
+function renderIntroLadder(container) {
+  const units = ['km', 'hm', 'dam', 'm', 'dm', 'cm', 'mm'];
+  let html = '<div class="ladder">';
+  units.forEach((u, i) => {
+    html += `<div class="ladder-step active-step">${u}</div>`;
+    if (i < units.length - 1) html += `<div class="ladder-arrow">×10</div>`;
+  });
+  html += '</div>';
+  if (container) container.innerHTML = html;
+}
+
+function showToast(msg) {
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.classList.add('show');
+  clearTimeout(toast._timer);
+  toast._timer = setTimeout(() => toast.classList.remove('show'), 2500);
+}
+
+function showModal(message, onConfirm) {
+  document.getElementById('modal-message').textContent = message;
+  document.getElementById('modal').classList.add('show');
+  const btn = document.getElementById('modal-confirm-btn');
+  const newBtn = btn.cloneNode(true);
+  btn.parentNode.replaceChild(newBtn, btn);
+  newBtn.id = 'modal-confirm-btn';
+  newBtn.addEventListener('click', () => { closeModal(); onConfirm(); });
+}
+
+function closeModal() {
+  document.getElementById('modal').classList.remove('show');
+}
+
+// Mulai latihan
+function startQuiz() {
+  const name = document.getElementById('student-name').value.trim();
+  if (!name) {
+    document.getElementById('name-error').classList.remove('hidden');
+    document.getElementById('student-name').focus();
+    return;
+  }
+  document.getElementById('name-error').classList.add('hidden');
+  state.studentName = name;
+  document.getElementById('student-display').textContent = name;
+  showSlide('slide-questions');
+  renderQuestion(0);
+  renderDots();
+}
+
+// Render soal
+function renderQuestion(idx) {
+  state.currentQ = idx;
+  const q = questions[idx];
+  const card = document.getElementById('question-card');
+  
+  document.getElementById('q-current').textContent = idx + 1;
+  document.getElementById('progress-fill').style.width = ((idx + 1) / 30 * 100) + '%';
+  
+  const optionLetters = ['A', 'B', 'C', 'D'];
+  
+  // Susun HTML pembahasan
+  const expLines = q.exp.split('\n');
+  let expHtml = '';
+  expLines.forEach((line, i) => {
+    if (i === expLines.length - 1) {
+      expHtml += `<div class="font-display font-semibold text-base mt-3" style="color: var(--pink-deep); background: rgba(255, 143, 177, 0.12); padding: 10px 16px; border-radius: 12px; display: inline-block;">${line}</div>`;
+    } else {
+      expHtml += `<p class="text-sm mb-1" style="color: var(--text);">${line}</p>`;
+    }
+  });
+  
+  let html = `
+    <div class="flex items-start gap-3 mb-4">
+      <div class="font-display text-xl md:text-2xl font-bold flex-shrink-0" style="color: white; background: linear-gradient(135deg, #ff8fb1, #e85d8a); width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(232, 93, 138, 0.3);">${idx + 1}</div>
+      <div class="flex-1 pt-1">
+        <p class="text-xs font-semibold uppercase tracking-wider mb-1" style="color: var(--text-light);">Soal Pilihan Ganda</p>
+        <p class="font-display text-base md:text-lg font-semibold" style="color: var(--text);">Lengkapi konversi satuan berikut:</p>
+      </div>
+    </div>
+    
+    <div class="equation">
+      <span class="value">${q.val}</span>
+      <span class="unit">${q.from}</span>
+      <span class="equals">=</span>
+      <span class="question">?</span>
+      <span class="unit">${q.to}</span>
+    </div>
+    
+    <div class="space-y-2.5" id="options-list">
+      ${q.options.map((opt, i) => `
+        <div class="option p-3 md:p-4 rounded-2xl flex items-center gap-3 ${state.answers[idx] === i ? 'selected' : ''}" 
+             data-idx="${i}" onclick="selectOption(${i})">
+          <div class="font-display font-bold w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0" style="background: rgba(255, 143, 177, 0.15); color: var(--pink-deep);">${optionLetters[i]}</div>
+          <div class="font-medium text-sm md:text-base">${opt}</div>
+        </div>
+      `).join('')}
+    </div>
+    
+    <div class="flex gap-3 mt-6 flex-wrap">
+      <button class="btn-primary" onclick="checkAnswer()">Cek Jawaban</button>
+      <button class="btn-secondary" onclick="toggleExplanation()">Pembahasan</button>
+    </div>
+    
+    <div class="explanation-box" id="explanation-box">
+      <h4 class="font-display font-semibold mb-3" style="color: var(--lavender-deep);">Pembahasan</h4>
+      <div class="mb-3" id="exp-ladder"></div>
+      ${expHtml}
+      <p class="text-sm font-semibold mt-4" style="color: var(--pink-deep);">Jawaban benar: ${q.options[q.correct]}</p>
+    </div>
+    
+    <div id="check-result" class="mt-4"></div>
+  `;
+  
+  card.innerHTML = html;
+  
+  renderLadder(q.from, q.to, document.getElementById('exp-ladder'));
+  
+  if (state.explanationsShown[idx]) {
+    document.getElementById('explanation-box').classList.add('show');
+  }
+  
+  if (state.checked[idx]) {
+    showCheckResult();
+  }
+  
+  document.getElementById('prev-btn').disabled = idx === 0;
+  document.getElementById('next-btn').style.visibility = idx === 29 ? 'hidden' : 'visible';
+  
+  updateDots();
+}
+
+function selectOption(i) {
+  if (state.checked[state.currentQ]) {
+    showToast('Soal sudah diperiksa, jawaban tidak bisa diubah ya!');
+    return;
+  }
+  state.answers[state.currentQ] = i;
+  document.querySelectorAll('#options-list .option').forEach((el, idx) => {
+    el.classList.remove('selected');
+    if (idx === i) el.classList.add('selected');
+  });
+}
+
+function checkAnswer() {
+  if (state.answers[state.currentQ] === null) {
+    showToast('Pilih jawaban dulu ya!');
+    return;
+  }
+  state.checked[state.currentQ] = true;
+  showCheckResult();
+  updateDots();
+  
+  const correct = state.answers[state.currentQ] === questions[state.currentQ].correct;
+  if (correct) showToast('Hebat! Jawaban benar!');
+}
+
+function showCheckResult() {
+  const idx = state.currentQ;
+  const correct = state.answers[idx] === questions[idx].correct;
+  
+  document.querySelectorAll('#options-list .option').forEach((el, i) => {
+    el.classList.remove('selected');
+    el.classList.add('disabled');
+    if (i === questions[idx].correct) {
+      el.classList.add('correct');
+    } else if (i === state.answers[idx] && !correct) {
+      el.classList.add('wrong');
+    }
+  });
+  
+  const result = document.getElementById('check-result');
+  result.innerHTML = `
+    <div class="p-4 rounded-2xl text-center" style="background: ${correct ? 'linear-gradient(135deg, #d9f5e3, #f0fcf4)' : 'linear-gradient(135deg, #ffd4e3, #fff0f5)'}; border: 2px solid ${correct ? '#5fb88a' : '#e85d8a'};">
+      <div class="font-display text-lg md:text-xl font-bold mb-1" style="color: ${correct ? '#2d6e44' : '#a8264e'};">
+        ${correct ? 'Benar!' : 'Belum tepat'}
+      </div>
+      <p class="text-sm" style="color: var(--text);">
+        ${correct ? 'Kerja bagus, lanjut ke soal berikutnya!' : 'Jawaban benar: ' + questions[idx].options[questions[idx].correct]}
+      </p>
+    </div>
+  `;
+}
+
+function toggleExplanation() {
+  const box = document.getElementById('explanation-box');
+  state.explanationsShown[state.currentQ] = true;
+  box.classList.toggle('show');
+}
+
+function prevQuestion() {
+  if (state.currentQ > 0) renderQuestion(state.currentQ - 1);
+}
+
+function nextQuestion() {
+  if (state.currentQ < 29) renderQuestion(state.currentQ + 1);
+}
+
+function renderDots() {
+  const dots = document.getElementById('q-dots');
+  let html = '';
+  for (let i = 0; i < 30; i++) {
+    html += `<div class="q-dot" onclick="renderQuestion(${i})" title="Soal ${i + 1}">${i + 1}</div>`;
+  }
+  dots.innerHTML = html;
+  updateDots();
+}
+
+function updateDots() {
+  document.querySelectorAll('.q-dot').forEach((dot, i) => {
+    dot.classList.remove('current', 'correct', 'wrong');
+    if (i === state.currentQ) dot.classList.add('current');
+    else if (state.checked[i]) {
+      if (state.answers[i] === questions[i].correct) dot.classList.add('correct');
+      else dot.classList.add('wrong');
+    }
+  });
+}
+
+function confirmFinish() {
+  const answered = state.answers.filter(a => a !== null).length;
+  if (answered < 30) {
+    showModal(`Kamu baru menjawab ${answered} dari 30 soal. Soal yang belum dijawab akan dihitung salah. Lanjut ke hasil?`, finishQuiz);
+  } else {
+    finishQuiz();
+  }
+}
+
+function finishQuiz() {
+  let correct = 0, wrong = 0;
+  state.answers.forEach((a, i) => {
+    if (a === questions[i].correct) correct++;
+    else wrong++;
+  });
+  
+  const accuracy = Math.round(correct / 30 * 100);
+  
+  document.getElementById('stats-name').textContent = state.studentName;
+  document.getElementById('thanks-name').textContent = state.studentName;
+  document.getElementById('final-score').textContent = correct + '/30';
+  
+  let msg = '';
+  if (accuracy >= 90) msg = 'Luar biasa! Kamu jago konversi satuan!';
+  else if (accuracy >= 70) msg = 'Bagus sekali! Sedikit lagi menuju sempurna!';
+  else if (accuracy >= 50) msg = 'Cukup baik! Yuk terus berlatih!';
+  else msg = 'Jangan menyerah ya! Coba pelajari lagi materinya.';
+  document.getElementById('final-message').textContent = msg;
+  
+  // Grid detail per soal
+  const grid = document.getElementById('stats-grid');
+  let html = '';
+  for (let i = 0; i < 30; i++) {
+    const isCorrect = state.answers[i] === questions[i].correct;
+    const answered = state.answers[i] !== null;
+    const bg = answered ? (isCorrect ? '#d9f5e3' : '#ffd4e3') : '#f5e8ed';
+    const color = answered ? (isCorrect ? '#2d6e44' : '#a8264e') : '#a89099';
+    const symbol = answered ? (isCorrect ? '✓' : '✗') : '—';
+    const border = answered ? (isCorrect ? 'rgba(95, 184, 138, 0.3)' : 'rgba(232, 93, 138, 0.3)') : 'rgba(168, 144, 153, 0.2)';
+    html += `
+      <div class="p-2 rounded-xl text-center font-display font-semibold cursor-pointer hover:scale-105 transition-transform" 
+           style="background: ${bg}; color: ${color}; border: 1px solid ${border};" 
+           onclick="goToQuestion(${i})" title="Klik untuk lihat soal ${i+1}">
+        <div class="text-xs">${i + 1}</div>
+        <div class="text-base">${symbol}</div>
+      </div>`;
+  }
+  grid.innerHTML = html;
+  
+  animateCounter('stat-correct', 0, correct, 1000);
+  animateCounter('stat-wrong', 0, wrong, 1000);
+  animateCounter('stat-accuracy', 0, accuracy, 1200, '%');
+  
+  showSlide('slide-stats');
+}
+
+function goToQuestion(i) {
+  showSlide('slide-questions');
+  renderQuestion(i);
+}
+
+function animateCounter(id, from, to, duration, suffix = '') {
+  const el = document.getElementById(id);
+  const start = performance.now();
+  function frame(now) {
+    const t = Math.min((now - start) / duration, 1);
+    const eased = 1 - Math.pow(1 - t, 3);
+    const val = Math.round(from + (to - from) * eased);
+    el.textContent = val + suffix;
+    if (t < 1) requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+}
+
+function reviewAnswers() {
+  showSlide('slide-questions');
+  renderQuestion(0);
+}
+
+function goToReflection() {
+  showSlide('slide-reflection');
+  renderIntroLadder(document.getElementById('reflection-ladder'));
+}
+
+function goToThanks() {
+  showSlide('slide-thanks');
+}
+
+function restartQuiz() {
+  state = {
+    currentQ: 0,
+    studentName: "",
+    answers: new Array(30).fill(null),
+    checked: new Array(30).fill(false),
+    explanationsShown: new Array(30).fill(false)
+  };
+  document.getElementById('student-name').value = '';
+  const reflectionInput = document.getElementById('reflection-input');
+  if (reflectionInput) reflectionInput.value = '';
+  showSlide('slide-welcome');
+}
+
+// Inisialisasi
+renderIntroLadder(document.getElementById('welcome-ladder'));
+
+document.getElementById('student-name').addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') startQuiz();
+});
+</script>
+</body>
+</html>
