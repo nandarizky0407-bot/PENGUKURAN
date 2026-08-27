@@ -1,0 +1,2669 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>✨ Petualangan Mengukur Berat ✨</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Quicksand:wght@400;500;600;700&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --pink-soft: #ffeef4;
+  --pink: #f8bbd0;
+  --pink-bright: #ff8fb1;
+  --rose: #e8829b;
+  --rose-deep: #c2185b;
+  --peach: #ffd4c4;
+  --lavender: #d4c1e0;
+  --lavender-deep: #9c80b8;
+  --cream: #fff8f3;
+  --gold: #e6b87e;
+  --mint: #c8e0d2;
+  --mint-deep: #7fbfa0;
+  --dark: #5d3a4a;
+  --muted: #8a6b78;
+  --white: #ffffff;
+  --shadow-soft: 0 4px 20px rgba(232, 130, 155, 0.15);
+  --shadow-strong: 0 8px 30px rgba(232, 130, 155, 0.3);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Quicksand', sans-serif;
+  background: 
+    radial-gradient(circle at 20% 20%, rgba(248,187,208,0.5) 0%, transparent 50%),
+    radial-gradient(circle at 80% 70%, rgba(212,193,224,0.5) 0%, transparent 50%),
+    radial-gradient(circle at 50% 90%, rgba(255,212,196,0.4) 0%, transparent 50%),
+    linear-gradient(135deg, #fff5f8 0%, #ffe9f0 100%);
+  background-attachment: fixed;
+  color: var(--dark);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Floating decorations */
+.float-deco {
+  position: fixed;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.5;
+  animation: floatAround 12s ease-in-out infinite;
+  font-size: 2rem;
+}
+.float-deco:nth-child(1) { top: 8%; left: 4%; animation-delay: 0s; }
+.float-deco:nth-child(2) { top: 20%; right: 6%; animation-delay: 3s; font-size: 1.5rem;}
+.float-deco:nth-child(3) { bottom: 25%; left: 5%; animation-delay: 6s; font-size: 2.5rem;}
+.float-deco:nth-child(4) { bottom: 15%; right: 4%; animation-delay: 9s; }
+.float-deco:nth-child(5) { top: 50%; left: 2%; animation-delay: 2s; font-size: 1.8rem;}
+
+@keyframes floatAround {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  25% { transform: translateY(-30px) rotate(15deg); }
+  50% { transform: translateY(-15px) rotate(-10deg); }
+  75% { transform: translateY(-25px) rotate(5deg); }
+}
+
+/* Slide system */
+.slide {
+  min-height: 100vh;
+  padding: 2.5rem 1.5rem 7rem;
+  position: relative;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  z-index: 2;
+}
+
+.slide.active {
+  display: flex;
+  animation: slideIn 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(40px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.slide-content {
+  max-width: 1150px;
+  width: 100%;
+  position: relative;
+  z-index: 2;
+}
+
+.slide-title {
+  font-family: 'Fredoka', sans-serif;
+  font-size: clamp(1.8rem, 4.5vw, 3rem);
+  font-weight: 700;
+  color: var(--rose-deep);
+  text-align: center;
+  margin-bottom: 0.3rem;
+  text-shadow: 2px 2px 0 rgba(255,255,255,0.9);
+}
+
+.slide-subtitle {
+  text-align: center;
+  color: var(--muted);
+  font-size: 1rem;
+  margin-bottom: 2rem;
+  font-weight: 500;
+  font-family: 'Caveat', cursive;
+  font-size: 1.4rem;
+}
+
+/* Navigation */
+.nav-bar {
+  position: fixed;
+  bottom: 1.2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(12px);
+  padding: 0.5rem 0.8rem;
+  border-radius: 50px;
+  box-shadow: var(--shadow-strong);
+  z-index: 100;
+  border: 2px solid var(--pink);
+}
+
+.nav-btn {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: none;
+  background: linear-gradient(135deg, var(--rose), var(--rose-deep));
+  color: white;
+  cursor: pointer;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s;
+  font-weight: 600;
+}
+
+.nav-btn:hover:not(:disabled) {
+  transform: scale(1.15) rotate(-5deg);
+  box-shadow: 0 4px 15px rgba(194, 24, 91, 0.4);
+}
+
+.nav-btn:disabled {
+  background: #ddd;
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.slide-indicator {
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 600;
+  color: var(--rose-deep);
+  padding: 0 0.8rem;
+  font-size: 0.95rem;
+}
+
+/* ============ SLIDE 1: COVER ============ */
+.cover-container {
+  background: rgba(255,255,255,0.7);
+  backdrop-filter: blur(15px);
+  padding: 3rem 2.5rem;
+  border-radius: 35px;
+  box-shadow: var(--shadow-strong);
+  border: 3px solid white;
+  text-align: center;
+  max-width: 600px;
+  margin: 1rem auto;
+  position: relative;
+  overflow: hidden;
+}
+
+.cover-container::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -30%;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, var(--pink) 0%, transparent 70%);
+  opacity: 0.4;
+  border-radius: 50%;
+}
+
+.cover-container::after {
+  content: '';
+  position: absolute;
+  bottom: -50%;
+  left: -30%;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, var(--lavender) 0%, transparent 70%);
+  opacity: 0.4;
+  border-radius: 50%;
+}
+
+.cover-emoji {
+  font-size: 4rem;
+  margin-bottom: 0.5rem;
+  display: block;
+  animation: bounce 2.5s ease-in-out infinite;
+  position: relative;
+  z-index: 1;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0) rotate(-5deg); }
+  50% { transform: translateY(-15px) rotate(5deg); }
+}
+
+.cover-title {
+  font-family: 'Fredoka', sans-serif;
+  font-size: clamp(2rem, 5.5vw, 3.2rem);
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--rose-deep), var(--lavender-deep));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  margin-bottom: 0.3rem;
+  line-height: 1.1;
+  position: relative;
+  z-index: 1;
+}
+
+.cover-subtitle {
+  font-family: 'Caveat', cursive;
+  font-size: 1.8rem;
+  color: var(--rose);
+  margin-bottom: 1.5rem;
+  position: relative;
+  z-index: 1;
+}
+
+.cover-input-group {
+  margin: 1.5rem 0;
+  text-align: left;
+  position: relative;
+  z-index: 1;
+}
+
+.cover-label {
+  font-weight: 600;
+  color: var(--dark);
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 1.05rem;
+}
+
+.cover-input {
+  width: 100%;
+  padding: 1rem 1.5rem;
+  border: 3px solid var(--pink);
+  border-radius: 20px;
+  font-size: 1.1rem;
+  font-family: inherit;
+  background: white;
+  color: var(--dark);
+  transition: all 0.3s;
+}
+
+.cover-input:focus {
+  outline: none;
+  border-color: var(--rose);
+  box-shadow: 0 0 0 4px rgba(232, 130, 155, 0.2);
+}
+
+.start-btn {
+  background: linear-gradient(135deg, var(--rose), var(--rose-deep));
+  color: white;
+  border: none;
+  padding: 1rem 2.5rem;
+  border-radius: 50px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: 'Fredoka', sans-serif;
+  box-shadow: var(--shadow-strong);
+  transition: all 0.3s;
+  position: relative;
+  z-index: 1;
+  margin-top: 0.5rem;
+}
+
+.start-btn:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 12px 30px rgba(194, 24, 91, 0.4);
+}
+
+.name-display {
+  display: inline-block;
+  background: var(--pink-soft);
+  color: var(--rose-deep);
+  padding: 0.3rem 1rem;
+  border-radius: 20px;
+  font-weight: 600;
+  margin-left: 0.5rem;
+}
+
+/* ============ SLIDE 2: CONCEPT ============ */
+.concept-card {
+  background: white;
+  border-radius: 24px;
+  padding: 2rem;
+  box-shadow: var(--shadow-soft);
+  border: 3px solid var(--pink-soft);
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+
+.concept-text {
+  font-size: 1.05rem;
+  line-height: 1.8;
+  color: var(--dark);
+}
+
+.concept-text strong {
+  color: var(--rose-deep);
+  background: var(--pink-soft);
+  padding: 0.1rem 0.5rem;
+  border-radius: 8px;
+  font-weight: 700;
+}
+
+.unit-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin: 1.5rem 0;
+  flex-wrap: wrap;
+}
+
+.unit-btn {
+  padding: 1rem 2rem;
+  border-radius: 20px;
+  border: 3px solid;
+  background: white;
+  cursor: pointer;
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: all 0.3s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+  min-width: 180px;
+}
+
+.unit-btn.baku { border-color: var(--lavender-deep); color: var(--lavender-deep); }
+.unit-btn.tidak-baku { border-color: var(--rose); color: var(--rose); }
+
+.unit-btn:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-soft);
+}
+
+.unit-btn.active.baku { background: linear-gradient(135deg, var(--lavender-deep), #7c5fa0); color: white; border-color: transparent; }
+.unit-btn.active.tidak-baku { background: linear-gradient(135deg, var(--rose), var(--rose-deep)); color: white; border-color: transparent; }
+
+.unit-section { display: none; }
+.unit-section.active { display: block; animation: slideIn 0.5s ease; }
+
+.subsection-title {
+  font-family: 'Fredoka', sans-serif;
+  color: var(--rose-deep);
+  font-size: 1.4rem;
+  margin: 1rem 0 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.example-list { list-style: none; padding: 0; }
+.example-list li {
+  background: var(--pink-soft);
+  margin: 0.5rem 0;
+  padding: 0.8rem 1.2rem;
+  border-radius: 12px;
+  padding-left: 2.5rem;
+  position: relative;
+}
+.example-list li::before {
+  content: '🌸';
+  position: absolute;
+  left: 0.8rem;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.illustration-box {
+  background: linear-gradient(135deg, var(--cream), white);
+  border-radius: 20px;
+  padding: 1.5rem;
+  margin: 1rem 0;
+  border: 3px dashed var(--pink);
+  text-align: center;
+}
+
+.hand-animation {
+  position: relative;
+  height: 180px;
+  background: linear-gradient(to right, #fff5f8 0%, #ffe9f0 100%);
+  border-radius: 15px;
+  overflow: hidden;
+  margin: 1rem 0;
+  border: 2px solid var(--pink);
+}
+
+.hand-svg {
+  position: absolute;
+  top: 20px;
+  left: 30%;
+  animation: handMove 3s ease-in-out infinite;
+}
+
+@keyframes handMove {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-15px); }
+}
+
+.table-line {
+  position: absolute;
+  bottom: 30px;
+  left: 5%;
+  right: 5%;
+  height: 30px;
+  background: linear-gradient(to bottom, #d4a574, #b8854f);
+  border-radius: 5px;
+}
+
+.hand-count {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  background: white;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 700;
+  color: var(--rose-deep);
+  box-shadow: var(--shadow-soft);
+  font-size: 1.2rem;
+}
+
+/* Tangga satuan */
+.tangga-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 1.5rem 0;
+  position: relative;
+}
+
+.tangga-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0.15rem 0;
+}
+
+.tangga-step {
+  background: linear-gradient(135deg, white, var(--pink-soft));
+  border: 3px solid var(--rose);
+  padding: 0.7rem 1.5rem;
+  border-radius: 12px;
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--rose-deep);
+  cursor: pointer;
+  transition: all 0.3s;
+  min-width: 90px;
+  text-align: center;
+  box-shadow: var(--shadow-soft);
+  position: relative;
+}
+
+.tangga-step:hover {
+  transform: scale(1.08);
+  background: linear-gradient(135deg, var(--pink), var(--rose));
+  color: white;
+}
+
+.tangga-step.selected { background: linear-gradient(135deg, var(--rose), var(--rose-deep)); color: white; transform: scale(1.1); }
+.tangga-step.target { background: linear-gradient(135deg, var(--lavender-deep), #7c5fa0); color: white; transform: scale(1.1); }
+
+.conversion-display {
+  background: var(--cream);
+  border-radius: 15px;
+  padding: 1rem 1.5rem;
+  margin-top: 1rem;
+  text-align: center;
+  border: 2px dashed var(--rose);
+  font-size: 1rem;
+  color: var(--dark);
+  min-height: 60px;
+}
+
+.conversion-display strong { color: var(--rose-deep); font-size: 1.2rem; }
+
+/* Real life examples */
+.life-examples {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+  margin: 1rem 0;
+}
+
+.life-card {
+  background: white;
+  padding: 1.2rem;
+  border-radius: 18px;
+  text-align: center;
+  border: 3px solid var(--pink-soft);
+  transition: all 0.3s;
+  cursor: default;
+}
+
+.life-card:hover { transform: translateY(-5px); border-color: var(--rose); box-shadow: var(--shadow-soft); }
+
+.life-card .emoji { font-size: 2.5rem; margin-bottom: 0.5rem; display: block; }
+.life-card .title { font-family: 'Fredoka', sans-serif; font-weight: 600; color: var(--rose-deep); margin-bottom: 0.3rem; }
+.life-card .desc { font-size: 0.9rem; color: var(--muted); }
+
+/* Tools display */
+.tools-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+  margin: 1rem 0;
+}
+
+.tool-card {
+  background: white;
+  padding: 1rem;
+  border-radius: 18px;
+  text-align: center;
+  border: 3px solid var(--lavender);
+  transition: all 0.3s;
+}
+
+.tool-card:hover { transform: translateY(-5px) rotate(-2deg); border-color: var(--lavender-deep); box-shadow: var(--shadow-soft); }
+
+.tool-img {
+  width: 100%;
+  max-width: 130px;
+  height: 110px;
+  object-fit: contain;
+  border-radius: 10px;
+  margin: 0 auto 0.5rem;
+  display: block;
+  background: white;
+  padding: 0.3rem;
+  border: 2px solid var(--pink-soft);
+}
+
+.tool-card .name { font-family: 'Fredoka', sans-serif; font-weight: 600; color: var(--lavender-deep); font-size: 0.95rem; }
+.tool-card .how { font-size: 0.8rem; color: var(--muted); margin-top: 0.3rem; }
+
+/* Practice problem */
+.problem-container {
+  background: white;
+  border-radius: 20px;
+  padding: 1.5rem;
+  box-shadow: var(--shadow-soft);
+  border: 3px solid var(--pink-soft);
+  margin: 1rem 0;
+}
+
+.problem-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.problem-number {
+  background: linear-gradient(135deg, var(--rose), var(--rose-deep));
+  color: white;
+  padding: 0.4rem 1rem;
+  border-radius: 20px;
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.problem-nav { display: flex; gap: 0.5rem; align-items: center; }
+.problem-nav button {
+  background: var(--pink-soft);
+  border: none;
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  cursor: pointer;
+  color: var(--rose-deep);
+  font-weight: 700;
+  font-size: 0.9rem;
+  transition: all 0.3s;
+}
+.problem-nav button:hover { background: var(--rose); color: white; }
+
+.problem-question { text-align: center; margin-bottom: 1rem; color: var(--dark); font-size: 1rem; }
+
+.problem-visual {
+  background: var(--cream);
+  border-radius: 15px;
+  padding: 1.5rem;
+  margin: 1rem 0;
+  text-align: center;
+}
+
+.problem-input-row {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+
+.problem-input {
+  width: 100px;
+  padding: 0.6rem 1rem;
+  border: 2px solid var(--pink);
+  border-radius: 12px;
+  font-size: 1.1rem;
+  font-family: inherit;
+  text-align: center;
+  color: var(--dark);
+}
+
+.problem-input:focus { outline: none; border-color: var(--rose); box-shadow: 0 0 0 3px rgba(232, 130, 155, 0.2); }
+
+.check-btn {
+  background: linear-gradient(135deg, var(--mint-deep), #5fa080);
+  color: white;
+  border: none;
+  padding: 0.6rem 1.5rem;
+  border-radius: 12px;
+  cursor: pointer;
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 600;
+  transition: all 0.3s;
+}
+.check-btn:hover { transform: translateY(-2px); box-shadow: var(--shadow-soft); }
+
+.feedback {
+  margin-top: 1rem;
+  text-align: center;
+  font-weight: 600;
+  padding: 0.8rem;
+  border-radius: 12px;
+  display: none;
+}
+.feedback.correct { background: rgba(127, 191, 160, 0.2); color: #2d6e4e; display: block; }
+.feedback.wrong { background: rgba(232, 130, 155, 0.2); color: var(--rose-deep); display: block; }
+
+/* ============ SLIDE 3: Game - Guess Tool ============ */
+.flashcard {
+  background: white;
+  border-radius: 25px;
+  padding: 2rem;
+  box-shadow: var(--shadow-strong);
+  border: 4px solid var(--pink);
+  max-width: 700px;
+  margin: 0 auto;
+  text-align: center;
+  position: relative;
+}
+
+.flashcard::before {
+  content: '';
+  position: absolute;
+  top: -15px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 30px;
+  background: var(--rose);
+  border-radius: 15px 15px 0 0;
+}
+
+.flashcard-type {
+  background: var(--lavender);
+  color: white;
+  padding: 0.3rem 1rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  display: inline-block;
+  margin-bottom: 1rem;
+}
+
+.flashcard-visual {
+  background: var(--cream);
+  border-radius: 18px;
+  padding: 1.5rem;
+  margin: 1rem 0;
+  min-height: 220px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flashcard-visual img {
+  max-width: 200px;
+  max-height: 200px;
+  object-fit: contain;
+  border-radius: 12px;
+  background: white;
+  padding: 0.5rem;
+  border: 2px solid var(--pink-soft);
+}
+
+.flashcard-scenario {
+  font-size: 1.1rem;
+  color: var(--dark);
+  margin: 1rem 0;
+  padding: 1rem;
+  background: var(--pink-soft);
+  border-radius: 15px;
+  line-height: 1.5;
+}
+
+.options-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.8rem;
+  margin: 1rem 0;
+}
+
+.option-btn {
+  background: white;
+  border: 3px solid var(--pink);
+  padding: 0.8rem 1rem;
+  border-radius: 15px;
+  cursor: pointer;
+  font-family: inherit;
+  font-weight: 600;
+  color: var(--dark);
+  transition: all 0.3s;
+  font-size: 0.95rem;
+}
+
+.option-btn:hover { background: var(--pink-soft); border-color: var(--rose); transform: translateY(-2px); }
+.option-btn.correct { background: rgba(127, 191, 160, 0.3); border-color: var(--mint-deep); color: #2d6e4e; }
+.option-btn.wrong { background: rgba(232, 130, 155, 0.3); border-color: var(--rose); color: var(--rose-deep); animation: shake 0.5s; }
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-8px); }
+  75% { transform: translateX(8px); }
+}
+
+.game-score {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  margin: 1rem 0;
+  flex-wrap: wrap;
+}
+
+.score-pill {
+  background: white;
+  padding: 0.5rem 1.2rem;
+  border-radius: 20px;
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 600;
+  color: var(--rose-deep);
+  box-shadow: var(--shadow-soft);
+  border: 2px solid var(--pink);
+}
+
+/* ============ SLIDE 4: Conversion ============ */
+.tangga-interactive {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 1.5rem 0;
+  background: white;
+  padding: 1.5rem;
+  border-radius: 20px;
+  box-shadow: var(--shadow-soft);
+  border: 3px solid var(--pink-soft);
+}
+
+.tangga-stairs {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.stair {
+  background: linear-gradient(135deg, var(--pink-soft), white);
+  border: 3px solid var(--pink);
+  padding: 0.6rem 1.2rem;
+  border-radius: 10px;
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 700;
+  color: var(--rose-deep);
+  cursor: pointer;
+  transition: all 0.3s;
+  position: relative;
+  min-width: 80px;
+  text-align: center;
+}
+
+.stair:nth-child(1) { min-width: 130px; background: linear-gradient(135deg, #ffc1d4, #ff8fb1); color: white; border-color: var(--rose-deep);}
+.stair:nth-child(2) { min-width: 120px; background: linear-gradient(135deg, #ffd0e0, #ffa5be); color: white;}
+.stair:nth-child(3) { min-width: 110px; background: linear-gradient(135deg, #ffd9e8, #ffb8cf); color: white;}
+.stair:nth-child(4) { min-width: 100px; background: linear-gradient(135deg, #ffe0ec, #ffc1d4); color: var(--rose-deep);}
+.stair:nth-child(5) { min-width: 90px; background: linear-gradient(135deg, #ffe7f0, #ffc9da); color: var(--rose-deep);}
+.stair:nth-child(6) { min-width: 80px; background: linear-gradient(135deg, #ffeef4, #ffd1de); color: var(--rose-deep);}
+.stair:nth-child(7) { min-width: 70px; background: linear-gradient(135deg, #fff5f8, #ffd9e2); color: var(--rose-deep);}
+
+.stair:hover { transform: scale(1.08); box-shadow: var(--shadow-soft); }
+.stair.from { outline: 4px solid var(--lavender-deep); outline-offset: 2px; }
+.stair.to { outline: 4px solid var(--mint-deep); outline-offset: 2px; }
+
+.tangga-info {
+  margin-top: 1rem;
+  text-align: center;
+  background: var(--cream);
+  padding: 1rem;
+  border-radius: 15px;
+  border: 2px dashed var(--rose);
+  min-height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 0.3rem;
+  width: 100%;
+}
+
+.tangga-rules {
+  display: flex;
+  justify-content: space-around;
+  margin: 1rem 0;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.rule-card {
+  background: white;
+  padding: 1rem 1.5rem;
+  border-radius: 15px;
+  border: 3px solid;
+  text-align: center;
+  flex: 1;
+  min-width: 200px;
+}
+
+.rule-card.down { border-color: var(--mint-deep); }
+.rule-card.up { border-color: var(--rose); }
+
+.rule-card .icon { font-size: 2rem; display: block; margin-bottom: 0.3rem; }
+.rule-card .title { font-family: 'Fredoka', sans-serif; font-weight: 600; margin-bottom: 0.3rem; }
+.rule-card.down .title { color: var(--mint-deep); }
+.rule-card.up .title { color: var(--rose); }
+.rule-card .desc { font-size: 0.9rem; color: var(--muted); }
+
+.conversion-problem {
+  background: white;
+  border-radius: 20px;
+  padding: 1.5rem;
+  box-shadow: var(--shadow-soft);
+  border: 3px solid var(--pink-soft);
+  margin: 1rem 0;
+  text-align: center;
+}
+
+.conversion-question {
+  font-size: 1.3rem;
+  font-family: 'Fredoka', sans-serif;
+  color: var(--rose-deep);
+  margin: 0.5rem 0 1rem;
+}
+
+.conversion-input {
+  width: 130px;
+  padding: 0.8rem 1rem;
+  border: 3px solid var(--pink);
+  border-radius: 15px;
+  font-size: 1.2rem;
+  font-family: inherit;
+  text-align: center;
+  color: var(--dark);
+  margin: 0 0.3rem;
+}
+
+.explanation {
+  background: var(--cream);
+  border-left: 5px solid var(--lavender-deep);
+  padding: 1rem;
+  border-radius: 10px;
+  margin-top: 1rem;
+  text-align: left;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  display: none;
+}
+
+.explanation.show { display: block; animation: slideIn 0.4s ease; }
+
+/* ============ SLIDE 5: Quiz ============ */
+.quiz-tabs {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.quiz-tab {
+  padding: 0.7rem 1.5rem;
+  border-radius: 20px;
+  border: 3px solid;
+  background: white;
+  cursor: pointer;
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 600;
+  transition: all 0.3s;
+  font-size: 0.95rem;
+}
+
+.quiz-tab.q1 { border-color: var(--rose); color: var(--rose); }
+.quiz-tab.q2 { border-color: var(--lavender-deep); color: var(--lavender-deep); }
+.quiz-tab.active.q1 { background: var(--rose); color: white; }
+.quiz-tab.active.q2 { background: var(--lavender-deep); color: white; }
+
+.quiz-section { display: none; }
+.quiz-section.active { display: block; animation: slideIn 0.5s ease; }
+
+.quiz-question-box {
+  background: white;
+  border-radius: 20px;
+  padding: 1.8rem;
+  box-shadow: var(--shadow-soft);
+  border: 3px solid var(--pink-soft);
+  margin-bottom: 1rem;
+}
+
+.quiz-prompt {
+  font-family: 'Fredoka', sans-serif;
+  font-size: 1.2rem;
+  color: var(--rose-deep);
+  text-align: center;
+  margin-bottom: 1.2rem;
+}
+
+.quiz-prompt .highlight { background: var(--pink-soft); padding: 0.2rem 0.7rem; border-radius: 10px; }
+
+.items-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 0.6rem;
+  margin: 1rem 0;
+}
+
+.item-check {
+  background: var(--cream);
+  border: 2px solid var(--pink-soft);
+  border-radius: 12px;
+  padding: 0.6rem;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  user-select: none;
+}
+
+.item-check:hover { border-color: var(--rose); transform: translateY(-2px); }
+.item-check input { display: none; }
+
+.item-check .checkbox-custom {
+  width: 22px;
+  height: 22px;
+  border: 2px solid var(--pink);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.3s;
+}
+
+.item-check input:checked + .checkbox-custom { background: var(--rose); border-color: var(--rose); }
+.item-check input:checked + .checkbox-custom::after { content: '✓'; color: white; font-weight: 700; font-size: 0.85rem; }
+.item-check input:checked ~ .item-label { color: var(--rose-deep); font-weight: 600; }
+.item-check.correct { background: rgba(127, 191, 160, 0.2); border-color: var(--mint-deep); }
+.item-check.wrong { background: rgba(232, 130, 155, 0.2); border-color: var(--rose); }
+
+.item-label { font-size: 0.9rem; color: var(--dark); flex: 1; }
+
+.quiz-actions {
+  display: flex;
+  justify-content: center;
+  gap: 0.8rem;
+  margin: 1rem 0;
+  flex-wrap: wrap;
+}
+
+.action-btn {
+  padding: 0.7rem 1.5rem;
+  border-radius: 15px;
+  border: none;
+  cursor: pointer;
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 600;
+  transition: all 0.3s;
+  font-size: 0.95rem;
+}
+
+.action-btn.primary { background: linear-gradient(135deg, var(--rose), var(--rose-deep)); color: white; }
+.action-btn.secondary { background: var(--lavender); color: white; }
+.action-btn:hover { transform: translateY(-2px); box-shadow: var(--shadow-soft); }
+
+/* Quiz 2: Comparison */
+.comparison-box {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 1rem;
+  align-items: center;
+  margin: 1.5rem 0;
+}
+
+.compare-card {
+  background: linear-gradient(135deg, white, var(--pink-soft));
+  padding: 1.5rem;
+  border-radius: 20px;
+  text-align: center;
+  border: 3px solid var(--pink);
+}
+
+.compare-card.b {
+  background: linear-gradient(135deg, white, var(--lavender));
+  border-color: var(--lavender-deep);
+}
+
+.compare-emoji { font-size: 3rem; display: block; margin-bottom: 0.5rem; }
+.compare-name { font-family: 'Fredoka', sans-serif; font-weight: 600; color: var(--rose-deep); margin-bottom: 0.3rem; }
+.compare-card.b .compare-name { color: var(--lavender-deep); }
+.compare-value { font-size: 1.4rem; font-weight: 700; color: var(--dark); }
+
+.vs-symbol { font-family: 'Fredoka', sans-serif; font-size: 2rem; font-weight: 700; color: var(--rose); }
+
+.comparison-options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin: 1rem 0;
+}
+
+.compare-option {
+  background: white;
+  border: 3px solid var(--pink-soft);
+  padding: 1rem 1.5rem;
+  border-radius: 15px;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-size: 1rem;
+  text-align: center;
+  color: var(--dark);
+}
+
+.compare-option:hover { border-color: var(--rose); background: var(--pink-soft); }
+.compare-option.selected { background: var(--pink-soft); border-color: var(--rose); font-weight: 600; }
+.compare-option.correct { background: rgba(127, 191, 160, 0.3); border-color: var(--mint-deep); color: #2d6e4e; font-weight: 600; }
+.compare-option.wrong { background: rgba(232, 130, 155, 0.3); border-color: var(--rose); color: var(--rose-deep); }
+
+/* ============ SLIDE 6: Memory Game ============ */
+.memory-stats {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin: 1rem 0;
+  flex-wrap: wrap;
+}
+
+.stat-pill {
+  background: white;
+  padding: 0.5rem 1.2rem;
+  border-radius: 20px;
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 600;
+  color: var(--rose-deep);
+  border: 2px solid var(--pink);
+  box-shadow: var(--shadow-soft);
+  font-size: 0.95rem;
+}
+
+.memory-grid {
+  display: grid;
+  gap: 0.5rem; 
+  margin: 1.5rem auto;
+  max-width: 450px; 
+  perspective: 1000px;
+}
+
+.memory-grid.cols-4 { grid-template-columns: repeat(4, 1fr); }
+.memory-grid.cols-5 { grid-template-columns: repeat(5, 1fr); }
+
+.memory-card {
+  aspect-ratio: 3/4;
+  cursor: pointer;
+  perspective: 1000px;
+}
+
+.memory-card-inner {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+}
+
+.memory-card.flipped .memory-card-inner { transform: rotateY(180deg); }
+.memory-card.matched .memory-card-inner { transform: rotateY(180deg); opacity: 0.5; }
+
+.memory-card-front, .memory-card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  border-radius: 12px; 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 700;
+  padding: 0.3rem; 
+  text-align: center;
+  font-size: 0.85rem; 
+}
+
+.memory-card-front {
+  background: linear-gradient(135deg, var(--rose), var(--rose-deep));
+  color: white;
+  font-size: 1.5rem; 
+  border: 2px solid white; 
+  box-shadow: var(--shadow-soft);
+}
+
+.memory-card-back {
+  background: linear-gradient(135deg, white, var(--pink-soft));
+  color: var(--rose-deep);
+  border: 2px solid var(--pink); 
+  transform: rotateY(180deg);
+  box-shadow: var(--shadow-soft);
+  word-break: break-word;
+}
+
+.memory-card.matched .memory-card-back { background: linear-gradient(135deg, var(--mint), var(--mint-deep)); color: white; border-color: var(--mint-deep); }
+
+.memory-controls {
+  display: flex;
+  justify-content: center;
+  gap: 0.8rem;
+  margin: 1.5rem 0;
+  flex-wrap: wrap;
+}
+
+.timer-display {
+  background: var(--rose-deep);
+  color: white;
+  padding: 0.6rem 1.5rem;
+  border-radius: 25px;
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 700;
+  font-size: 1.2rem;
+  box-shadow: var(--shadow-strong);
+}
+
+.memory-message {
+  text-align: center;
+  background: var(--cream);
+  padding: 1rem;
+  border-radius: 15px;
+  border: 2px dashed var(--rose);
+  margin: 1rem 0;
+  font-weight: 600;
+  color: var(--rose-deep);
+  min-height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ============ SLIDE 7: Reflection ============ */
+.reflection-card {
+  background: white;
+  border-radius: 25px;
+  padding: 2.5rem;
+  box-shadow: var(--shadow-strong);
+  border: 4px solid var(--pink);
+  max-width: 800px;
+  margin: 1rem auto;
+  text-align: center;
+  position: relative;
+}
+
+.reflection-card::before { content: '🌸'; position: absolute; top: -20px; left: 30px; font-size: 2rem; background: white; padding: 0.3rem; border-radius: 50%; }
+.reflection-card::after { content: '✨'; position: absolute; top: -20px; right: 30px; font-size: 2rem; background: white; padding: 0.3rem; border-radius: 50%; }
+
+.reflection-title { font-family: 'Fredoka', sans-serif; font-size: 2rem; color: var(--rose-deep); margin-bottom: 1rem; }
+
+.reflection-list { text-align: left; margin: 1.5rem 0; list-style: none; }
+.reflection-list li {
+  background: var(--pink-soft);
+  padding: 1rem 1.5rem;
+  margin: 0.5rem 0;
+  border-radius: 15px;
+  padding-left: 3rem;
+  position: relative;
+  line-height: 1.6;
+}
+.reflection-list li::before { content: '🌷'; position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); font-size: 1.3rem; }
+
+.thank-you {
+  font-family: 'Caveat', cursive;
+  font-size: 3rem;
+  background: linear-gradient(135deg, var(--rose-deep), var(--lavender-deep));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  margin: 1rem 0;
+}
+
+.thank-emoji { font-size: 4rem; display: block; margin: 1rem 0; animation: bounce 2s ease-in-out infinite; }
+
+.score-summary {
+  background: linear-gradient(135deg, var(--pink-soft), var(--lavender));
+  padding: 1.5rem;
+  border-radius: 20px;
+  margin: 1.5rem 0;
+  border: 3px solid white;
+}
+
+.score-summary .label { color: var(--muted); font-size: 0.9rem; margin-bottom: 0.3rem; }
+.score-summary .value { font-family: 'Fredoka', sans-serif; font-size: 2.5rem; font-weight: 700; color: var(--rose-deep); }
+
+/* Confetti */
+.confetti {
+  position: fixed;
+  width: 10px;
+  height: 10px;
+  pointer-events: none;
+  z-index: 1000;
+  animation: confettiFall linear forwards;
+}
+
+@keyframes confettiFall {
+  to { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .slide { padding: 1.5rem 1rem 6rem; }
+  .comparison-box { grid-template-columns: 1fr; }
+  .vs-symbol { transform: rotate(90deg); }
+  .options-grid { grid-template-columns: 1fr; }
+  .memory-grid.cols-5 { grid-template-columns: repeat(4, 1fr); }
+  .memory-grid { max-width: 100%; }
+}
+
+/* Progress bar */
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  background: var(--pink-soft);
+  border-radius: 10px;
+  margin: 1rem 0;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--rose), var(--rose-deep));
+  border-radius: 10px;
+  transition: width 0.5s ease;
+  width: 0%;
+}
+
+/* Section divider */
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 1.5rem 0;
+  color: var(--rose);
+}
+
+.divider::before, .divider::after {
+  content: '';
+  flex: 1;
+  height: 2px;
+  background: linear-gradient(to right, transparent, var(--pink), transparent);
+}
+
+.divider span {
+  font-family: 'Caveat', cursive;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+</style>
+</head>
+<body>
+
+<!-- Floating decorations -->
+<div class="float-deco">🌸</div>
+<div class="float-deco">✨</div>
+<div class="float-deco">🎀</div>
+<div class="float-deco">💖</div>
+<div class="float-deco">🦋</div>
+
+<!-- ============ SLIDE 1: COVER ============ -->
+<section class="slide active" id="slide1">
+  <div class="slide-content">
+    <div class="cover-container">
+      <span class="cover-emoji">⚖️✨</span>
+      <h1 class="cover-title">Petualangan Mengukur Berat</h1>
+      <p class="cover-subtitle">Yuk kita jelajahi dunia pengukuran! 🌸</p>
+      <div class="cover-input-group">
+        <label class="cover-label" for="studentName">Halo cantik! Siapa namamu? 💕</label>
+        <input type="text" id="studentName" class="cover-input" placeholder="Tulis namamu di sini ya...">
+      </div>
+      <button class="start-btn" onclick="startAdventure()">Mulai Petualangan 🚀</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 2: CONCEPT ============ -->
+<section class="slide" id="slide2">
+  <div class="slide-content">
+    <h1 class="slide-title">Apa itu Berat? 🌸</h1>
+    <p class="slide-subtitle">Hai <span id="nameDisplay" class="name-display">Sayang</span>! Mari kita pelajari bersama 💕</p>
+    
+    <div class="concept-card">
+      <p class="concept-text">
+        <strong>Berat</strong> adalah seberapa berat atau ringannya suatu benda. Ketika kita mengukur berat, kita sedang mengetahui massa benda tersebut. 
+        <br><br>
+        🌷 Ada dua jenis satuan ukur yaitu <strong>Satuan Baku</strong> dan <strong>Satuan Tidak Baku</strong>. Yuk pilih untuk belajar lebih dalam!
+      </p>
+    </div>
+
+    <div class="unit-buttons">
+      <button class="unit-btn tidak-baku" onclick="showUnit('tidak-baku')">
+        <span style="font-size:1.8rem">✋</span>
+        Satuan Tidak Baku
+      </button>
+      <button class="unit-btn baku" onclick="showUnit('baku')">
+        <span style="font-size:1.8rem">⚖️</span>
+        Satuan Baku
+      </button>
+    </div>
+
+    <!-- TIDAK BAKU SECTION -->
+    <div class="unit-section" id="section-tidak-baku">
+      <div class="concept-card">
+        <h3 class="subsection-title">✋ Satuan Tidak Baku</h3>
+        <p class="concept-text">
+          Satuan tidak baku adalah satuan yang dipakai untuk memperkirakan berat suatu benda dengan menggunakan benda lain yang sudah diketahui beratnya, atau hanya dengan mengangkatnya secara langsung. Hasilnya bisa berbeda-beda karena kekuatan setiap orang tidak sama.
+        </p>
+        <ul class="example-list">
+          <li><strong>Mengangkat langsung</strong> - merasakan berat benda dengan tangan</li>
+          <li><strong>Batu bata</strong> - "Berat benda ini kira-kira sama dengan 2 batu bata"</li>
+          <li><strong>Buku</strong> - "Tas ini beratnya seperti 5 buku tebal"</li>
+          <li><strong>Berat Badan Sendiri</strong> - "Kucing ini beratnya setengah dari adik saya"</li>
+        </ul>
+      </div>
+
+      <div class="illustration-box">
+        <h3 class="subsection-title">🎨 Ilustrasi: Membandingkan Berat Benda</h3>
+        <p class="concept-text" style="margin-bottom:1rem;">
+          Lihat! Kita bisa menebak berat benda dengan mengangkatnya dan membandingkannya dengan benda lain. Tas sekolah ini terasa sama beratnya dengan 4 buku tebal!
+        </p>
+        <div class="hand-animation">
+          <div class="table-line"></div>
+          <svg class="hand-svg" width="120" height="100" viewBox="0 0 120 100">
+            <g fill="#ffcc99" stroke="#c2185b" stroke-width="2">
+              <rect x="40" y="40" width="50" height="20" rx="5"/>
+              <rect x="45" y="25" width="40" height="20" rx="3" fill="#d4c1e0" stroke="#7c5fa0"/>
+              <line x1="65" y1="25" x2="65" y2="15" stroke="#7c5fa0" stroke-width="3"/>
+              <rect x="60" y="10" width="10" height="8" rx="2" fill="#ff8fb1" stroke="#c2185b"/>
+            </g>
+            <text x="60" y="85" text-anchor="middle" font-size="10" font-weight="bold" fill="#c2185b">Tas = 4 Buku</text>
+          </svg>
+          <div class="hand-count" id="handCount">Tebakan: 4 Buku</div>
+        </div>
+        <button class="action-btn primary" onclick="resetHandAnimation()" style="margin-top:0.5rem;">▶ Putar Lagi</button>
+      </div>
+    </div>
+
+    <!-- BAKU SECTION -->
+    <div class="unit-section" id="section-baku">
+      <div class="concept-card">
+        <h3 class="subsection-title">⚖️ Satuan Baku</h3>
+        <p class="concept-text">
+          Satuan baku adalah satuan yang telah ditetapkan dan digunakan secara internasional. Hasil pengukurannya sama di mana pun dan kapan pun. Satuan baku berat menggunakan <strong>Sistem Internasional (SI)</strong> dengan satuan dasar <strong>kilogram (kg)</strong>.
+        </p>
+        
+        <h3 class="subsection-title" style="margin-top:1.5rem;">🪜 Tangga Satuan Berat (kg - mg)</h3>
+        <p class="concept-text" style="font-size:0.95rem;">Klik dua tangga untuk melihat konversinya!</p>
+        <div class="tangga-container">
+          <div class="tangga-row"><div class="tangga-step" onclick="selectTangga(this, 'kg')">kg</div></div>
+          <div class="tangga-row"><div class="tangga-step" onclick="selectTangga(this, 'hg')">hg (ons)</div></div>
+          <div class="tangga-row"><div class="tangga-step" onclick="selectTangga(this, 'dag')">dag</div></div>
+          <div class="tangga-row"><div class="tangga-step" onclick="selectTangga(this, 'g')">g</div></div>
+          <div class="tangga-row"><div class="tangga-step" onclick="selectTangga(this, 'dg')">dg</div></div>
+          <div class="tangga-row"><div class="tangga-step" onclick="selectTangga(this, 'cg')">cg</div></div>
+          <div class="tangga-row"><div class="tangga-step" onclick="selectTangga(this, 'mg')">mg</div></div>
+        </div>
+        <div class="conversion-display" id="tanggaDisplay">
+          🌸 Pilih dua satuan di tangga untuk melihat konversinya 🌸
+        </div>
+
+        <div style="background:var(--cream); padding:1rem; border-radius:12px; margin-top:1rem; border-left:4px solid var(--rose);">
+          <strong style="color:var(--rose-deep);">💡 Satuan Berat Lainnya:</strong>
+          <ul style="margin-left:1.5rem; margin-top:0.5rem; line-height:1.7;">
+            <li><strong>1 Ton (t)</strong> = 1.000 kg (Untuk benda sangat berat seperti truk)</li>
+            <li><strong>1 Kuintal (kw)</strong> = 100 kg (Untuk hasil tani seperti padi)</li>
+            <li><strong>1 Ons (ons)</strong> = 100 g = 1 hg (Untuk bahan masak)</li>
+            <li><strong>1 Pound (lb)</strong> = 0,45 kg (Sering dipakai di luar negeri)</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="concept-card">
+        <h3 class="subsection-title">🌍 Penggunaan dalam Kehidupan Sehari-hari</h3>
+        <div class="life-examples" id="lifeExamples"></div>
+      </div>
+
+      <div class="concept-card">
+        <h3 class="subsection-title">🔧 Berbagai Jenis Alat Ukur Berat</h3>
+        <div class="tools-grid" id="toolsGrid"></div>
+        <div style="background:var(--cream); padding:1rem; border-radius:12px; margin-top:1rem; border-left:4px solid var(--rose);">
+          <strong style="color:var(--rose-deep);">💡 Cara Membaca Timbangan:</strong>
+          <ol style="margin-left:1.5rem; margin-top:0.5rem; line-height:1.7;">
+            <li>Pastikan timbangan kosong dan jarum/angka menunjuk ke nol (0)</li>
+            <li>Letakkan benda di atas timbangan dengan hati-hati</li>
+            <li>Tunggu hingga angka stabil atau jarum berhenti bergerak</li>
+            <li>Baca angka yang ditunjuk, lalu catat satuannya (kg, g, dll)</li>
+          </ol>
+        </div>
+      </div>
+
+      <!-- 20 Practice Problems -->
+      <div class="concept-card">
+        <h3 class="subsection-title">✏️ Latihan: Baca Hasil Pengukuran</h3>
+        <p style="color:var(--muted); margin-bottom:1rem;">Lihat gambar timbangan, lalu tulis jawabanmu! (20 soal)</p>
+        <div class="problem-container" id="practiceProblem">
+          <!-- Generated by JS -->
+        </div>
+        <div class="problem-nav" style="justify-content:center; display:flex;">
+          <button onclick="prevPractice()">‹</button>
+          <span id="practiceIndicator" style="padding:0.5rem 1rem; font-weight:600; color:var(--rose-deep);">1 / 20</span>
+          <button onclick="nextPractice()">›</button>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" id="practiceProgress"></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 3: GAME - GUESS TOOL ============ -->
+<section class="slide" id="slide3">
+  <div class="slide-content">
+    <h1 class="slide-title">🎮 IT'S GAME TIME! 🎮</h1>
+    <p class="slide-subtitle">Tebak Alat Ukur yang Tepat! 💕</p>
+    
+    <div class="game-score">
+      <div class="score-pill">🎯 Skor: <span id="gameScore">0</span></div>
+      <div class="score-pill">🌸 Benar: <span id="gameCorrect">0</span></div>
+      <div class="score-pill">💔 Salah: <span id="gameWrong">0</span></div>
+    </div>
+
+    <div class="flashcard" id="flashcard">
+      <!-- Generated by JS -->
+    </div>
+
+    <div class="problem-nav" style="justify-content:center; display:flex; margin-top:1.5rem;">
+      <button onclick="prevFlashcard()">‹</button>
+      <span id="flashcardIndicator" style="padding:0.5rem 1rem; font-weight:600; color:var(--rose-deep);">1 / 30</span>
+      <button onclick="nextFlashcard()">›</button>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="flashcardProgress"></div></div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 4: CONVERSION ============ -->
+<section class="slide" id="slide4">
+  <div class="slide-content">
+    <h1 class="slide-title">🔄 Konversi Satuan Baku</h1>
+    <p class="slide-subtitle">Belajar mengubah satuan dengan tangga interaktif 🌸</p>
+
+    <div class="concept-card">
+      <h3 class="subsection-title">🪜 Tangga Konversi Interaktif</h3>
+      <p class="concept-text" style="font-size:0.95rem; margin-bottom:1rem;">
+        Klik satuan asal dan satuan tujuan untuk melihat konversinya!
+      </p>
+      <div class="tangga-interactive">
+        <div class="tangga-stairs" id="interactiveStairs">
+          <div class="stair" onclick="selectInteractiveStair(this, 'kg')">kg</div>
+          <div class="stair" onclick="selectInteractiveStair(this, 'hg')">hg (ons)</div>
+          <div class="stair" onclick="selectInteractiveStair(this, 'dag')">dag</div>
+          <div class="stair" onclick="selectInteractiveStair(this, 'g')">g</div>
+          <div class="stair" onclick="selectInteractiveStair(this, 'dg')">dg</div>
+          <div class="stair" onclick="selectInteractiveStair(this, 'cg')">cg</div>
+          <div class="stair" onclick="selectInteractiveStair(this, 'mg')">mg</div>
+        </div>
+        <div class="tangga-info" id="interactiveInfo">
+          🌸 Pilih dua tangga (asal & tujuan) untuk melihat cara konversi
+        </div>
+      </div>
+    </div>
+
+    <div class="tangga-rules">
+      <div class="rule-card down">
+        <span class="icon">⬇️</span>
+        <div class="title">Turun Tangga</div>
+        <div class="desc">Setiap turun 1 tangga, <strong>dikali 10</strong></div>
+      </div>
+      <div class="rule-card up">
+        <span class="icon">⬆️</span>
+        <div class="title">Naik Tangga</div>
+        <div class="desc">Setiap naik 1 tangga, <strong>dibagi 10</strong></div>
+      </div>
+    </div>
+
+    <div class="conversion-problem" id="conversionProblem">
+      <!-- Generated by JS -->
+    </div>
+
+    <div class="problem-nav" style="justify-content:center; display:flex; margin-top:1rem;">
+      <button onclick="prevConversion()">‹</button>
+      <span id="conversionIndicator" style="padding:0.5rem 1rem; font-weight:600; color:var(--rose-deep);">1 / 30</span>
+      <button onclick="nextConversion()">›</button>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="conversionProgress"></div></div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 5: QUIZ ============ -->
+<section class="slide" id="slide5">
+  <div class="slide-content">
+    <h1 class="slide-title">🏅 KUIS TIME! 🏅</h1>
+    <p class="slide-subtitle">Uji kemampuanmu, semangat ya! 🌟</p>
+
+    <div class="quiz-tabs">
+      <button class="quiz-tab q1 active" onclick="showQuiz('q1')">🎀 Kuis 1: Alat & Benda</button>
+      <button class="quiz-tab q2" onclick="showQuiz('q2')">💖 Kuis 2: Bandingkan</button>
+    </div>
+
+    <!-- QUIZ 1 -->
+    <div class="quiz-section active" id="quiz1">
+      <div class="quiz-question-box" id="quiz1Box">
+        <!-- Generated by JS -->
+      </div>
+      <div class="quiz-actions">
+        <button class="action-btn primary" onclick="checkQuiz1()">✓ Cek Jawaban</button>
+        <button class="action-btn secondary" onclick="nextQuiz1()">Soal Berikutnya →</button>
+      </div>
+      <div style="text-align:center; color:var(--muted); font-size:0.9rem;">
+        Soal <span id="quiz1Num">1</span> dari 10
+      </div>
+    </div>
+
+    <!-- QUIZ 2 -->
+    <div class="quiz-section" id="quiz2">
+      <div class="quiz-question-box" id="quiz2Box">
+        <!-- Generated by JS -->
+      </div>
+      <div class="quiz-actions">
+        <button class="action-btn primary" onclick="checkQuiz2()">✓ Cek Jawaban</button>
+        <button class="action-btn secondary" onclick="nextQuiz2()">Soal Berikutnya →</button>
+      </div>
+      <div style="text-align:center; color:var(--muted); font-size:0.9rem;">
+        Soal <span id="quiz2Num">1</span> dari 10
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 6: MEMORY GAME ============ -->
+<section class="slide" id="slide6">
+  <div class="slide-content">
+    <h1 class="slide-title">🧠 GAME TIME: MEMORY MATCH! 🧠</h1>
+    <p class="slide-subtitle">Cocokkan pasangan satuan yang sama nilainya! 💕</p>
+
+    <div class="memory-stats">
+      <div class="stat-pill">🎮 Ronde: <span id="memoryRound">1</span>/5</div>
+      <div class="stat-pill">⭐ Skor: <span id="memoryScore">0</span></div>
+      <div class="stat-pill">🎯 Pasangan: <span id="memoryMatched">0</span>/<span id="memoryTotal">0</span></div>
+    </div>
+
+    <div class="memory-message" id="memoryMessage">
+      👀 Lihat semua kartu selama 10 detik, lalu ingat pasangannya!
+    </div>
+
+    <div class="timer-display" id="memoryTimer">⏱️ 10</div>
+
+    <div class="memory-grid cols-4" id="memoryGrid">
+      <!-- Generated by JS -->
+    </div>
+
+    <div class="memory-controls">
+      <button class="action-btn primary" id="memoryStartBtn" onclick="startMemoryGame()">▶ Mulai Ronde</button>
+      <button class="action-btn secondary" id="memoryNextBtn" onclick="nextMemoryRound()" style="display:none;">Ronde Berikutnya →</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 7: REFLECTION ============ -->
+<section class="slide" id="slide7">
+  <div class="slide-content">
+    <div class="reflection-card">
+      <span class="thank-emoji">🌷</span>
+      <h2 class="reflection-title">Refleksi & Kesimpulan</h2>
+      
+      <div style="text-align:left; margin:1.5rem 0;">
+        <p style="font-size:1.05rem; line-height:1.8; color:var(--dark);">
+          <strong style="color:var(--rose-deep);">Hai <span id="finalName">Sayang</span>! 🌸</strong><br><br>
+          Hari ini kita telah belajar banyak hal tentang <strong>pengukuran berat</strong>. Berikut hal-hal yang sudah kita pelajari bersama:
+        </p>
+        
+        <ul class="reflection-list">
+          <li><strong>Berat</strong> adalah seberapa berat atau ringan suatu benda.</li>
+          <li><strong>Satuan tidak baku</strong>: membandingkan dengan benda lain seperti batu bata atau buku.</li>
+          <li><strong>Satuan baku</strong>: ton, kuintal, kg, ons, g, mg — sama di seluruh dunia!</li>
+          <li><strong>Alat ukur</strong>: timbangan digital, timbangan duduk, neraca, jembatan timbang, dll.</li>
+          <li><strong>Konversi</strong>: turun tangga ×10, naik tangga ÷10. 1 ton = 1000 kg, 1 kuintal = 100 kg.</li>
+          <li><strong>Membandingkan</strong>: ubah ke satuan yang sama dulu sebelum membandingkan!</li>
+        </ul>
+
+        <p style="font-size:1.05rem; line-height:1.8; color:var(--dark); margin-top:1rem;">
+          🌷 <strong>Pertanyaan Refleksi untukmu:</strong>
+          <br>• Bagian mana yang paling kamu sukai hari ini?
+          <br>• Apa yang menurutmu masih sulit?
+          <br>• Kapan kamu akan menggunakan ilmu ini di kehidupan sehari-hari?
+        </p>
+      </div>
+
+      <div class="score-summary">
+        <div class="label">Total Skor Petualanganmu</div>
+        <div class="value" id="totalScore">0</div>
+        <div style="margin-top:0.5rem; color:var(--muted); font-size:0.9rem;">Kumpulkan dari semua permainan dan kuis ya! 💕</div>
+      </div>
+
+      <div class="thank-you">Thank you for today! 💕</div>
+      <p style="color:var(--muted); font-size:1rem; margin-top:0.5rem;">
+        Kamu sudah hebat! Terus belajar dan jangan pernah berhenti bertanya ya cantik 🌸✨
+      </p>
+      
+      <button class="action-btn primary" onclick="restartAdventure()" style="margin-top:1.5rem;">🔄 Mulai Lagi dari Awal</button>
+    </div>
+  </div>
+</section>
+
+<!-- Navigation -->
+<div class="nav-bar">
+  <button class="nav-btn" onclick="prevSlide()" id="prevBtn">‹</button>
+  <span class="slide-indicator" id="slideIndicator">1 / 7</span>
+  <button class="nav-btn" onclick="nextSlide()" id="nextBtn">›</button>
+</div>
+
+<script>
+// ============ STATE ============
+let currentSlide = 1;
+let totalSlides = 7;
+let studentName = "Sayang";
+let totalGameScore = 0;
+
+// ============ TOOL IMAGES ============
+const toolImages = {
+  timbanganDuduk: 'https://i0.wp.com/rezekibarokah.com/wp-content/uploads/2021/05/Timbangan-Duduk.jpg',
+  timbanganRumahan: 'https://i0.wp.com/rezekibarokah.com/wp-content/uploads/2021/05/Timbangan-Duduk-rumahan-1142x1536.jpg',
+  neraca2Lengan: 'https://i0.wp.com/rezekibarokah.com/wp-content/uploads/2021/05/Neraca-2-Lengan.jpg',
+  neracaLenganGantung: 'https://i0.wp.com/rezekibarokah.com/wp-content/uploads/2021/05/Neraca-Lengan-Gantung.jpg',
+  neracaOhaus: 'https://i0.wp.com/rezekibarokah.com/wp-content/uploads/2021/05/Neraca-Ohaus.jpg',
+  timbanganBadanTinggi: 'https://i0.wp.com/rezekibarokah.com/wp-content/uploads/2021/05/Timbangan-Berat-dan-Tinggi-Badan.jpg',
+  timbanganAnalog: 'https://i0.wp.com/rezekibarokah.com/wp-content/uploads/2021/05/Timbangan-Berat-Badan-Analog.jpg',
+  timbanganBayi: 'https://i0.wp.com/rezekibarokah.com/wp-content/uploads/2021/05/Timbangan-Berat-Badan-Badan-Bayi-1536x1025.jpg',
+  timbanganDigital: 'https://i0.wp.com/rezekibarokah.com/wp-content/uploads/2021/05/Timbangan-Digital.jpg',
+  timbanganKodok: 'https://i0.wp.com/rezekibarokah.com/wp-content/uploads/2021/05/Timbangan-Kodok.jpg',
+  timbanganGantung: 'https://i0.wp.com/rezekibarokah.com/wp-content/uploads/2021/05/Timbangan-Gantung.jpg',
+  jembatanTimbang: 'https://i0.wp.com/rezekibarokah.com/wp-content/uploads/2021/05/Jembatan-Timbang-Weighbridge.jpg'
+};
+
+function toolImg(key, alt = 'Alat ukur', cls = 'tool-img') {
+  return `<img src="${toolImages[key]}" alt="${alt}" class="${cls}" loading="lazy" onerror="this.style.display='none'">`;
+}
+
+// ============ DYNAMIC SVG: DIGITAL SCALE ============
+function renderDigitalScale(weight, unit) {
+  return `<svg viewBox="0 0 200 120" xmlns="http://www.w3.org/2000/svg" style="width:100%; max-width:300px;">
+    <rect x="10" y="10" width="180" height="100" fill="#e8829b" rx="10"/>
+    <rect x="20" y="20" width="160" height="40" fill="#fff5f8" rx="5"/>
+    <text x="100" y="48" text-anchor="middle" font-size="22" font-weight="bold" fill="#c2185b" font-family="Quicksand">${weight} ${unit}</text>
+    <rect x="80" y="60" width="40" height="20" fill="#9c80b8"/>
+    <rect x="40" y="75" width="120" height="20" fill="#5d3a4a" rx="5"/>
+    <circle cx="60" cy="85" r="3" fill="#fff5f8"/>
+    <circle cx="140" cy="85" r="3" fill="#fff5f8"/>
+  </svg>`;
+}
+
+// ============ DATA: Life Examples ============
+const lifeExamples = [
+  { emoji: '🚗', title: 'Berat Mobil', desc: 'Berat mobil kira-kira 1 ton' },
+  { emoji: '🐘', title: 'Berat Gajah', desc: 'Gajah dewasa bisa mencapai 4 ton' },
+  { emoji: '👨', title: 'Berat Badan', desc: 'Berat siswa SD rata-rata 30 kg' },
+  { emoji: '🍚', title: 'Beras', desc: 'Satu karung beras beratnya 50 kg' },
+  { emoji: '🍎', title: 'Apel', desc: 'Satu apel beratnya 150 g' },
+  { emoji: '💊', title: 'Tablet Obat', desc: 'Satu tablet obat beratnya 500 mg' },
+  { emoji: '✉️', title: 'Surat', desc: 'Satu lembar surat beratnya 2 g' },
+  { emoji: '🐟', title: 'Ikan', desc: 'Ikan di pasar diukur menggunakan ons atau kg' }
+];
+
+// ============ DATA: Tools (with images) ============
+const tools = [
+  { name: 'Timbangan Duduk', img: 'timbanganDuduk', how: 'Di pasar, untuk sayur & buah' },
+  { name: 'Timbangan Rumahan', img: 'timbanganRumahan', how: 'Di dapur, untuk bahan masak' },
+  { name: 'Neraca 2 Lengan', img: 'neraca2Lengan', how: 'Di lab sekolah' },
+  { name: 'Neraca Lengan Gantung', img: 'neracaLenganGantung', how: 'Menggantung, untuk ikan/hasil tani' },
+  { name: 'Neraca Ohaus', img: 'neracaOhaus', how: 'Di lab, presisi 0.1 g' },
+  { name: 'Timbangan Badan', img: 'timbanganBadanTinggi', how: 'Di klinik/puskesmas' },
+  { name: 'Timbangan Analog', img: 'timbanganAnalog', how: 'Di kamar mandi, untuk berat badan' },
+  { name: 'Timbangan Bayi', img: 'timbanganBayi', how: 'Khusus untuk menimbang bayi' },
+  { name: 'Timbangan Digital', img: 'timbanganDigital', how: 'Praktis, otomatis menampilkan angka' },
+  { name: 'Timbangan Kodok', img: 'timbanganKodok', how: 'Di pasar tradisional' },
+  { name: 'Timbangan Gantung', img: 'timbanganGantung', how: 'Untuk bagasi/kipas' },
+  { name: 'Jembatan Timbang', img: 'jembatanTimbang', how: 'Untuk truk & container besar' }
+];
+
+// ============ DATA: 20 Practice Problems ============
+const practiceProblems = [
+  { name: 'Apel', weight: 150, unit: 'g' },
+  { name: 'Gula Pasir', weight: 1, unit: 'kg' },
+  { name: 'Beras', weight: 5, unit: 'kg' },
+  { name: 'Buku', weight: 300, unit: 'g' },
+  { name: 'Pulpen', weight: 20, unit: 'g' },
+  { name: 'Pensil', weight: 10, unit: 'g' },
+  { name: 'Penghapus', weight: 15, unit: 'g' },
+  { name: 'Sepatu', weight: 400, unit: 'g' },
+  { name: 'Tas Sekolah', weight: 2, unit: 'kg' },
+  { name: 'Bayi', weight: 4, unit: 'kg' },
+  { name: 'Kucing', weight: 3, unit: 'kg' },
+  { name: 'Anjing', weight: 8, unit: 'kg' },
+  { name: 'Koin', weight: 5, unit: 'g' },
+  { name: 'Smartphone', weight: 200, unit: 'g' },
+  { name: 'Laptop', weight: 2, unit: 'kg' },
+  { name: 'Botol Air', weight: 500, unit: 'g' },
+  { name: 'Semangka', weight: 4, unit: 'kg' },
+  { name: 'Nanas', weight: 1, unit: 'kg' },
+  { name: 'Melon', weight: 2, unit: 'kg' },
+  { name: 'Jeruk', weight: 100, unit: 'g' }
+];
+
+// ============ DATA: 30 Flash Cards ============
+const flashcards = [
+  { type: 'image', q: 'Apa nama alat ukur pada gambar di bawah ini?', img: 'timbanganDuduk', options: ['Timbangan Duduk', 'Neraca Ohaus', 'Timbangan Kodok', 'Timbangan Bayi'], answer: 0 },
+  { type: 'image', q: 'Apa nama alat ukur pada gambar di bawah ini?', img: 'timbanganRumahan', options: ['Timbangan Digital', 'Timbangan Rumahan', 'Neraca 2 Lengan', 'Jembatan Timbang'], answer: 1 },
+  { type: 'image', q: 'Apa nama alat ukur pada gambar di bawah ini?', img: 'neraca2Lengan', options: ['Neraca Ohaus', 'Timbangan Gantung', 'Neraca 2 Lengan', 'Timbangan Kodok'], answer: 2 },
+  { type: 'image', q: 'Apa nama alat ukur pada gambar di bawah ini?', img: 'neracaLenganGantung', options: ['Neraca Lengan Gantung', 'Timbangan Analog', 'Timbangan Bayi', 'Neraca 2 Lengan'], answer: 0 },
+  { type: 'image', q: 'Apa nama alat ukur pada gambar di bawah ini?', img: 'neracaOhaus', options: ['Neraca Ohaus', 'Timbangan Digital', 'Timbangan Duduk', 'Neraca Lengan Gantung'], answer: 0 },
+  { type: 'image', q: 'Apa nama alat ukur pada gambar di bawah ini?', img: 'timbanganBadanTinggi', options: ['Timbangan Bayi', 'Timbangan Badan Tinggi', 'Timbangan Analog', 'Jembatan Timbang'], answer: 1 },
+  { type: 'image', q: 'Apa nama alat ukur pada gambar di bawah ini?', img: 'timbanganAnalog', options: ['Timbangan Analog', 'Timbangan Digital', 'Neraca Ohaus', 'Timbangan Kodok'], answer: 0 },
+  { type: 'image', q: 'Apa nama alat ukur pada gambar di bawah ini?', img: 'timbanganBayi', options: ['Timbangan Duduk', 'Timbangan Bayi', 'Timbangan Rumahan', 'Neraca 2 Lengan'], answer: 1 },
+  { type: 'image', q: 'Apa nama alat ukur pada gambar di bawah ini?', img: 'timbanganDigital', options: ['Timbangan Analog', 'Timbangan Gantung', 'Timbangan Digital', 'Neraca Lengan Gantung'], answer: 2 },
+  { type: 'image', q: 'Apa nama alat ukur pada gambar di bawah ini?', img: 'timbanganKodok', options: ['Timbangan Kodok', 'Jembatan Timbang', 'Timbangan Digital', 'Neraca Ohaus'], answer: 0 },
+  { type: 'image', q: 'Apa nama alat ukur pada gambar di bawah ini?', img: 'timbanganGantung', options: ['Timbangan Gantung', 'Timbangan Analog', 'Neraca 2 Lengan', 'Timbangan Bayi'], answer: 0 },
+  { type: 'image', q: 'Apa nama alat ukur pada gambar di bawah ini?', img: 'jembatanTimbang', options: ['Jembatan Timbang', 'Timbangan Kodok', 'Neraca Lengan Gantung', 'Timbangan Duduk'], answer: 0 },
+  { type: 'image', q: 'Alat apa yang digunakan di pasar tradisional dengan bentuk seperti kodok?', img: 'timbanganKodok', options: ['Timbangan Digital', 'Timbangan Kodok', 'Neraca Ohaus', 'Jembatan Timbang'], answer: 1 },
+  { type: 'image', q: 'Alat apa yang digunakan khusus untuk menimbang berat bayi?', img: 'timbanganBayi', options: ['Timbangan Bayi', 'Timbangan Analog', 'Timbangan Badan Tinggi', 'Neraca 2 Lengan'], answer: 0 },
+  { type: 'image', q: 'Alat apa yang digunakan untuk menimbang truk besar?', img: 'jembatanTimbang', options: ['Jembatan Timbang', 'Timbangan Gantung', 'Neraca Ohaus', 'Timbangan Duduk'], answer: 0 },
+  { type: 'scenario', q: 'Bu Ani ingin menimbang berat badannya di kamar mandi. Alat apa yang dipakai?', options: ['Timbangan Analog', 'Neraca Ohaus', 'Jembatan Timbang', 'Timbangan Kodok'], answer: 0 },
+  { type: 'scenario', q: 'Pak Tani ingin menjual padi di koperasi. Alat apa yang dipakai?', options: ['Neraca Lengan Gantung', 'Timbangan Bayi', 'Jembatan Timbang', 'Neraca Ohaus'], answer: 0 },
+  { type: 'scenario', q: 'Dokter ingin menimbang berat bayi yang baru lahir. Alat apa yang dipakai?', options: ['Timbangan Bayi', 'Timbangan Badan Tinggi', 'Timbangan Duduk', 'Neraca 2 Lengan'], answer: 0 },
+  { type: 'scenario', q: 'Seorang ilmuwan ingin menimbang bahan kimia dengan presisi di lab. Alat apa yang dipakai?', options: ['Neraca Ohaus', 'Timbangan Kodok', 'Timbangan Gantung', 'Jembatan Timbang'], answer: 0 },
+  { type: 'scenario', q: 'Pedagang sayur di pasar ingin menimbang tomat. Alat apa yang dipakai?', options: ['Timbangan Kodok', 'Timbangan Bayi', 'Neraca Ohaus', 'Timbangan Analog'], answer: 0 },
+  { type: 'scenario', q: 'Ibu ingin menimbang tepung terigu untuk membuat kue di dapur. Alat apa yang dipakai?', options: ['Timbangan Rumahan', 'Timbangan Gantung', 'Jembatan Timbang', 'Timbangan Badan Tinggi'], answer: 0 },
+  { type: 'scenario', q: 'Petugas pos ingin menimbang berat paket. Alat apa yang dipakai?', options: ['Timbangan Gantung', 'Neraca 2 Lengan', 'Timbangan Bayi', 'Jembatan Timbang'], answer: 0 },
+  { type: 'scenario', q: 'Siswa ingin menimbang batu di lab sekolah menggunakan alat manual. Alat apa yang dipakai?', options: ['Neraca 2 Lengan', 'Timbangan Analog', 'Timbangan Digital', 'Timbangan Kodok'], answer: 0 },
+  { type: 'scenario', q: 'Pengemudi truk ingin memastikan muatannya tidak berlebihan. Alat apa yang dipakai?', options: ['Jembatan Timbang', 'Timbangan Gantung', 'Neraca Ohaus', 'Timbangan Duduk'], answer: 0 },
+  { type: 'scenario', q: 'Puskesmas ingin menimbang berat dan tinggi badan balita. Alat apa yang dipakai?', options: ['Timbangan Badan Tinggi', 'Neraca Ohaus', 'Timbangan Kodok', 'Timbangan Rumahan'], answer: 0 },
+  { type: 'scenario', q: 'Penjual ikan di pinggir jalan ingin menimbang ikan secara mudah dibawa. Alat apa yang dipakai?', options: ['Timbangan Kodok', 'Jembatan Timbang', 'Timbangan Badan Tinggi', 'Neraca Ohaus'], answer: 0 },
+  { type: 'scenario', q: 'Ibu ingin menimbang berat emas dengan presisi tinggi. Alat apa yang dipakai?', options: ['Timbangan Digital', 'Timbangan Kodok', 'Neraca Lengan Gantung', 'Timbangan Bayi'], answer: 0 },
+  { type: 'scenario', q: 'Tukang kayu ingin menimbang bahan bangunan curah. Alat apa yang dipakai?', options: ['Timbangan Duduk', 'Neraca 2 Lengan', 'Timbangan Bayi', 'Neraca Ohaus'], answer: 0 },
+  { type: 'scenario', q: 'Pak Andi ingin menimbang koper di bandara. Alat apa yang dipakai?', options: ['Timbangan Gantung', 'Timbangan Analog', 'Neraca Ohaus', 'Timbangan Bayi'], answer: 0 },
+  { type: 'scenario', q: 'Siswa IPA ingin menimbang garam dengan teliti. Alat apa yang dipakai?', options: ['Neraca Ohaus', 'Timbangan Kodok', 'Jembatan Timbang', 'Timbangan Analog'], answer: 0 }
+];
+
+// ============ DATA: 30 Conversion Problems ============
+const conversionProblems = [
+  { value: 2, from: 'kg', to: 'g', answer: 2000, exp: 'Turun 3 tangga dari kg ke g = ×1000. Jadi 2 × 1000 = 2000 g' },
+  { value: 5, from: 'kg', to: 'ons', answer: 50, exp: '1 kg = 10 ons. Jadi 5 × 10 = 50 ons' },
+  { value: 3, from: 'ton', to: 'kg', answer: 3000, exp: '1 ton = 1000 kg. Jadi 3 × 1000 = 3000 kg' },
+  { value: 1, from: 'kuintal', to: 'kg', answer: 100, exp: '1 kuintal = 100 kg. Jadi 1 × 100 = 100 kg' },
+  { value: 4, from: 'kg', to: 'g', answer: 4000, exp: 'Turun 3 tangga = ×1000. Jadi 4 × 1000 = 4000 g' },
+  { value: 7, from: 'hg', to: 'g', answer: 700, exp: 'Turun 2 tangga = ×100. Jadi 7 × 100 = 700 g' },
+  { value: 2, from: 'ons', to: 'g', answer: 200, exp: '1 ons = 100 g (1 hg). Jadi 2 × 100 = 200 g' },
+  { value: 6, from: 'kg', to: 'ons', answer: 60, exp: '1 kg = 10 ons. Jadi 6 × 10 = 60 ons' },
+  { value: 8, from: 'kuintal', to: 'kg', answer: 800, exp: '1 kuintal = 100 kg. Jadi 8 × 100 = 800 kg' },
+  { value: 4, from: 'ton', to: 'kuintal', answer: 40, exp: '1 ton = 10 kuintal. Jadi 4 × 10 = 40 kuintal' },
+  { value: 5, from: 'kg', to: 'hg', answer: 50, exp: 'Turun 1 tangga = ×10. Jadi 5 × 10 = 50 hg' },
+  { value: 3, from: 'kg', to: 'ons', answer: 30, exp: '1 kg = 10 ons. Jadi 3 × 10 = 30 ons' },
+  { value: 2, from: 'ton', to: 'kg', answer: 2000, exp: '1 ton = 1000 kg. Jadi 2 × 1000 = 2000 kg' },
+  { value: 9, from: 'hg', to: 'g', answer: 900, exp: 'Turun 2 tangga = ×100. Jadi 9 × 100 = 900 g' },
+  { value: 6, from: 'ons', to: 'g', answer: 600, exp: '1 ons = 100 g. Jadi 6 × 100 = 600 g' },
+  { value: 7, from: 'g', to: 'mg', answer: 7000, exp: 'Turun 3 tangga = ×1000. Jadi 7 × 1000 = 7000 mg' },
+  { value: 50, from: 'ons', to: 'kg', answer: 5, exp: '10 ons = 1 kg. Jadi 50 ÷ 10 = 5 kg' },
+  { value: 600, from: 'g', to: 'kg', answer: 0.6, exp: 'Naik 3 tangga = ÷1000. Jadi 600 ÷ 1000 = 0,6 kg' },
+  { value: 8000, from: 'g', to: 'kg', answer: 8, exp: 'Naik 3 tangga = ÷1000. Jadi 8000 ÷ 1000 = 8 kg' },
+  { value: 4000, from: 'kg', to: 'ton', answer: 4, exp: '1000 kg = 1 ton. Jadi 4000 ÷ 1000 = 4 ton' },
+  { value: 30, from: 'kg', to: 'ons', answer: 300, exp: '1 kg = 10 ons. Jadi 30 × 10 = 300 ons' },
+  { value: 500, from: 'g', to: 'ons', answer: 5, exp: '100 g = 1 ons. Jadi 500 ÷ 100 = 5 ons' },
+  { value: 7000, from: 'mg', to: 'g', answer: 7, exp: 'Naik 3 tangga = ÷1000. Jadi 7000 ÷ 1000 = 7 g' },
+  { value: 9, from: 'kuintal', to: 'kg', answer: 900, exp: '1 kuintal = 100 kg. Jadi 9 × 100 = 900 kg' },
+  { value: 20, from: 'kuintal', to: 'ton', answer: 2, exp: '10 kuintal = 1 ton. Jadi 20 ÷ 10 = 2 ton' },
+  { value: 5, from: 'ton', to: 'kuintal', answer: 50, exp: '1 ton = 10 kuintal. Jadi 5 × 10 = 50 kuintal' },
+  { value: 12, from: 'kg', to: 'g', answer: 12000, exp: 'Turun 3 tangga = ×1000. Jadi 12 × 1000 = 12000 g' },
+  { value: 25, from: 'ons', to: 'kg', answer: 2.5, exp: '10 ons = 1 kg. Jadi 25 ÷ 10 = 2,5 kg' },
+  { value: 150, from: 'kg', to: 'kuintal', answer: 1.5, exp: '100 kg = 1 kuintal. Jadi 150 ÷ 100 = 1,5 kuintal' },
+  { value: 3, from: 'kg', to: 'hg', answer: 30, exp: 'Turun 1 tangga = ×10. Jadi 3 × 10 = 30 hg' }
+];
+
+// ============ DATA: Quiz 1 - tool & items ============
+const quiz1Data = [
+  { tool: 'Timbangan Bayi', correctItems: ['Bayi', 'Selimut tipis', 'Botol susu', 'Popok', 'Gendongan bayi'], wrongItems: ['Truk', 'Mobil', 'Padi', 'Gajah', 'Semangka', 'Kulkas', 'Ayam', 'Buku', 'Pulpen', 'Koin', 'Ikan', 'Beras', 'Tepung', 'Gula', 'Meja'] },
+  { tool: 'Jembatan Timbang', correctItems: ['Truk', 'Mobil', 'Bus', 'Container', 'Gerbong Kereta'], wrongItems: ['Bayi', 'Apel', 'Pulpen', 'Penghapus', 'Jarum', 'Krayon', 'Tusuk Gigi', 'Sekrup', 'Paku', 'Spidol', 'Baterai', 'Klip Kertas', 'Sedotan', 'Surat', 'Korek Api'] },
+  { tool: 'Neraca Ohaus', correctItems: ['Garam', 'Gula pasir', 'Tepung', 'Batu kecil', 'Logam kecil'], wrongItems: ['Truk', 'Manusia', 'Lemari', 'Pohon', 'Mobil', 'Rumah', 'Jalan', 'Sungai', 'Jembatan', 'Kapal', 'Pintu', 'Tali', 'Kamar', 'Kolam', 'Taman'] },
+  { tool: 'Timbangan Digital', correctItems: ['Emas', 'Perhiasan', 'Surat', 'Koin', 'Gula sedikit'], wrongItems: ['Truk', 'Mobil', 'Padi', 'Gajah', 'Manusia', 'Kulkas', 'Lemari', 'Meja', 'Pintu', 'Kamar', 'Kolam', 'Pohon', 'Taman', 'Rumah', 'Jalan'] },
+  { tool: 'Timbangan Kodok', correctItems: ['Ikan', 'Sayur', 'Buah', 'Ayam', 'Daging'], wrongItems: ['Truk', 'Gajah', 'Mobil', 'Manusia', 'Kulkas', 'Lemari', 'Pohon', 'Rumah', 'Jalan', 'Kolam', 'Kapal', 'Taman', 'Jembatan', 'Sungai', 'Lapangan'] },
+  { tool: 'Timbangan Analog', correctItems: ['Berat Badan Manusia', 'Tas Berat', 'Paket Besar', 'Anjing', 'Kucing'], wrongItems: ['Jarum', 'Koin', 'Surat', 'Pulpen', 'Tusuk Gigi', 'Klip Kertas', 'Penghapus', 'Krayon', 'Tablet Obat', 'Spidol', 'Baterai', 'Sedotan', 'Garam', 'Tepung', 'Logam Kecil'] },
+  { tool: 'Timbangan Badan Tinggi', correctItems: ['Berat Badan Siswa', 'Berat Badan Guru', 'Berat Badan Ibu', 'Berat Badan Kakek', 'Berat Badan Nenek'], wrongItems: ['Truk', 'Gajah', 'Mobil', 'Kulkas', 'Lemari', 'Pohon', 'Rumah', 'Jalan', 'Kolam', 'Kapal', 'Taman', 'Jembatan', 'Sungai', 'Lapangan', 'Padi'] },
+  { tool: 'Timbangan Rumahan', correctItems: ['Tepung', 'Gula', 'Garam', 'Minyak', 'Berat Bahan Kue'], wrongItems: ['Berat Manusia', 'Truk', 'Mobil', 'Kulkas', 'Gajah', 'Lemari', 'Pohon', 'Rumah', 'Jalan', 'Kolam', 'Kapal', 'Taman', 'Jembatan', 'Sungai', 'Lapangan'] },
+  { tool: 'Neraca 2 Lengan', correctItems: ['Batu Kecil', 'Logam', 'Plastisin', 'Kapur', 'Pensil'], wrongItems: ['Truk', 'Manusia', 'Lemari', 'Pohon', 'Mobil', 'Rumah', 'Jalan', 'Sungai', 'Jembatan', 'Kapal', 'Pintu', 'Tali', 'Kamar', 'Kolam', 'Taman'] },
+  { tool: 'Timbangan Duduk', correctItems: ['Sayur', 'Buah', 'Ikan', 'Beras 5 kg', 'Daging'], wrongItems: ['Truk', 'Gajah', 'Mobil', 'Kulkas', 'Lemari', 'Pohon', 'Rumah', 'Jalan', 'Kolam', 'Kapal', 'Taman', 'Jembatan', 'Sungai', 'Lapangan', 'Padi'] }
+];
+
+// ============ DATA: Quiz 2 - comparison ============
+const quiz2Data = [
+  { objA: { name: 'Apel A', emoji: '🍎', value: 200, unit: 'g' }, objB: { name: 'Jeruk B', emoji: '🍊', value: 2, unit: 'ons' }, answer: 'same' },
+  { objA: { name: 'Bayi A', emoji: '👶', value: 3, unit: 'kg' }, objB: { name: 'Kucing B', emoji: '🐱', value: 2500, unit: 'g' }, answer: 'A' },
+  { objA: { name: 'Beras A', emoji: '🍚', value: 5, unit: 'kg' }, objB: { name: 'Beras B', emoji: '🍚', value: 40, unit: 'ons' }, answer: 'A' },
+  { objA: { name: 'Semangka A', emoji: '🍉', value: 2, unit: 'kg' }, objB: { name: 'Nanas B', emoji: '🍍', value: 2500, unit: 'g' }, answer: 'B' },
+  { objA: { name: 'Gula A', emoji: '🍬', value: 500, unit: 'g' }, objB: { name: 'Gula B', emoji: '🍬', value: 5, unit: 'ons' }, answer: 'same' },
+  { objA: { name: 'Truk A', emoji: '🚚', value: 2, unit: 'ton' }, objB: { name: 'Mobil B', emoji: '🚗', value: 1500, unit: 'kg' }, answer: 'A' },
+  { objA: { name: 'Emas A', emoji: '👑', value: 50, unit: 'g' }, objB: { name: 'Perak B', emoji: '💍', value: 5, unit: 'ons' }, answer: 'B' },
+  { objA: { name: 'Buku A', emoji: '📚', value: 300, unit: 'g' }, objB: { name: 'Pulpen B', emoji: '🖊️', value: 20, unit: 'g' }, answer: 'A' },
+  { objA: { name: 'Tas A', emoji: '🎒', value: 1.5, unit: 'kg' }, objB: { name: 'Sepatu B', emoji: '👟', value: 1200, unit: 'g' }, answer: 'A' },
+  { objA: { name: 'Sapi A', emoji: '🐄', value: 4, unit: 'kuintal' }, objB: { name: 'Kuda B', emoji: '🐎', value: 350, unit: 'kg' }, answer: 'A' }
+];
+
+// ============ DATA: Memory Game Rounds ============
+// Setiap pasangan di dalam ronde memiliki angka depan yang berbeda-beda (1, 2, 3, dst.)
+// sehingga siswa tidak bingung dan tidak ada teks yang sama persis di satu ronde.
+const memoryRounds = [
+  { pairs: [['1 kg', '10 ons'], ['2 ons', '200 g'], ['3 ton', '3000 kg'], ['4 kg', '4000 g'], ['5 kuintal', '500 kg'], ['6 ton', '60 kuintal']], cols: 4 },
+  { pairs: [['2 kg', '2000 g'], ['3 ons', '300 g'], ['4 ton', '4000 kg'], ['5 kg', '50 ons'], ['6 kuintal', '600 kg'], ['7 ton', '7000 kg']], cols: 4 },
+  { pairs: [['1 ton', '10 kuintal'], ['2 kg', '2000 g'], ['3 ons', '300 g'], ['4 ton', '40 kuintal'], ['5 kg', '5000 g'], ['6 kuintal', '600 kg'], ['7 ons', '700 g'], ['8 kg', '80 ons']], cols: 4 },
+  { pairs: [['1 kg', '1000 g'], ['2 ton', '2000 kg'], ['3 kuintal', '300 kg'], ['4 kg', '40 ons'], ['5 ons', '500 g'], ['6 ton', '60 kuintal'], ['7 kg', '7000 g'], ['9 kuintal', '900 kg']], cols: 4 },
+  { pairs: [['1 ons', '100 g'], ['2 ton', '20 kuintal'], ['3 kg', '3000 g'], ['4 kuintal', '400 kg'], ['5 ton', '5000 kg'], ['6 kg', '60 ons'], ['7 kuintal', '700 kg'], ['8 ons', '800 g'], ['9 ton', '9000 kg'], ['10 kg', '100 ons']], cols: 5 }
+];
+
+// ============ NAVIGATION ============
+function showSlide(num) {
+  document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
+  document.getElementById('slide' + num).classList.add('active');
+  currentSlide = num;
+  document.getElementById('slideIndicator').textContent = `${num} / ${totalSlides}`;
+  document.getElementById('prevBtn').disabled = num === 1;
+  document.getElementById('nextBtn').disabled = num === totalSlides;
+  window.scrollTo(0, 0);
+}
+
+function nextSlide() {
+  if (currentSlide < totalSlides) {
+    showSlide(currentSlide + 1);
+    if (currentSlide === 7) updateTotalScore();
+  }
+}
+
+function prevSlide() {
+  if (currentSlide > 1) showSlide(currentSlide - 1);
+}
+
+// ============ SLIDE 1: Cover ============
+function startAdventure() {
+  const name = document.getElementById('studentName').value.trim();
+  if (name) {
+    studentName = name;
+    document.getElementById('nameDisplay').textContent = studentName;
+    document.getElementById('finalName').textContent = studentName;
+    showSlide(2);
+    spawnConfetti();
+  } else {
+    alert('Isi nama dulu ya cantik! 💕');
+  }
+}
+
+// ============ SLIDE 2: Concept ============
+function showUnit(type) {
+  document.querySelectorAll('.unit-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.unit-section').forEach(s => s.classList.remove('active'));
+  
+  if (type === 'baku') {
+    document.querySelector('.unit-btn.baku').classList.add('active');
+    document.getElementById('section-baku').classList.add('active');
+    renderLifeExamples();
+    renderTools();
+    renderPractice();
+  } else {
+    document.querySelector('.unit-btn.tidak-baku').classList.add('active');
+    document.getElementById('section-tidak-baku').classList.add('active');
+    startHandAnimation();
+  }
+}
+
+let handInterval;
+function startHandAnimation() {
+  const counter = document.getElementById('handCount');
+  counter.textContent = 'Tebakan: 4 Buku';
+  clearInterval(handInterval);
+  let step = 0;
+  handInterval = setInterval(() => {
+    step++;
+    if (step % 2 === 0) counter.textContent = 'Tebakan: 4 Buku';
+    else counter.textContent = 'Terasa Berat! 🌸';
+    if (step >= 4) {
+      setTimeout(() => {
+        clearInterval(handInterval);
+        counter.textContent = 'Tebakan: 4 Buku ✓';
+      }, 500);
+    }
+  }, 1600);
+}
+
+function resetHandAnimation() {
+  startHandAnimation();
+}
+
+// Tangga satuan (slide 2 - baku)
+let tanggaSelections = [];
+function selectTangga(el, unit) {
+  document.querySelectorAll('#section-baku .tangga-step').forEach(s => {
+    s.classList.remove('selected', 'target');
+  });
+  tanggaSelections.push(unit);
+  if (tanggaSelections.length > 2) tanggaSelections = [unit];
+  
+  if (tanggaSelections.length === 2) {
+    const [from, to] = tanggaSelections;
+    const units = ['kg', 'hg', 'dag', 'g', 'dg', 'cg', 'mg'];
+    const fromIdx = units.indexOf(from);
+    const toIdx = units.indexOf(to);
+    const diff = toIdx - fromIdx;
+    const factor = Math.pow(10, Math.abs(diff));
+    const direction = diff > 0 ? 'turun' : 'naik';
+    const steps = Math.abs(diff);
+    
+    const display = document.getElementById('tanggaDisplay');
+    if (diff === 0) {
+      display.innerHTML = `🌸 Satuan sama! ${from} = ${to}`;
+    } else {
+      display.innerHTML = `
+        Dari <strong>${from}</strong> ke <strong>${to}</strong>: <br>
+        ${direction} ${steps} tangga = ${direction === 'turun' ? '×' : '÷'} ${factor}<br>
+        Contoh: <strong>1 ${from} = ${direction === 'turun' ? factor : '1/' + factor} ${to}</strong>
+      `;
+    }
+    const allSteps = document.querySelectorAll('#section-baku .tangga-step');
+    allSteps[fromIdx].classList.add('selected');
+    allSteps[toIdx].classList.add('target');
+  }
+}
+
+function renderLifeExamples() {
+  const container = document.getElementById('lifeExamples');
+  container.innerHTML = lifeExamples.map(e => `
+    <div class="life-card">
+      <span class="emoji">${e.emoji}</span>
+      <div class="title">${e.title}</div>
+      <div class="desc">${e.desc}</div>
+    </div>
+  `).join('');
+}
+
+function renderTools() {
+  const container = document.getElementById('toolsGrid');
+  container.innerHTML = tools.map(t => `
+    <div class="tool-card">
+      ${toolImg(t.img, t.name)}
+      <div class="name">${t.name}</div>
+      <div class="how">${t.how}</div>
+    </div>
+  `).join('');
+}
+
+// Practice problems
+let currentPractice = 0;
+function renderPractice() {
+  currentPractice = 0;
+  showPractice();
+}
+
+function showPractice() {
+  const p = practiceProblems[currentPractice];
+  const container = document.getElementById('practiceProblem');
+  container.innerHTML = `
+    <div class="problem-header">
+      <span class="problem-number">Soal ${currentPractice + 1}</span>
+      <div style="color:var(--muted); font-size:0.9rem;">Lihat timbangan, isi jawabanmu!</div>
+    </div>
+    <div class="problem-question">Berapakah berat <strong>${p.name}</strong> yang tertera pada timbangan?</div>
+    <div class="problem-visual">
+      <div style="position: relative; width: 100%; max-width: 300px; margin: 0 auto;">
+        ${renderDigitalScale(p.weight, p.unit)}
+      </div>
+      <div style="margin-top:0.5rem; color:var(--muted); font-size:0.85rem;">⚖️ Timbangan Digital</div>
+    </div>
+    <div class="problem-input-row">
+      <input type="number" class="problem-input" id="practiceAnswer" placeholder="...">
+      <span style="font-weight:600; color:var(--rose-deep);">${p.unit}</span>
+      <button class="check-btn" onclick="checkPractice()">Cek</button>
+    </div>
+    <div class="feedback" id="practiceFeedback"></div>
+  `;
+  document.getElementById('practiceIndicator').textContent = `${currentPractice + 1} / 20`;
+  document.getElementById('practiceProgress').style.width = ((currentPractice + 1) / 20 * 100) + '%';
+}
+
+function checkPractice() {
+  const ans = parseFloat(document.getElementById('practiceAnswer').value);
+  const correct = practiceProblems[currentPractice].weight;
+  const fb = document.getElementById('practiceFeedback');
+  if (isNaN(ans)) {
+    fb.className = 'feedback wrong';
+    fb.textContent = 'Isi jawaban dulu ya cantik! 💕';
+    return;
+  }
+  if (ans === correct) {
+    fb.className = 'feedback correct';
+    fb.textContent = '🎉 Hebat! Jawabanmu benar!';
+    spawnConfetti();
+  } else {
+    fb.className = 'feedback wrong';
+    fb.textContent = `💔 Belum tepat. Jawaban yang benar: ${correct} ${practiceProblems[currentPractice].unit}. Yuk coba soal berikutnya!`;
+  }
+}
+
+function nextPractice() {
+  if (currentPractice < 19) {
+    currentPractice++;
+    showPractice();
+  } else {
+    alert('🌸 Kamu sudah menyelesaikan semua 20 soal! Hebat banget!');
+  }
+}
+
+function prevPractice() {
+  if (currentPractice > 0) {
+    currentPractice--;
+    showPractice();
+  }
+}
+
+// ============ SLIDE 3: Flashcard Game ============
+let currentFlash = 0;
+let flashAnswered = false;
+let gameScore = 0, gameCorrect = 0, gameWrong = 0;
+
+function renderFlashcard() {
+  const card = flashcards[currentFlash];
+  const container = document.getElementById('flashcard');
+  flashAnswered = false;
+  
+  let visualContent = '';
+  if (card.type === 'image') {
+    visualContent = toolImg(card.img, 'Alat ukur', 'tool-img');
+  } else {
+    visualContent = `<div style="font-size:4rem;">🤔</div>`;
+  }
+  
+  let questionHTML = '';
+  if (card.type === 'scenario') {
+    questionHTML = `<div class="flashcard-scenario">${card.q}</div>`;
+  } else {
+    questionHTML = `<div style="color:var(--rose-deep); font-weight:600; margin:0.5rem 0;">${card.q}</div>`;
+  }
+  
+  container.innerHTML = `
+    <div class="flashcard-type">${card.type === 'image' ? '🖼️ Tebak Alat' : '💡 Pilih Alat'}</div>
+    <div class="flashcard-visual">${visualContent}</div>
+    ${questionHTML}
+    <div class="options-grid">
+      ${card.options.map((opt, i) => `<button class="option-btn" onclick="answerFlash(${i})">${opt}</button>`).join('')}
+    </div>
+    <div class="feedback" id="flashFeedback"></div>
+  `;
+  document.getElementById('flashcardIndicator').textContent = `${currentFlash + 1} / 30`;
+  document.getElementById('flashcardProgress').style.width = ((currentFlash + 1) / 30 * 100) + '%';
+}
+
+function answerFlash(idx) {
+  if (flashAnswered) return;
+  flashAnswered = true;
+  const card = flashcards[currentFlash];
+  const buttons = document.querySelectorAll('#flashcard .option-btn');
+  buttons.forEach((b, i) => {
+    if (i === card.answer) b.classList.add('correct');
+    else if (i === idx) b.classList.add('wrong');
+    b.style.pointerEvents = 'none';
+  });
+  const fb = document.getElementById('flashFeedback');
+  if (idx === card.answer) {
+    gameScore += 10;
+    gameCorrect++;
+    fb.className = 'feedback correct';
+    fb.textContent = '🎉 Yeay! Jawaban benar! +10 poin';
+    spawnConfetti();
+  } else {
+    gameWrong++;
+    fb.className = 'feedback wrong';
+    fb.textContent = `💔 Jawaban yang benar: ${card.options[card.answer]}`;
+  }
+  document.getElementById('gameScore').textContent = gameScore;
+  document.getElementById('gameCorrect').textContent = gameCorrect;
+  document.getElementById('gameWrong').textContent = gameWrong;
+}
+
+function nextFlashcard() {
+  if (currentFlash < 29) {
+    currentFlash++;
+    renderFlashcard();
+  } else {
+    alert('🌸 Kamu sudah menyelesaikan semua 30 flashcard! Skor: ' + gameScore);
+  }
+}
+
+function prevFlashcard() {
+  if (currentFlash > 0) {
+    currentFlash--;
+    renderFlashcard();
+  }
+}
+
+// ============ SLIDE 4: Conversion ============
+let currentConv = 0;
+let convAnswered = false;
+let interactiveStairSelections = [];
+
+function selectInteractiveStair(el, unit) {
+  document.querySelectorAll('#interactiveStairs .stair').forEach(s => {
+    s.classList.remove('from', 'to');
+  });
+  interactiveStairSelections.push({ el, unit });
+  if (interactiveStairSelections.length > 2) {
+    interactiveStairSelections = [{ el, unit }];
+  }
+  
+  if (interactiveStairSelections.length === 2) {
+    const [from, to] = interactiveStairSelections;
+    from.el.classList.add('from');
+    to.el.classList.add('to');
+    
+    const units = ['kg', 'hg', 'dag', 'g', 'dg', 'cg', 'mg'];
+    const fromIdx = units.indexOf(from.unit);
+    const toIdx = units.indexOf(to.unit);
+    const diff = toIdx - fromIdx;
+    const factor = Math.pow(10, Math.abs(diff));
+    const direction = diff > 0 ? 'turun' : 'naik';
+    const steps = Math.abs(diff);
+    
+    const info = document.getElementById('interactiveInfo');
+    if (diff === 0) {
+      info.innerHTML = `🌸 Satuan sama, tidak perlu dikonversi!`;
+    } else {
+      info.innerHTML = `
+        <div style="font-size:1.2rem; font-family:'Fredoka'; color:var(--rose-deep); margin-bottom:0.3rem;">
+          ${from.unit} → ${to.unit}
+        </div>
+        <div>${direction === 'turun' ? '⬇️ Turun' : '⬆️ Naik'} ${steps} tangga</div>
+        <div>Operasi: ${direction === 'turun' ? '× ' + factor : '÷ ' + factor}</div>
+        <div style="margin-top:0.5rem; color:var(--rose-deep);"><strong>Contoh: 1 ${from.unit} = ${direction === 'turun' ? factor : (1/factor).toString().replace('.', ',')} ${to.unit}</strong></div>
+      `;
+    }
+  } else {
+    el.classList.add('from');
+  }
+}
+
+function renderConversion() {
+  currentConv = 0;
+  showConversion();
+}
+
+function showConversion() {
+  const p = conversionProblems[currentConv];
+  const container = document.getElementById('conversionProblem');
+  convAnswered = false;
+  container.innerHTML = `
+    <div class="problem-header">
+      <span class="problem-number">Soal ${currentConv + 1}</span>
+      <div style="color:var(--muted); font-size:0.9rem;">Konversi satuan berat</div>
+    </div>
+    <div class="conversion-question">
+      ${p.value} ${p.from} = <input type="number" class="conversion-input" id="convAnswer" placeholder="?"> ${p.to}
+    </div>
+    <div class="problem-input-row">
+      <button class="check-btn" onclick="checkConversion()">Cek Jawaban</button>
+      <button class="action-btn secondary" onclick="showExplanation()">💡 Lihat Pembahasan</button>
+    </div>
+    <div class="feedback" id="convFeedback"></div>
+    <div class="explanation" id="convExp">
+      <strong>📝 Pembahasan:</strong><br>
+      ${p.exp}<br>
+      <strong>Jawaban: ${p.value} ${p.from} = ${p.answer} ${p.to}</strong>
+    </div>
+  `;
+  document.getElementById('conversionIndicator').textContent = `${currentConv + 1} / 30`;
+  document.getElementById('conversionProgress').style.width = ((currentConv + 1) / 30 * 100) + '%';
+}
+
+function checkConversion() {
+  const ans = parseFloat(document.getElementById('convAnswer').value);
+  const correct = conversionProblems[currentConv].answer;
+  const fb = document.getElementById('convFeedback');
+  if (isNaN(ans)) {
+    fb.className = 'feedback wrong';
+    fb.textContent = 'Isi jawaban dulu ya! 💕';
+    return;
+  }
+  convAnswered = true;
+  if (Math.abs(ans - correct) < 0.01) {
+    fb.className = 'feedback correct';
+    fb.textContent = '🎉 Mantap! Jawaban benar!';
+    spawnConfetti();
+    gameScore += 5;
+    document.getElementById('gameScore').textContent = gameScore;
+  } else {
+    fb.className = 'feedback wrong';
+    fb.textContent = `💔 Belum tepat. Jawaban: ${correct} ${conversionProblems[currentConv].to}`;
+  }
+}
+
+function showExplanation() {
+  document.getElementById('convExp').classList.add('show');
+}
+
+function nextConversion() {
+  if (currentConv < 29) {
+    currentConv++;
+    showConversion();
+  } else {
+    alert('🌸 Kamu sudah menyelesaikan 30 soal konversi! Hebat!');
+  }
+}
+
+function prevConversion() {
+  if (currentConv > 0) {
+    currentConv--;
+    showConversion();
+  }
+}
+
+// ============ SLIDE 5: Quiz ============
+function showQuiz(type) {
+  document.querySelectorAll('.quiz-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.quiz-section').forEach(s => s.classList.remove('active'));
+  if (type === 'q1') {
+    document.querySelector('.quiz-tab.q1').classList.add('active');
+    document.getElementById('quiz1').classList.add('active');
+  } else {
+    document.querySelector('.quiz-tab.q2').classList.add('active');
+    document.getElementById('quiz2').classList.add('active');
+  }
+}
+
+// Quiz 1
+let currentQuiz1 = 0;
+let quiz1Answered = false;
+
+function renderQuiz1() {
+  const q = quiz1Data[currentQuiz1];
+  quiz1Answered = false;
+  const container = document.getElementById('quiz1Box');
+  const allItems = [...q.correctItems, ...q.wrongItems].slice(0, 15);
+  for (let i = allItems.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [allItems[i], allItems[j]] = [allItems[j], allItems[i]];
+  }
+  
+  container.innerHTML = `
+    <div class="quiz-prompt">
+      Pilihlah benda yang dapat diukur menggunakan <span class="highlight">${q.tool}</span> 🌸
+    </div>
+    <div class="items-grid">
+      ${allItems.map((item, i) => `
+        <label class="item-check" data-item="${item}" data-correct="${q.correctItems.includes(item)}">
+          <input type="checkbox" id="q1item${i}">
+          <span class="checkbox-custom"></span>
+          <span class="item-label">${item}</span>
+        </label>
+      `).join('')}
+    </div>
+    <div class="feedback" id="quiz1Feedback"></div>
+  `;
+  document.getElementById('quiz1Num').textContent = currentQuiz1 + 1;
+}
+
+function checkQuiz1() {
+  if (quiz1Answered) return;
+  quiz1Answered = true;
+  const items = document.querySelectorAll('#quiz1Box .item-check');
+  let correct = 0, wrong = 0;
+  items.forEach(item => {
+    const isChecked = item.querySelector('input').checked;
+    const isCorrect = item.dataset.correct === 'true';
+    if (isChecked && isCorrect) {
+      item.classList.add('correct');
+      correct++;
+    } else if (isChecked && !isCorrect) {
+      item.classList.add('wrong');
+      wrong++;
+    } else if (!isChecked && isCorrect) {
+      item.classList.add('wrong');
+      wrong++;
+    }
+    item.querySelector('input').disabled = true;
+  });
+  const fb = document.getElementById('quiz1Feedback');
+  if (wrong === 0 && correct > 0) {
+    fb.className = 'feedback correct';
+    fb.textContent = '🎉 Sempurna! Semua jawaban benar!';
+    gameScore += 10;
+    spawnConfetti();
+  } else {
+    fb.className = 'feedback wrong';
+    fb.textContent = `💔 Benar: ${correct}, Kurang tepat: ${wrong}. Tetap semangat!`;
+  }
+  document.getElementById('gameScore').textContent = gameScore;
+}
+
+function nextQuiz1() {
+  if (currentQuiz1 < 9) {
+    currentQuiz1++;
+    renderQuiz1();
+  } else {
+    alert('🌸 Kamu sudah selesaikan 10 soal Kuis 1!');
+  }
+}
+
+// Quiz 2
+let currentQuiz2 = 0;
+let quiz2Answered = false;
+let quiz2Selected = -1;
+
+function renderQuiz2() {
+  const q = quiz2Data[currentQuiz2];
+  quiz2Answered = false;
+  quiz2Selected = -1;
+  const container = document.getElementById('quiz2Box');
+  container.innerHTML = `
+    <div class="quiz-prompt">Manakah pernyataan yang benar? 🌸</div>
+    <div class="comparison-box">
+      <div class="compare-card">
+        <span class="compare-emoji">${q.objA.emoji}</span>
+        <div class="compare-name">${q.objA.name}</div>
+        <div class="compare-value">${q.objA.value} ${q.objA.unit}</div>
+      </div>
+      <div class="vs-symbol">VS</div>
+      <div class="compare-card b">
+        <span class="compare-emoji">${q.objB.emoji}</span>
+        <div class="compare-name">${q.objB.name}</div>
+        <div class="compare-value">${q.objB.value} ${q.objB.unit}</div>
+      </div>
+    </div>
+    <div class="comparison-options">
+      <div class="compare-option" onclick="selectQuiz2(this, 0)">Benda A lebih berat dari Benda B</div>
+      <div class="compare-option" onclick="selectQuiz2(this, 1)">Benda A lebih ringan dari Benda B</div>
+      <div class="compare-option" onclick="selectQuiz2(this, 2)">Benda A memiliki berat yang sama dengan Benda B</div>
+    </div>
+    <div class="problem-input-row">
+      <button class="check-btn" onclick="checkQuiz2()">Cek Jawaban</button>
+    </div>
+    <div class="feedback" id="quiz2Feedback"></div>
+    <div class="explanation" id="quiz2Exp"></div>
+  `;
+  document.getElementById('quiz2Num').textContent = currentQuiz2 + 1;
+}
+
+function selectQuiz2(el, idx) {
+  if (quiz2Answered) return;
+  document.querySelectorAll('#quiz2Box .compare-option').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+  quiz2Selected = idx;
+}
+
+function checkQuiz2() {
+  if (quiz2Answered || quiz2Selected === -1) {
+    if (quiz2Selected === -1) {
+      alert('Pilih salah satu jawaban dulu ya! 💕');
+    }
+    return;
+  }
+  quiz2Answered = true;
+  const q = quiz2Data[currentQuiz2];
+  
+  // Convert everything to grams
+  const units = ['ton', 'kuintal', 'kg', 'ons', 'hg', 'dag', 'g', 'dg', 'cg', 'mg'];
+  const factors = [1000000, 100000, 1000, 100, 100, 10, 1, 0.1, 0.01, 0.001];
+  
+  const valA = q.objA.value * factors[units.indexOf(q.objA.unit)];
+  const valB = q.objB.value * factors[units.indexOf(q.objB.unit)];
+  
+  let correctIdx;
+  if (valA > valB) correctIdx = 0;
+  else if (valA < valB) correctIdx = 1;
+  else correctIdx = 2;
+  
+  const options = document.querySelectorAll('#quiz2Box .compare-option');
+  options.forEach((o, i) => {
+    if (i === correctIdx) o.classList.add('correct');
+    else if (i === quiz2Selected) o.classList.add('wrong');
+    o.style.pointerEvents = 'none';
+  });
+  
+  const fb = document.getElementById('quiz2Feedback');
+  const exp = document.getElementById('quiz2Exp');
+  
+  let comparison = '';
+  if (valA === valB) comparison = `${q.objA.value} ${q.objA.unit} = ${valA} g SAMA DENGAN ${q.objB.value} ${q.objB.unit} = ${valB} g`;
+  else if (valA > valB) comparison = `${q.objA.value} ${q.objA.unit} = ${valA} g > ${q.objB.value} ${q.objB.unit} = ${valB} g`;
+  else comparison = `${q.objA.value} ${q.objA.unit} = ${valA} g < ${q.objB.value} ${q.objB.unit} = ${valB} g`;
+  
+  exp.innerHTML = `<strong>📝 Pembahasan:</strong><br>Ubah ke satuan yang sama (gram) dulu:<br>${comparison}`;
+  exp.classList.add('show');
+  
+  if (quiz2Selected === correctIdx) {
+    fb.className = 'feedback correct';
+    fb.textContent = '🎉 Hebat! Jawaban benar!';
+    gameScore += 10;
+    spawnConfetti();
+  } else {
+    fb.className = 'feedback wrong';
+    fb.textContent = '💔 Belum tepat. Lihat pembahasan ya!';
+  }
+  document.getElementById('gameScore').textContent = gameScore;
+}
+
+function nextQuiz2() {
+  if (currentQuiz2 < 9) {
+    currentQuiz2++;
+    renderQuiz2();
+  } else {
+    alert('🌸 Kamu sudah selesaikan 10 soal Kuis 2!');
+  }
+}
+
+// ============ SLIDE 6: Memory Game ============
+let memoryRound = 0;
+let memoryScore = 0;
+let memoryMatched = 0;
+let memoryTotal = 0;
+let memoryCards = [];
+let memoryFlipped = [];
+let memoryLock = false;
+let memoryTimer = null;
+
+function startMemoryGame() {
+  if (memoryRound >= memoryRounds.length) {
+    document.getElementById('memoryMessage').innerHTML = '🎉 Selamat! Kamu sudah menyelesaikan semua 5 ronde! Kamu hebat banget! 💕';
+    spawnConfetti();
+    return;
+  }
+  
+  const round = memoryRounds[memoryRound];
+  memoryCards = [];
+  round.pairs.forEach((pair, i) => {
+    memoryCards.push({ id: i*2, pairId: i, text: pair[0], matched: false });
+    memoryCards.push({ id: i*2+1, pairId: i, text: pair[1], matched: false });
+  });
+  for (let i = memoryCards.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [memoryCards[i], memoryCards[j]] = [memoryCards[j], memoryCards[i]];
+  }
+  
+  memoryTotal = round.pairs.length;
+  memoryMatched = 0;
+  memoryFlipped = [];
+  memoryLock = true;
+  
+  document.getElementById('memoryRound').textContent = memoryRound + 1;
+  document.getElementById('memoryTotal').textContent = memoryTotal;
+  document.getElementById('memoryMatched').textContent = '0';
+  document.getElementById('memoryMessage').innerHTML = '👀 Hafalkan pasangan kartunya! Tutup dalam 10 detik...';
+  document.getElementById('memoryStartBtn').style.display = 'none';
+  document.getElementById('memoryNextBtn').style.display = 'none';
+  
+  const grid = document.getElementById('memoryGrid');
+  grid.className = 'memory-grid cols-' + round.cols;
+  grid.innerHTML = memoryCards.map((c, i) => `
+    <div class="memory-card flipped" data-idx="${i}" onclick="flipMemoryCard(${i})">
+      <div class="memory-card-inner">
+        <div class="memory-card-front">🌸</div>
+        <div class="memory-card-back">${c.text}</div>
+      </div>
+    </div>
+  `).join('');
+  
+  let timeLeft = 10;
+  document.getElementById('memoryTimer').textContent = '⏱️ ' + timeLeft;
+  document.getElementById('memoryTimer').style.background = 'var(--rose-deep)';
+  
+  clearInterval(memoryTimer);
+  memoryTimer = setInterval(() => {
+    timeLeft--;
+    document.getElementById('memoryTimer').textContent = '⏱️ ' + timeLeft;
+    if (timeLeft <= 3) {
+      document.getElementById('memoryTimer').style.background = '#c2185b';
+    }
+    if (timeLeft <= 0) {
+      clearInterval(memoryTimer);
+      document.querySelectorAll('.memory-card').forEach(c => c.classList.remove('flipped'));
+      memoryLock = false;
+      document.getElementById('memoryMessage').innerHTML = '🎀 Sekarang buka kartu berpasangan yang sama nilainya!';
+      document.getElementById('memoryTimer').textContent = '🎀 Mulai!';
+    }
+  }, 1000);
+}
+
+function flipMemoryCard(idx) {
+  if (memoryLock) return;
+  const card = document.querySelector(`.memory-card[data-idx="${idx}"]`);
+  if (card.classList.contains('flipped') || card.classList.contains('matched')) return;
+  
+  card.classList.add('flipped');
+  memoryFlipped.push(idx);
+  
+  if (memoryFlipped.length === 2) {
+    memoryLock = true;
+    setTimeout(() => {
+      const [i1, i2] = memoryFlipped;
+      const c1 = memoryCards[i1];
+      const c2 = memoryCards[i2];
+      if (c1.pairId === c2.pairId) {
+        document.querySelector(`.memory-card[data-idx="${i1}"]`).classList.add('matched');
+        document.querySelector(`.memory-card[data-idx="${i2}"]`).classList.add('matched');
+        memoryMatched++;
+        memoryScore += 20;
+        document.getElementById('memoryMatched').textContent = memoryMatched;
+        document.getElementById('memoryScore').textContent = memoryScore;
+        document.getElementById('memoryMessage').innerHTML = '🎉 Cocok! +20 poin!';
+        gameScore += 20;
+        document.getElementById('gameScore').textContent = gameScore;
+        spawnConfetti();
+        
+        if (memoryMatched === memoryTotal) {
+          setTimeout(() => {
+            document.getElementById('memoryMessage').innerHTML = `🏆 Ronde ${memoryRound + 1} selesai! Kamu menyelesaikan semua pasangan! Klik "Ronde Berikutnya" untuk lanjut!`;
+            document.getElementById('memoryNextBtn').style.display = 'inline-block';
+            spawnConfetti();
+          }, 500);
+        }
+      } else {
+        document.getElementById('memoryMessage').innerHTML = '💔 Belum cocok. Coba lagi ya!';
+        document.querySelector(`.memory-card[data-idx="${i1}"]`).classList.remove('flipped');
+        document.querySelector(`.memory-card[data-idx="${i2}"]`).classList.remove('flipped');
+      }
+      memoryFlipped = [];
+      memoryLock = false;
+    }, 1000);
+  }
+}
+
+function nextMemoryRound() {
+  memoryRound++;
+  if (memoryRound >= memoryRounds.length) {
+    document.getElementById('memoryMessage').innerHTML = '🎉 Selamat! Kamu sudah menyelesaikan semua 5 ronde! Kamu hebat banget! 💕';
+    document.getElementById('memoryNextBtn').style.display = 'none';
+    document.getElementById('memoryStartBtn').style.display = 'inline-block';
+    document.getElementById('memoryStartBtn').textContent = '🔄 Main Lagi';
+    memoryRound = 0;
+    return;
+  }
+  startMemoryGame();
+}
+
+// ============ CONFETTI ============
+function spawnConfetti() {
+  const colors = ['#ff8fb1', '#c2185b', '#d4c1e0', '#ffd4c4', '#e6b87e', '#c8e0d2'];
+  for (let i = 0; i < 30; i++) {
+    const c = document.createElement('div');
+    c.className = 'confetti';
+    c.style.background = colors[Math.floor(Math.random() * colors.length)];
+    c.style.left = Math.random() * 100 + 'vw';
+    c.style.top = '-10px';
+    c.style.animationDuration = (2 + Math.random() * 2) + 's';
+    c.style.transform = `rotate(${Math.random() * 360}deg)`;
+    if (Math.random() > 0.5) {
+      c.style.borderRadius = '50%';
+    }
+    document.body.appendChild(c);
+    setTimeout(() => c.remove(), 4000);
+  }
+}
+
+// ============ TOTAL SCORE ============
+function updateTotalScore() {
+  document.getElementById('totalScore').textContent = gameScore + memoryScore;
+}
+
+function restartAdventure() {
+  currentSlide = 1;
+  currentPractice = 0;
+  currentFlash = 0;
+  currentConv = 0;
+  currentQuiz1 = 0;
+  currentQuiz2 = 0;
+  memoryRound = 0;
+  memoryScore = 0;
+  memoryMatched = 0;
+  gameScore = 0;
+  gameCorrect = 0;
+  gameWrong = 0;
+  document.getElementById('studentName').value = '';
+  document.getElementById('gameScore').textContent = '0';
+  document.getElementById('gameCorrect').textContent = '0';
+  document.getElementById('gameWrong').textContent = '0';
+  document.getElementById('memoryScore').textContent = '0';
+  document.getElementById('memoryMatched').textContent = '0';
+  showSlide(1);
+}
+
+// ============ INIT ============
+window.addEventListener('DOMContentLoaded', () => {
+  renderFlashcard();
+  renderConversion();
+  renderQuiz1();
+  renderQuiz2();
+});
+
+document.addEventListener('keydown', (e) => {
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+  if (e.key === 'ArrowRight') nextSlide();
+  if (e.key === 'ArrowLeft') prevSlide();
+});
+</script>
+
+</body>
+</html>
