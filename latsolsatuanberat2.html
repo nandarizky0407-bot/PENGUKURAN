@@ -1,0 +1,1083 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Latihan Konversi Satuan Berat</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+:root {
+  --pink-light: #ffe4ee;
+  --pink: #ff8fb1;
+  --pink-deep: #e85d8a;
+  --lavender: #c8a8e9;
+  --lavender-deep: #9d70d8;
+  --peach: #ffb996;
+  --mint: #b8e6d2;
+  --cream: #fff5f7;
+  --text: #5a3d4e;
+  --text-light: #8a6b7a;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  font-family: 'Quicksand', sans-serif;
+  background: linear-gradient(135deg, #ffe4ee 0%, #fff5f7 40%, #f3e8ff 100%);
+  background-attachment: fixed;
+  min-height: 100vh;
+  color: var(--text);
+  overflow-x: hidden;
+  margin: 0;
+}
+
+.font-display { font-family: 'Fredoka', sans-serif; }
+
+.bg-pattern {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.deco { position: absolute; pointer-events: none; user-select: none; }
+
+@keyframes float {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-25px) rotate(8deg); }
+}
+@keyframes sparkle {
+  0%, 100% { opacity: 0.2; transform: scale(0.7) rotate(0deg); }
+  50% { opacity: 0.7; transform: scale(1.2) rotate(180deg); }
+}
+
+.float-anim { animation: float 7s ease-in-out infinite; }
+.sparkle-anim { animation: sparkle 5s ease-in-out infinite; }
+
+.slide { display: none; opacity: 0; }
+.slide.active { display: block; animation: fadeInUp 0.6s ease forwards; }
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.card {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 143, 177, 0.25);
+  border-radius: 28px;
+  box-shadow: 0 20px 60px -20px rgba(232, 93, 138, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.5) inset;
+}
+
+.option {
+  background: rgba(255, 255, 255, 0.7);
+  border: 2px solid #ffd4e3;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  user-select: none;
+}
+.option:hover { border-color: var(--pink); background: #fff5f9; transform: translateX(4px); }
+.option.selected { border-color: var(--pink-deep); background: linear-gradient(135deg, #ffe4ee, #fff5f9); box-shadow: 0 4px 16px rgba(232, 93, 138, 0.2); }
+.option.correct { border-color: #5fb88a; background: linear-gradient(135deg, #d9f5e3, #f0fcf4); color: #2d6e44; }
+.option.wrong { border-color: #e85d8a; background: linear-gradient(135deg, #ffd4e3, #fff0f5); color: #a8264e; }
+.option.disabled { cursor: not-allowed; }
+.option.disabled:hover { transform: none; }
+
+.btn-primary {
+  background: linear-gradient(135deg, #ff8fb1, #e85d8a);
+  color: white;
+  font-weight: 600;
+  padding: 12px 28px;
+  border-radius: 999px;
+  box-shadow: 0 8px 20px -6px rgba(232, 93, 138, 0.5);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  border: none;
+  font-family: 'Quicksand', sans-serif;
+  font-size: 1rem;
+}
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 28px -6px rgba(232, 93, 138, 0.6); }
+.btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+.btn-secondary {
+  background: rgba(200, 168, 233, 0.15);
+  color: var(--lavender-deep);
+  font-weight: 600;
+  padding: 12px 28px;
+  border-radius: 999px;
+  border: 2px solid rgba(200, 168, 233, 0.4);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  font-family: 'Quicksand', sans-serif;
+  font-size: 1rem;
+}
+.btn-secondary:hover { background: rgba(200, 168, 233, 0.3); border-color: var(--lavender); transform: translateY(-1px); }
+
+.btn-ghost {
+  background: rgba(255, 255, 255, 0.6);
+  color: var(--text-light);
+  padding: 10px 20px;
+  border-radius: 999px;
+  border: 2px solid #ffd4e3;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  font-family: 'Quicksand', sans-serif;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+.btn-ghost:hover { background: #ffe4ee; color: var(--pink-deep); border-color: var(--pink); }
+.btn-ghost:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.progress-track {
+  background: rgba(255, 143, 177, 0.15);
+  border-radius: 999px;
+  height: 12px;
+  overflow: hidden;
+  position: relative;
+}
+.progress-fill {
+  background: linear-gradient(90deg, #ff8fb1, #c8a8e9);
+  height: 100%;
+  transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 999px;
+  position: relative;
+}
+.progress-fill::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+  animation: shimmer 2s infinite;
+}
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.equation {
+  font-family: 'Fredoka', sans-serif;
+  font-size: 1.9rem;
+  font-weight: 500;
+  text-align: center;
+  padding: 1.75rem 1rem;
+  background: linear-gradient(135deg, #fff5f9, #f9f0ff);
+  border-radius: 20px;
+  border: 2px dashed #ffc1d6;
+  margin: 1.5rem 0;
+  letter-spacing: 0.02em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+.equation .unit { color: var(--pink-deep); font-weight: 600; }
+.equation .value { color: var(--text); font-weight: 600; }
+.equation .equals { color: var(--text-light); margin: 0 0.5rem; }
+.equation .plus { color: var(--lavender-deep); margin: 0 0.5rem; font-weight: 600; }
+.equation .question { color: var(--lavender-deep); font-weight: 700; font-size: 2.2rem; }
+
+.story-box {
+  background: linear-gradient(135deg, #fff5f9, #f9f0ff);
+  border-radius: 20px;
+  border: 2px dashed #ffc1d6;
+  padding: 1.75rem 1.75rem 1.75rem 3.5rem;
+  margin: 1.5rem 0;
+  font-family: 'Quicksand', sans-serif;
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: var(--text);
+  text-align: left;
+  position: relative;
+}
+.story-box::before {
+  content: '📖';
+  font-size: 1.5rem;
+  position: absolute;
+  top: 1.5rem;
+  left: 1.25rem;
+}
+
+.type-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.type-badge.metric { background: rgba(255, 143, 177, 0.18); color: var(--pink-deep); }
+.type-badge.common { background: rgba(255, 185, 150, 0.25); color: #c66a3a; }
+.type-badge.addition { background: rgba(157, 112, 216, 0.18); color: var(--lavender-deep); }
+.type-badge.story { background: rgba(184, 230, 210, 0.35); color: #2d8d6e; }
+
+.ladder {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin: 1rem 0;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.ladder-step {
+  background: linear-gradient(135deg, #ffd4e3, #fff5f9);
+  border: 2px solid #ff8fb1;
+  border-radius: 14px;
+  padding: 10px 14px;
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 500;
+  color: var(--pink-deep);
+  min-width: 56px;
+  text-align: center;
+  transition: all 0.3s ease;
+  font-size: 0.95rem;
+}
+.ladder-step.active-step {
+  background: linear-gradient(135deg, #ff8fb1, #e85d8a);
+  color: white;
+  transform: scale(1.15);
+  box-shadow: 0 8px 20px rgba(232, 93, 138, 0.4);
+}
+.ladder-arrow {
+  font-size: 0.7rem;
+  color: var(--pink);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.explanation-box {
+  background: linear-gradient(135deg, rgba(184, 230, 210, 0.25), rgba(200, 168, 233, 0.2));
+  border: 2px solid rgba(184, 230, 210, 0.6);
+  border-radius: 20px;
+  padding: 1.5rem;
+  margin-top: 1rem;
+  display: none;
+}
+.explanation-box.show { display: block; animation: fadeInUp 0.4s ease forwards; }
+
+.stat-card {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 228, 238, 0.5));
+  border: 2px solid rgba(255, 143, 177, 0.3);
+  border-radius: 24px;
+  padding: 1.5rem;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+.stat-card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px -12px rgba(232, 93, 138, 0.3); }
+
+.q-dot {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Fredoka', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.6);
+  border: 2px solid #ffd4e3;
+  color: var(--text-light);
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+.q-dot:hover { background: #ffe4ee; border-color: var(--pink); transform: scale(1.1); }
+.q-dot.current { background: linear-gradient(135deg, #ff8fb1, #e85d8a); color: white; border-color: var(--pink-deep); transform: scale(1.15); box-shadow: 0 4px 12px rgba(232, 93, 138, 0.4); }
+.q-dot.correct { background: #d9f5e3; border-color: #5fb88a; color: #2d6e44; }
+.q-dot.wrong { background: #ffd4e3; border-color: #e85d8a; color: #a8264e; }
+
+.input-field {
+  background: rgba(255, 255, 255, 0.85);
+  border: 2px solid #ffd4e3;
+  border-radius: 16px;
+  padding: 14px 20px;
+  font-size: 1.05rem;
+  font-family: 'Quicksand', sans-serif;
+  font-weight: 500;
+  color: var(--text);
+  transition: all 0.3s ease;
+  width: 100%;
+  outline: none;
+}
+.input-field:focus { border-color: var(--pink); background: white; box-shadow: 0 0 0 4px rgba(255, 143, 177, 0.15); }
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: rgba(90, 61, 78, 0.4);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+.modal-overlay.show { display: flex; animation: fadeIn 0.3s ease; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+::-webkit-scrollbar { width: 10px; }
+::-webkit-scrollbar-track { background: #ffe4ee; }
+::-webkit-scrollbar-thumb { background: #ff8fb1; border-radius: 5px; }
+::-webkit-scrollbar-thumb:hover { background: #e85d8a; }
+
+.toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background: linear-gradient(135deg, #ff8fb1, #e85d8a);
+  color: white;
+  padding: 12px 24px;
+  border-radius: 999px;
+  font-weight: 600;
+  box-shadow: 0 8px 24px rgba(232, 93, 138, 0.4);
+  z-index: 200;
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  font-size: 0.9rem;
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
+
+@media (max-width: 640px) {
+  .equation { font-size: 1.5rem; padding: 1.25rem 0.75rem; }
+  .equation .question { font-size: 1.8rem; }
+  .ladder-step { min-width: 44px; padding: 8px 10px; font-size: 0.85rem; }
+  .q-dot { width: 26px; height: 26px; font-size: 0.65rem; }
+  .story-box { padding-left: 3rem; font-size: 0.95rem; }
+}
+</style>
+</head>
+<body>
+
+<div class="bg-pattern">
+  <div class="deco float-anim" style="top: 8%; left: 4%; font-size: 32px; color: #ff8fb1; opacity: 0.5;">♥</div>
+  <div class="deco sparkle-anim" style="top: 18%; right: 6%; font-size: 26px; color: #c8a8e9; opacity: 0.6;">✦</div>
+  <div class="deco float-anim" style="top: 45%; left: 2%; font-size: 28px; color: #ffb996; opacity: 0.5; animation-delay: 1.5s;">♥</div>
+  <div class="deco sparkle-anim" style="top: 65%; right: 4%; font-size: 24px; color: #ff8fb1; opacity: 0.5; animation-delay: 1s;">✦</div>
+  <div class="deco float-anim" style="bottom: 12%; left: 6%; font-size: 22px; color: #c8a8e9; opacity: 0.6; animation-delay: 2s;">♥</div>
+  <div class="deco sparkle-anim" style="bottom: 25%; right: 8%; font-size: 20px; color: #ffb996; opacity: 0.5; animation-delay: 2.5s;">✦</div>
+  <div class="deco float-anim" style="top: 30%; left: 10%; font-size: 18px; color: #c8a8e9; opacity: 0.4; animation-delay: 3s;">✦</div>
+  <div class="deco sparkle-anim" style="top: 75%; left: 5%; font-size: 24px; color: #ff8fb1; opacity: 0.4; animation-delay: 0.5s;">♥</div>
+</div>
+
+<div class="relative z-10 max-w-4xl mx-auto px-4 py-6 md:py-10">
+  
+  <!-- SLIDE 1: WELCOME -->
+  <section class="slide active" id="slide-welcome">
+    <div class="card p-6 md:p-12 text-center">
+      <div class="text-6xl mb-4">⚖️</div>
+      <h1 class="font-display text-3xl md:text-5xl font-bold mb-3" style="background: linear-gradient(135deg, #e85d8a, #9d70d8); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">Latihan Konversi Satuan Berat</h1>
+      <p class="text-base md:text-lg mb-6" style="color: var(--text-light);">Yuk kita belajar mengubah satuan berat dengan tangga konversi yang lucu!</p>
+      
+      <div class="mb-2 text-sm font-semibold uppercase tracking-wide" style="color: var(--pink-deep);">Tangga Konversi (Metrik)</div>
+      <div id="welcome-ladder" class="mb-2"></div>
+      <p class="text-sm mb-5" style="color: var(--text-light);">Turun 1 tangga = dikali 10 &nbsp;•&nbsp; Naik 1 tangga = dibagi 10</p>
+      
+      <div class="grid grid-cols-2 gap-3 max-w-xl mx-auto mb-6 text-sm">
+        <div class="p-3 rounded-2xl" style="background: rgba(255, 255, 255, 0.5); border: 1px dashed #ffc1d6;">
+          <p class="font-semibold mb-1" style="color: var(--pink-deep);">Ton & Kuintal</p>
+          <p style="color: var(--text);">1 ton = 1.000 kg<br>1 kuintal = 100 kg</p>
+        </div>
+        <div class="p-3 rounded-2xl" style="background: rgba(255, 255, 255, 0.5); border: 1px dashed #ffc1d6;">
+          <p class="font-semibold mb-1" style="color: var(--lavender-deep);">Ons & Pound</p>
+          <p style="color: var(--text);">1 kg = 10 ons<br>1 kg = 2 pound (500 g)</p>
+        </div>
+      </div>
+      
+      <div class="max-w-md mx-auto text-left mb-6">
+        <label class="block font-display font-semibold mb-2 text-base" style="color: var(--pink-deep);">Nama Siswa</label>
+        <input type="text" id="student-name" class="input-field" placeholder="Tulis namamu di sini..." maxlength="40" />
+        <p id="name-error" class="text-sm mt-2 hidden" style="color: #e85d8a;">Isi namamu dulu ya, sayang!</p>
+      </div>
+      
+      <button class="btn-primary text-lg" onclick="startQuiz()">Mulai Latihan</button>
+      
+      <div class="mt-8 pt-6 border-t" style="border-color: rgba(255, 143, 177, 0.2);">
+        <p class="text-sm" style="color: var(--text-light);">50 Soal: Konversi Metrik • Ton, Kuintal, Ons, Pound • Penjumlahan • Soal Cerita</p>
+        <div class="flex gap-2 justify-center mt-3 flex-wrap">
+          <span class="type-badge metric">20 Metrik</span>
+          <span class="type-badge common">10 Lainnya</span>
+          <span class="type-badge addition">10 Penjumlahan</span>
+          <span class="type-badge story">10 Cerita</span>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- SLIDE 2: QUESTIONS -->
+  <section class="slide" id="slide-questions">
+    <div class="flex items-center justify-between mb-4 flex-wrap gap-3">
+      <div class="flex items-center gap-2">
+        <span class="font-display font-semibold text-base md:text-lg" style="color: var(--pink-deep);" id="student-display">Siswa</span>
+        <span class="text-sm" style="color: var(--text-light);">• Latihan Satuan Berat</span>
+      </div>
+      <div class="text-sm font-semibold" style="color: var(--text-light);">
+        Soal <span id="q-current" class="font-display text-lg" style="color: var(--pink-deep);">1</span> / 50
+      </div>
+    </div>
+    
+    <div class="progress-track mb-6">
+      <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+    </div>
+    
+    <div class="card p-5 md:p-8" id="question-card"></div>
+    
+    <div class="flex items-center justify-between mt-5 gap-3">
+      <button class="btn-ghost" id="prev-btn" onclick="prevQuestion()">← Sebelumnya</button>
+      <button class="btn-ghost" id="next-btn" onclick="nextQuestion()">Selanjutnya →</button>
+    </div>
+    
+    <div class="mt-8">
+      <div class="text-xs text-center mb-3 font-semibold tracking-wider" style="color: var(--text-light);">NAVIGASI SOAL</div>
+      <div class="flex flex-wrap gap-2 justify-center" id="q-dots"></div>
+    </div>
+    
+    <div class="text-center mt-8">
+      <button class="btn-primary text-lg" onclick="confirmFinish()">Selesai & Lihat Hasil</button>
+    </div>
+  </section>
+  
+  <!-- SLIDE 3: STATS -->
+  <section class="slide" id="slide-stats">
+    <div class="card p-5 md:p-10">
+      <div class="text-center mb-8">
+        <div class="text-5xl mb-3">📊</div>
+        <h2 class="font-display text-2xl md:text-4xl font-bold mb-2" style="color: var(--pink-deep);">Statistik Hasil Latihan</h2>
+        <p class="text-base md:text-lg" style="color: var(--text-light);"><span id="stats-name">Siswa</span></p>
+      </div>
+      
+      <div class="grid grid-cols-3 gap-3 md:gap-4 mb-8">
+        <div class="stat-card">
+          <div class="text-3xl md:text-5xl font-display font-bold mb-1" style="color: #5fb88a;" id="stat-correct">0</div>
+          <div class="text-xs md:text-sm font-semibold uppercase tracking-wide" style="color: var(--text-light);">Benar</div>
+        </div>
+        <div class="stat-card">
+          <div class="text-3xl md:text-5xl font-display font-bold mb-1" style="color: #e85d8a;" id="stat-wrong">0</div>
+          <div class="text-xs md:text-sm font-semibold uppercase tracking-wide" style="color: var(--text-light);">Salah</div>
+        </div>
+        <div class="stat-card">
+          <div class="text-3xl md:text-5xl font-display font-bold mb-1" style="color: #9d70d8;" id="stat-accuracy">0%</div>
+          <div class="text-xs md:text-sm font-semibold uppercase tracking-wide" style="color: var(--text-light);">Kebenaran</div>
+        </div>
+      </div>
+      
+      <div class="mb-6">
+        <h3 class="font-display font-semibold text-base md:text-lg mb-3" style="color: var(--pink-deep);">Detail per Soal</h3>
+        <div class="grid grid-cols-10 gap-2" id="stats-grid"></div>
+        <div class="flex gap-4 mt-4 text-xs justify-center flex-wrap" style="color: var(--text-light);">
+          <span><span style="display:inline-block;width:12px;height:12px;background:#d9f5e3;border-radius:3px;vertical-align:middle;margin-right:4px;"></span>Benar</span>
+          <span><span style="display:inline-block;width:12px;height:12px;background:#ffd4e3;border-radius:3px;vertical-align:middle;margin-right:4px;"></span>Salah</span>
+          <span><span style="display:inline-block;width:12px;height:12px;background:#f5e8ed;border-radius:3px;vertical-align:middle;margin-right:4px;"></span>Tidak Dijawab</span>
+        </div>
+      </div>
+      
+      <div class="flex gap-3 justify-center flex-wrap">
+        <button class="btn-secondary" onclick="reviewAnswers()">Lihat Pembahasan</button>
+        <button class="btn-primary" onclick="goToReflection()">Lanjut ke Refleksi →</button>
+      </div>
+    </div>
+  </section>
+  
+  <!-- SLIDE 4: REFLECTION -->
+  <section class="slide" id="slide-reflection">
+    <div class="card p-5 md:p-10">
+      <div class="text-center mb-8">
+        <div class="text-5xl mb-3">🌟</div>
+        <h2 class="font-display text-2xl md:text-4xl font-bold mb-2" style="color: var(--pink-deep);">Refleksi & Kesimpulan</h2>
+      </div>
+      
+      <div class="space-y-6">
+        <div>
+          <h3 class="font-display font-semibold text-lg md:text-xl mb-3" style="color: var(--lavender-deep);">Tangga Konversi Satuan Berat</h3>
+          <div id="reflection-ladder"></div>
+          <p class="text-center text-sm mt-3" style="color: var(--text-light);">
+            Setiap turun 1 tangga = dikali 10 &nbsp;•&nbsp; Setiap naik 1 tangga = dibagi 10
+          </p>
+          <p class="text-center text-sm mt-1" style="color: var(--text-light);">
+            Ingat: 1 ton = 1000 kg, 1 kuintal = 100 kg, 1 kg = 10 ons, 1 kg = 2 pound
+          </p>
+        </div>
+        
+        <div class="grid md:grid-cols-2 gap-4">
+          <div class="stat-card text-left">
+            <div class="text-3xl mb-2">💡</div>
+            <h4 class="font-display font-semibold mb-2" style="color: var(--pink-deep);">Tips Konversi</h4>
+            <ul class="text-sm space-y-1.5" style="color: var(--text);">
+              <li>• Gunakan tangga untuk metrik (kg-hg-dag-g-dg-cg-mg)</li>
+              <li>• Ingat: 1 ton = 1000 kg, 1 kuintal = 100 kg</li>
+              <li>• 1 kg = 10 ons dan 1 kg = 2 pound</li>
+              <li>• Untuk penjumlahan: samakan satuan dulu</li>
+              <li>• Periksa hasil dengan akal sehat</li>
+            </ul>
+          </div>
+          <div class="stat-card text-left">
+            <div class="text-3xl mb-2">🎯</div>
+            <h4 class="font-display font-semibold mb-2" style="color: var(--pink-deep);">Kesimpulan</h4>
+            <p class="text-sm leading-relaxed" style="color: var(--text);">
+              Konversi satuan berat menggunakan tangga kg-hg-dag-g-dg-cg-mg. Selain itu, ada satuan lain seperti ton, kuintal, ons, dan pound yang mengacu pada kilogram (1 ton = 1000 kg, 1 kuintal = 100 kg, 1 kg = 10 ons, 1 kg = 2 pound). Dengan memahami ini, kita dapat menyelesaikan soal cerita maupun penjumlahan satuan dengan mudah.
+            </p>
+          </div>
+        </div>
+        
+        <div class="stat-card text-left">
+          <h4 class="font-display font-semibold mb-2" style="color: var(--lavender-deep);">💭 Refleksi Diri</h4>
+          <p class="text-sm mb-3" style="color: var(--text);">
+            Bagaimana perasaanmu setelah mengerjakan latihan ini? Apakah ada materi yang perlu kamu pelajari lagi? Yuk tulis di sini:
+          </p>
+          <textarea id="reflection-input" class="input-field" rows="3" placeholder="Tulis refleksimu..." style="resize: vertical; font-family: 'Quicksand', sans-serif;"></textarea>
+        </div>
+      </div>
+      
+      <div class="text-center mt-8">
+        <button class="btn-primary text-lg" onclick="goToThanks()">Selesai</button>
+      </div>
+    </div>
+  </section>
+  
+  <!-- SLIDE 5: THANK YOU -->
+  <section class="slide" id="slide-thanks">
+    <div class="card p-6 md:p-16 text-center">
+      <div class="text-7xl mb-6">🌷</div>
+      <h2 class="font-display text-3xl md:text-5xl font-bold mb-4" style="background: linear-gradient(135deg, #e85d8a, #9d70d8); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">Thank You for Today!</h2>
+      <p class="text-base md:text-lg mb-2" style="color: var(--text);">Terima kasih sudah belajar dengan semangat, <span class="font-semibold" style="color: var(--pink-deep);" id="thanks-name">Siswa</span>!</p>
+      <p class="text-sm md:text-base mb-8" style="color: var(--text-light);">Kamu sudah menyelesaikan 50 soal latihan satuan berat. Hebat sekali!</p>
+      
+      <div class="max-w-md mx-auto p-6 rounded-2xl" style="background: linear-gradient(135deg, rgba(255, 228, 238, 0.6), rgba(200, 168, 233, 0.3)); border: 2px solid rgba(255, 143, 177, 0.3);">
+        <p class="font-display text-base md:text-lg mb-2" style="color: var(--pink-deep);">Skor Akhirmu</p>
+        <p class="font-display text-4xl md:text-5xl font-bold mb-1" style="color: var(--lavender-deep);" id="final-score">0/50</p>
+        <p class="text-sm" style="color: var(--text-light);" id="final-message">Pertahankan semangat belajarmu!</p>
+      </div>
+      
+      <div class="mt-8">
+        <button class="btn-secondary" onclick="restartQuiz()">Ulangi Latihan</button>
+      </div>
+      
+      <p class="text-sm mt-10" style="color: var(--text-light);">Sampai jumpa di latihan berikutnya! ✨</p>
+    </div>
+  </section>
+  
+</div>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modal">
+  <div class="card p-6 md:p-8 max-w-sm w-full text-center">
+    <div class="text-4xl mb-3">🌸</div>
+    <p id="modal-message" class="mb-6 text-base" style="color: var(--text);">Pesan</p>
+    <div class="flex gap-3 justify-center">
+      <button class="btn-ghost" onclick="closeModal()">Belum</button>
+      <button class="btn-primary" id="modal-confirm-btn">Ya, Lanjut</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast">Pesan</div>
+
+<script>
+// Data 50 soal: 20 metrik + 10 satuan lain + 10 penjumlahan + 10 soal cerita
+const questions = [
+  // ===== 20 SOAL KONVERSI METRIK =====
+  { type: "metric", val: 1, from: "kg", to: "hg", options: ["10 hg", "100 hg", "1 hg", "0,1 hg"], correct: 0, exp: "Dari kg ke hg: turun 1 tangga.\nDikali 10.\n1 × 10 = 10 hg" },
+  { type: "metric", val: 5, from: "kg", to: "g", options: ["50 g", "500 g", "5000 g", "5 g"], correct: 2, exp: "Dari kg ke g: turun 3 tangga.\nDikali 1000.\n5 × 1000 = 5000 g" },
+  { type: "metric", val: 200, from: "g", to: "kg", options: ["0,2 kg", "2 kg", "20 kg", "0,02 kg"], correct: 0, exp: "Dari g ke kg: naik 3 tangga.\nDibagi 1000.\n200 ÷ 1000 = 0,2 kg" },
+  { type: "metric", val: 3, from: "dag", to: "g", options: ["30 g", "300 g", "0,3 g", "3 g"], correct: 0, exp: "Dari dag ke g: turun 1 tangga.\nDikali 10.\n3 × 10 = 30 g" },
+  { type: "metric", val: 1, from: "g", to: "cg", options: ["10 cg", "100 cg", "1000 cg", "1 cg"], correct: 1, exp: "Dari g ke cg: turun 2 tangga.\nDikali 100.\n1 × 100 = 100 cg" },
+  { type: "metric", val: 5000, from: "mg", to: "g", options: ["5 g", "50 g", "500 g", "0,5 g"], correct: 0, exp: "Dari mg ke g: naik 3 tangga.\nDibagi 1000.\n5000 ÷ 1000 = 5 g" },
+  { type: "metric", val: 2, from: "hg", to: "dag", options: ["20 dag", "200 dag", "0,2 dag", "2 dag"], correct: 0, exp: "Dari hg ke dag: turun 1 tangga.\nDikali 10.\n2 × 10 = 20 dag" },
+  { type: "metric", val: 50, from: "dg", to: "g", options: ["5 g", "50 g", "500 g", "0,5 g"], correct: 0, exp: "Dari dg ke g: naik 1 tangga.\nDibagi 10.\n50 ÷ 10 = 5 g" },
+  { type: "metric", val: 1, from: "dag", to: "dg", options: ["10 dg", "100 dg", "1000 dg", "1 dg"], correct: 1, exp: "Dari dag ke dg: turun 2 tangga.\nDikali 100.\n1 × 100 = 100 dg" },
+  { type: "metric", val: 7500, from: "mg", to: "g", options: ["75 g", "7,5 g", "750 g", "0,75 g"], correct: 1, exp: "Dari mg ke g: naik 3 tangga.\nDibagi 1000.\n7500 ÷ 1000 = 7,5 g" },
+  { type: "metric", val: 4, from: "kg", to: "dag", options: ["40 dag", "400 dag", "4000 dag", "4 dag"], correct: 1, exp: "Dari kg ke dag: turun 2 tangga.\nDikali 100.\n4 × 100 = 400 dag" },
+  { type: "metric", val: "1,5", from: "kg", to: "g", options: ["150 g", "15 g", "1500 g", "1,5 g"], correct: 2, exp: "Dari kg ke g: turun 3 tangga.\nDikali 1000.\n1,5 × 1000 = 1500 g" },
+  { type: "metric", val: 350, from: "cg", to: "g", options: ["3,5 g", "35 g", "3500 g", "0,35 g"], correct: 0, exp: "Dari cg ke g: naik 2 tangga.\nDibagi 100.\n350 ÷ 100 = 3,5 g" },
+  { type: "metric", val: 2, from: "g", to: "mg", options: ["20 mg", "200 mg", "2000 mg", "2 mg"], correct: 2, exp: "Dari g ke mg: turun 3 tangga.\nDikali 1000.\n2 × 1000 = 2000 mg" },
+  { type: "metric", val: 8, from: "hg", to: "g", options: ["80 g", "800 g", "8 g", "8000 g"], correct: 1, exp: "Dari hg ke g: turun 2 tangga.\nDikali 100.\n8 × 100 = 800 g" },
+  { type: "metric", val: 60, from: "cg", to: "mg", options: ["6 mg", "60 mg", "600 mg", "0,6 mg"], correct: 2, exp: "Dari cg ke mg: turun 1 tangga.\nDikali 10.\n60 × 10 = 600 mg" },
+  { type: "metric", val: "0,5", from: "kg", to: "g", options: ["5 g", "50 g", "500 g", "5000 g"], correct: 2, exp: "Dari kg ke g: turun 3 tangga.\nDikali 1000.\n0,5 × 1000 = 500 g" },
+  { type: "metric", val: 1500, from: "g", to: "dag", options: ["1,5 dag", "15 dag", "150 dag", "0,15 dag"], correct: 2, exp: "Dari g ke dag: naik 1 tangga.\nDibagi 10.\n1500 ÷ 10 = 150 dag" },
+  { type: "metric", val: "3,5", from: "g", to: "cg", options: ["35 cg", "350 cg", "3500 cg", "0,35 cg"], correct: 1, exp: "Dari g ke cg: turun 2 tangga.\nDikali 100.\n3,5 × 100 = 350 cg" },
+  { type: "metric", val: 25, from: "mg", to: "cg", options: ["2,5 cg", "25 cg", "250 cg", "0,25 cg"], correct: 0, exp: "Dari mg ke cg: naik 1 tangga.\nDibagi 10.\n25 ÷ 10 = 2,5 cg" },
+  
+  // ===== 10 SOAL SATUAN LAIN (TON, KUINTAL, ONS, POUND) =====
+  { type: "common", val: 2, from: "ton", to: "kg", options: ["200 kg", "2000 kg", "20 kg", "0,2 kg"], correct: 1, exp: "1 ton = 1000 kg.\n2 ton = 2 × 1000 = 2000 kg" },
+  { type: "common", val: 3, from: "kuintal", to: "kg", options: ["30 kg", "300 kg", "3000 kg", "3 kg"], correct: 1, exp: "1 kuintal = 100 kg.\n3 kuintal = 3 × 100 = 300 kg" },
+  { type: "common", val: 5, from: "kg", to: "ons", options: ["50 ons", "500 ons", "5 ons", "0,5 ons"], correct: 0, exp: "1 kg = 10 ons.\n5 kg = 5 × 10 = 50 ons" },
+  { type: "common", val: 4, from: "kg", to: "pound", options: ["40 pound", "4 pound", "8 pound", "2 pound"], correct: 2, exp: "1 kg = 2 pound.\n4 kg = 4 × 2 = 8 pound" },
+  { type: "common", val: 1, from: "ton", to: "kuintal", options: ["10 kuintal", "100 kuintal", "1 kuintal", "0,1 kuintal"], correct: 0, exp: "1 ton = 1000 kg, 1 kuintal = 100 kg.\n1 ton = 1000 ÷ 100 = 10 kuintal" },
+  { type: "common", val: 2000, from: "kg", to: "ton", options: ["200 ton", "2 ton", "20 ton", "0,2 ton"], correct: 1, exp: "1 ton = 1000 kg.\n2000 ÷ 1000 = 2 ton" },
+  { type: "common", val: 15, from: "ons", to: "g", options: ["1,5 g", "15 g", "150 g", "1500 g"], correct: 3, exp: "1 ons = 100 g.\n15 ons = 15 × 100 = 1500 g" },
+  { type: "common", val: 6, from: "pound", to: "g", options: ["60 g", "600 g", "3000 g", "6000 g"], correct: 2, exp: "1 pound = 500 g.\n6 pound = 6 × 500 = 3000 g" },
+  { type: "common", val: 5, from: "kuintal", to: "ton", options: ["50 ton", "5 ton", "0,5 ton", "0,05 ton"], correct: 2, exp: "1 kuintal = 100 kg, 1 ton = 1000 kg.\n5 kuintal = 500 kg = 0,5 ton" },
+  { type: "common", val: 10, from: "pound", to: "kg", options: ["1 kg", "5 kg", "10 kg", "2 kg"], correct: 1, exp: "1 kg = 2 pound.\n10 pound = 10 ÷ 2 = 5 kg" },
+  
+  // ===== 10 SOAL PENJUMLAHAN SATUAN =====
+  { type: "addition", val1: 2, unit1: "kg", val2: 500, unit2: "g", to: "g", options: ["500 g", "2500 g", "700 g", "2,5 g"], correct: 1, exp: "Samakan satuan ke gram.\n2 kg = 2 × 1000 = 2000 g\n2000 g + 500 g = 2500 g" },
+  { type: "addition", val1: 1, unit1: "ton", val2: 5, unit2: "kuintal", to: "kg", options: ["1500 kg", "1005 kg", "6 kg", "600 kg"], correct: 0, exp: "Samakan satuan ke kg.\n1 ton = 1000 kg\n5 kuintal = 5 × 100 = 500 kg\n1000 + 500 = 1500 kg" },
+  { type: "addition", val1: 3, unit1: "ons", val2: 200, unit2: "g", to: "g", options: ["203 g", "500 g", "230 g", "50 g"], correct: 1, exp: "Samakan satuan ke gram.\n3 ons = 3 × 100 = 300 g\n300 g + 200 g = 500 g" },
+  { type: "addition", val1: 4, unit1: "pound", val2: 1, unit2: "kg", to: "g", options: ["5 g", "1400 g", "3000 g", "4000 g"], correct: 2, exp: "Samakan satuan ke gram.\n4 pound = 4 × 500 = 2000 g\n1 kg = 1000 g\n2000 + 1000 = 3000 g" },
+  { type: "addition", val1: 5, unit1: "hg", val2: 2, unit2: "dag", to: "g", options: ["52 g", "502 g", "700 g", "520 g"], correct: 3, exp: "Samakan satuan ke gram.\n5 hg = 5 × 100 = 500 g\n2 dag = 2 × 10 = 20 g\n500 + 20 = 520 g" },
+  { type: "addition", val1: 1, unit1: "kuintal", val2: 50, unit2: "kg", to: "kg", options: ["150 kg", "50 kg", "15 kg", "100 kg"], correct: 0, exp: "Samakan satuan ke kg.\n1 kuintal = 100 kg\n100 kg + 50 kg = 150 kg" },
+  { type: "addition", val1: 1, unit1: "kg", val2: 5, unit2: "ons", to: "ons", options: ["15 ons", "6 ons", "50 ons", "60 ons"], correct: 0, exp: "Samakan satuan ke ons.\n1 kg = 10 ons\n10 ons + 5 ons = 15 ons" },
+  { type: "addition", val1: 3, unit1: "ton", val2: 2, unit2: "kuintal", to: "kuintal", options: ["5 kuintal", "32 kuintal", "302 kuintal", "50 kuintal"], correct: 1, exp: "Samakan satuan ke kuintal.\n3 ton = 3 × 10 = 30 kuintal\n30 kuintal + 2 kuintal = 32 kuintal" },
+  { type: "addition", val1: 2, unit1: "g", val2: 500, unit2: "mg", to: "mg", options: ["502 mg", "700 mg", "2500 mg", "250 mg"], correct: 2, exp: "Samakan satuan ke mg.\n2 g = 2 × 1000 = 2000 mg\n2000 mg + 500 mg = 2500 mg" },
+  { type: "addition", val1: 2, unit1: "pound", val2: 5, unit2: "ons", to: "g", options: ["7 g", "1500 g", "2500 g", "700 g"], correct: 1, exp: "Samakan satuan ke gram.\n2 pound = 2 × 500 = 1000 g\n5 ons = 5 × 100 = 500 g\n1000 + 500 = 1500 g" },
+  
+  // ===== 10 SOAL CERITA =====
+  { type: "story", story: "Ayah membeli 2 kg gula dan 500 g tepung. Berapa total berat belanjaan Ayah dalam gram?", ladderUnits: ["kg", "g"], options: ["2500 g", "700 g", "2,5 g", "500 g"], correct: 0, exp: "Samakan satuan ke gram.\n2 kg = 2 × 1000 = 2000 g\n2000 g + 500 g = 2500 g" },
+  { type: "story", story: "Berat kucing 3 kg, berat kelinci 1500 g. Berapa selisih berat mereka dalam gram?", ladderUnits: ["kg", "g"], options: ["1500 g", "4500 g", "1,5 g", "15 g"], correct: 0, exp: "Samakan satuan ke gram.\n3 kg = 3 × 1000 = 3000 g\n3000 g - 1500 g = 1500 g" },
+  { type: "story", story: "Sebuah truk mengangkut 5 ton semen. Berat semen dalam kilogram adalah?", ladderUnits: [], options: ["500 kg", "5000 kg", "50 kg", "0,5 kg"], correct: 1, exp: "1 ton = 1000 kg.\n5 ton = 5 × 1000 = 5000 kg" },
+  { type: "story", story: "Petani panen 2 kuintal padi kemudian melanjutkan panen 80 kg. Total padi yang dipanen dalam kg?", ladderUnits: [], options: ["82 kg", "280 kg", "200 kg", "100 kg"], correct: 1, exp: "1 kuintal = 100 kg.\n2 kuintal = 200 kg\n200 kg + 80 kg = 280 kg" },
+  { type: "story", story: "Ibu punya daging 1 kg, kemudian dipotong 250 g untuk dimasak. Sisa daging dalam gram?", ladderUnits: ["kg", "g"], options: ["750 g", "1250 g", "250 g", "75 g"], correct: 0, exp: "Samakan satuan ke gram.\n1 kg = 1000 g\n1000 g - 250 g = 750 g" },
+  { type: "story", story: "Ibu membeli 4 pound jeruk. Berat jeruk dalam gram adalah?", ladderUnits: [], options: ["400 g", "40 g", "2000 g", "4 g"], correct: 2, exp: "1 pound = 500 g.\n4 pound = 4 × 500 = 2000 g" },
+  { type: "story", story: "Pak Tani punya 3 ekor sapi, masing-masing beratnya 2 kuintal. Total berat sapi dalam ton?", ladderUnits: [], options: ["6 ton", "0,6 ton", "60 ton", "0,06 ton"], correct: 1, exp: "Total berat = 3 × 2 = 6 kuintal.\n1 kuintal = 100 kg, 1 ton = 1000 kg.\n6 kuintal = 600 kg = 0,6 ton" },
+  { type: "story", story: "Pak Ali berat badannya 80 kg, bulan lalu 85 kg. Berapa penurunan berat badan Pak Ali dalam ons?", ladderUnits: [], options: ["5 ons", "50 ons", "500 ons", "0,5 ons"], correct: 1, exp: "Penurunan = 85 - 80 = 5 kg.\n1 kg = 10 ons.\n5 kg = 5 × 10 = 50 ons" },
+  { type: "story", story: "Ibu membeli apel 1,5 kg dan pisang 500 g. Berat total buah dalam ons?", ladderUnits: ["kg", "g"], options: ["20 ons", "2 ons", "200 ons", "65 ons"], correct: 0, exp: "Samakan satuan ke gram.\n1,5 kg = 1500 g\n1500 g + 500 g = 2000 g\n1 ons = 100 g, maka 2000 g = 20 ons" },
+  { type: "story", story: "Tepung di dapur 2 kg, dipakai 0,5 kg untuk membuat kue. Sisa tepung dalam gram?", ladderUnits: ["kg", "g"], options: ["1,5 g", "15 g", "1500 g", "15 kg"], correct: 2, exp: "Sisa tepung = 2 kg - 0,5 kg = 1,5 kg.\nSamakan ke gram: 1,5 × 1000 = 1500 g" }
+];
+
+const TOTAL_QUESTIONS = questions.length;
+const metricUnits = ['kg', 'hg', 'dag', 'g', 'dg', 'cg', 'mg'];
+
+let state = {
+  currentQ: 0,
+  studentName: "",
+  answers: new Array(TOTAL_QUESTIONS).fill(null),
+  checked: new Array(TOTAL_QUESTIONS).fill(false),
+  explanationsShown: new Array(TOTAL_QUESTIONS).fill(false)
+};
+
+// Utilitas
+function showSlide(id) {
+  document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function renderLadder(activeUnits, container) {
+  let html = '<div class="ladder">';
+  metricUnits.forEach(u => {
+    const isActive = activeUnits.includes(u);
+    html += `<div class="ladder-step ${isActive ? 'active-step' : ''}">${u}</div>`;
+  });
+  html += '</div>';
+  if (container) container.innerHTML = html;
+  return html;
+}
+
+function renderIntroLadder(container) {
+  let html = '<div class="ladder">';
+  metricUnits.forEach((u, i) => {
+    html += `<div class="ladder-step active-step">${u}</div>`;
+    if (i < metricUnits.length - 1) html += `<div class="ladder-arrow">×10</div>`;
+  });
+  html += '</div>';
+  if (container) container.innerHTML = html;
+}
+
+function showToast(msg) {
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.classList.add('show');
+  clearTimeout(toast._timer);
+  toast._timer = setTimeout(() => toast.classList.remove('show'), 2500);
+}
+
+function showModal(message, onConfirm) {
+  document.getElementById('modal-message').textContent = message;
+  document.getElementById('modal').classList.add('show');
+  const btn = document.getElementById('modal-confirm-btn');
+  const newBtn = btn.cloneNode(true);
+  btn.parentNode.replaceChild(newBtn, btn);
+  newBtn.id = 'modal-confirm-btn';
+  newBtn.addEventListener('click', () => { closeModal(); onConfirm(); });
+}
+
+function closeModal() {
+  document.getElementById('modal').classList.remove('show');
+}
+
+// Mulai latihan
+function startQuiz() {
+  const name = document.getElementById('student-name').value.trim();
+  if (!name) {
+    document.getElementById('name-error').classList.remove('hidden');
+    document.getElementById('student-name').focus();
+    return;
+  }
+  document.getElementById('name-error').classList.add('hidden');
+  state.studentName = name;
+  document.getElementById('student-display').textContent = name;
+  showSlide('slide-questions');
+  renderQuestion(0);
+  renderDots();
+}
+
+// Render soal
+function renderQuestion(idx) {
+  state.currentQ = idx;
+  const q = questions[idx];
+  const card = document.getElementById('question-card');
+  
+  document.getElementById('q-current').textContent = idx + 1;
+  document.getElementById('progress-fill').style.width = ((idx + 1) / TOTAL_QUESTIONS * 100) + '%';
+  
+  const optionLetters = ['A', 'B', 'C', 'D'];
+  
+  // Tentukan tipe soal dan elemen visualnya
+  let typeLabel = "Konversi";
+  let instruction = "Lengkapi konversi satuan berikut:";
+  let equationHTML = '';
+  let badgeClass = "metric";
+  
+  if (q.type === "metric") {
+    typeLabel = "Konversi Metrik";
+    instruction = "Lengkapi konversi satuan berikut:";
+    badgeClass = "metric";
+    equationHTML = `
+      <div class="equation">
+        <span class="value">${q.val}</span>
+        <span class="unit">${q.from}</span>
+        <span class="equals">=</span>
+        <span class="question">?</span>
+        <span class="unit">${q.to}</span>
+      </div>`;
+  } else if (q.type === "common") {
+    typeLabel = "Satuan Berat Lain";
+    instruction = "Lengkapi konversi satuan berikut:";
+    badgeClass = "common";
+    equationHTML = `
+      <div class="equation">
+        <span class="value">${q.val}</span>
+        <span class="unit">${q.from}</span>
+        <span class="equals">=</span>
+        <span class="question">?</span>
+        <span class="unit">${q.to}</span>
+      </div>`;
+  } else if (q.type === "addition") {
+    typeLabel = "Penjumlahan Satuan";
+    instruction = "Selesaikan penjumlahan satuan berikut:";
+    badgeClass = "addition";
+    equationHTML = `
+      <div class="equation">
+        <span class="value">${q.val1}</span>
+        <span class="unit">${q.unit1}</span>
+        <span class="plus">+</span>
+        <span class="value">${q.val2}</span>
+        <span class="unit">${q.unit2}</span>
+        <span class="equals">=</span>
+        <span class="question">?</span>
+        <span class="unit">${q.to}</span>
+      </div>`;
+  } else if (q.type === "story") {
+    typeLabel = "Soal Cerita";
+    instruction = "Selesaikan soal cerita berikut:";
+    badgeClass = "story";
+    equationHTML = `
+      <div class="story-box">
+        <p>${q.story}</p>
+      </div>`;
+  }
+  
+  // Cek apakah perlu menampilkan tangga konversi
+  let showLadder = false;
+  let ladderUnits = [];
+  
+  if (q.type === "metric") {
+    showLadder = true;
+    ladderUnits = [q.from, q.to];
+  } else if (q.type === "addition") {
+    const allUnits = [q.unit1, q.unit2, q.to];
+    ladderUnits = allUnits.filter(u => metricUnits.includes(u));
+    if (ladderUnits.length > 0) showLadder = true;
+  } else if (q.type === "story") {
+    if (q.ladderUnits && q.ladderUnits.length > 0) {
+      ladderUnits = q.ladderUnits.filter(u => metricUnits.includes(u));
+      if (ladderUnits.length > 0) showLadder = true;
+    }
+  }
+  
+  // Susun HTML pembahasan
+  const expLines = q.exp.split('\n');
+  let expHtml = '';
+  expLines.forEach((line, i) => {
+    if (i === expLines.length - 1) {
+      expHtml += `<div class="font-display font-semibold text-base mt-3" style="color: var(--pink-deep); background: rgba(255, 143, 177, 0.12); padding: 10px 16px; border-radius: 12px; display: inline-block;">${line}</div>`;
+    } else {
+      expHtml += `<p class="text-sm mb-1" style="color: var(--text);">${line}</p>`;
+    }
+  });
+  
+  // Bangun ladder atau info box HTML
+  let ladderHTML = '';
+  if (showLadder) {
+    ladderHTML = `<div class="mb-3" id="exp-ladder"></div>`;
+  } else {
+    ladderHTML = `
+      <div class="info-box p-3 rounded-xl mb-3 text-sm" style="background: rgba(255, 255, 255, 0.5); border: 1px dashed #ffc1d6;">
+        <b style="color: var(--lavender-deep);">Info Satuan:</b>
+        <span style="color: var(--text);">1 ton = 1000 kg • 1 kuintal = 100 kg • 1 kg = 10 ons • 1 kg = 2 pound (500 g)</span>
+      </div>
+    `;
+  }
+  
+  let html = `
+    <div class="flex items-start gap-3 mb-4">
+      <div class="font-display text-xl md:text-2xl font-bold flex-shrink-0" style="color: white; background: linear-gradient(135deg, #ff8fb1, #e85d8a); width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(232, 93, 138, 0.3);">${idx + 1}</div>
+      <div class="flex-1 pt-1">
+        <span class="type-badge ${badgeClass} mb-1" style="display: inline-block;">${typeLabel}</span>
+        <p class="font-display text-base md:text-lg font-semibold mt-1" style="color: var(--text);">${instruction}</p>
+      </div>
+    </div>
+    
+    ${equationHTML}
+    
+    <div class="space-y-2.5" id="options-list">
+      ${q.options.map((opt, i) => `
+        <div class="option p-3 md:p-4 rounded-2xl flex items-center gap-3 ${state.answers[idx] === i ? 'selected' : ''}" 
+             data-idx="${i}" onclick="selectOption(${i})">
+          <div class="font-display font-bold w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0" style="background: rgba(255, 143, 177, 0.15); color: var(--pink-deep);">${optionLetters[i]}</div>
+          <div class="font-medium text-sm md:text-base">${opt}</div>
+        </div>
+      `).join('')}
+    </div>
+    
+    <div class="flex gap-3 mt-6 flex-wrap">
+      <button class="btn-primary" onclick="checkAnswer()">Cek Jawaban</button>
+      <button class="btn-secondary" onclick="toggleExplanation()">Pembahasan</button>
+    </div>
+    
+    <div class="explanation-box" id="explanation-box">
+      <h4 class="font-display font-semibold mb-3" style="color: var(--lavender-deep);">Pembahasan</h4>
+      ${ladderHTML}
+      ${expHtml}
+      <p class="text-sm font-semibold mt-4" style="color: var(--pink-deep);">Jawaban benar: ${q.options[q.correct]}</p>
+    </div>
+    
+    <div id="check-result" class="mt-4"></div>
+  `;
+  
+  card.innerHTML = html;
+  
+  if (showLadder) {
+    renderLadder(ladderUnits, document.getElementById('exp-ladder'));
+  }
+  
+  if (state.explanationsShown[idx]) {
+    document.getElementById('explanation-box').classList.add('show');
+  }
+  
+  if (state.checked[idx]) {
+    showCheckResult();
+  }
+  
+  document.getElementById('prev-btn').disabled = idx === 0;
+  document.getElementById('next-btn').style.visibility = idx === TOTAL_QUESTIONS - 1 ? 'hidden' : 'visible';
+  
+  updateDots();
+}
+
+function selectOption(i) {
+  if (state.checked[state.currentQ]) {
+    showToast('Soal sudah diperiksa, jawaban tidak bisa diubah ya!');
+    return;
+  }
+  state.answers[state.currentQ] = i;
+  document.querySelectorAll('#options-list .option').forEach((el, idx) => {
+    el.classList.remove('selected');
+    if (idx === i) el.classList.add('selected');
+  });
+}
+
+function checkAnswer() {
+  if (state.answers[state.currentQ] === null) {
+    showToast('Pilih jawaban dulu ya!');
+    return;
+  }
+  state.checked[state.currentQ] = true;
+  showCheckResult();
+  updateDots();
+  
+  const correct = state.answers[state.currentQ] === questions[state.currentQ].correct;
+  if (correct) showToast('Hebat! Jawaban benar!');
+}
+
+function showCheckResult() {
+  const idx = state.currentQ;
+  const correct = state.answers[idx] === questions[idx].correct;
+  
+  document.querySelectorAll('#options-list .option').forEach((el, i) => {
+    el.classList.remove('selected');
+    el.classList.add('disabled');
+    if (i === questions[idx].correct) {
+      el.classList.add('correct');
+    } else if (i === state.answers[idx] && !correct) {
+      el.classList.add('wrong');
+    }
+  });
+  
+  const result = document.getElementById('check-result');
+  result.innerHTML = `
+    <div class="p-4 rounded-2xl text-center" style="background: ${correct ? 'linear-gradient(135deg, #d9f5e3, #f0fcf4)' : 'linear-gradient(135deg, #ffd4e3, #fff0f5)'}; border: 2px solid ${correct ? '#5fb88a' : '#e85d8a'};">
+      <div class="font-display text-lg md:text-xl font-bold mb-1" style="color: ${correct ? '#2d6e44' : '#a8264e'};">
+        ${correct ? 'Benar!' : 'Belum tepat'}
+      </div>
+      <p class="text-sm" style="color: var(--text);">
+        ${correct ? 'Kerja bagus, lanjut ke soal berikutnya!' : 'Jawaban benar: ' + questions[idx].options[questions[idx].correct]}
+      </p>
+    </div>
+  `;
+}
+
+function toggleExplanation() {
+  const box = document.getElementById('explanation-box');
+  state.explanationsShown[state.currentQ] = true;
+  box.classList.toggle('show');
+}
+
+function prevQuestion() {
+  if (state.currentQ > 0) renderQuestion(state.currentQ - 1);
+}
+
+function nextQuestion() {
+  if (state.currentQ < TOTAL_QUESTIONS - 1) renderQuestion(state.currentQ + 1);
+}
+
+function renderDots() {
+  const dots = document.getElementById('q-dots');
+  let html = '';
+  for (let i = 0; i < TOTAL_QUESTIONS; i++) {
+    html += `<div class="q-dot" onclick="renderQuestion(${i})" title="Soal ${i + 1}">${i + 1}</div>`;
+  }
+  dots.innerHTML = html;
+  updateDots();
+}
+
+function updateDots() {
+  document.querySelectorAll('.q-dot').forEach((dot, i) => {
+    dot.classList.remove('current', 'correct', 'wrong');
+    if (i === state.currentQ) dot.classList.add('current');
+    else if (state.checked[i]) {
+      if (state.answers[i] === questions[i].correct) dot.classList.add('correct');
+      else dot.classList.add('wrong');
+    }
+  });
+}
+
+function confirmFinish() {
+  const answered = state.answers.filter(a => a !== null).length;
+  if (answered < TOTAL_QUESTIONS) {
+    showModal(`Kamu baru menjawab ${answered} dari ${TOTAL_QUESTIONS} soal. Soal yang belum dijawab akan dihitung salah. Lanjut ke hasil?`, finishQuiz);
+  } else {
+    finishQuiz();
+  }
+}
+
+function finishQuiz() {
+  let correct = 0, wrong = 0;
+  state.answers.forEach((a, i) => {
+    if (a === questions[i].correct) correct++;
+    else wrong++;
+  });
+  
+  const accuracy = Math.round(correct / TOTAL_QUESTIONS * 100);
+  
+  document.getElementById('stats-name').textContent = state.studentName;
+  document.getElementById('thanks-name').textContent = state.studentName;
+  document.getElementById('final-score').textContent = correct + '/' + TOTAL_QUESTIONS;
+  
+  let msg = '';
+  if (accuracy >= 90) msg = 'Luar biasa! Kamu jago konversi satuan!';
+  else if (accuracy >= 70) msg = 'Bagus sekali! Sedikit lagi menuju sempurna!';
+  else if (accuracy >= 50) msg = 'Cukup baik! Yuk terus berlatih!';
+  else msg = 'Jangan menyerah ya! Coba pelajari lagi materinya.';
+  document.getElementById('final-message').textContent = msg;
+  
+  // Grid detail per soal
+  const grid = document.getElementById('stats-grid');
+  let html = '';
+  for (let i = 0; i < TOTAL_QUESTIONS; i++) {
+    const isCorrect = state.answers[i] === questions[i].correct;
+    const answered = state.answers[i] !== null;
+    const bg = answered ? (isCorrect ? '#d9f5e3' : '#ffd4e3') : '#f5e8ed';
+    const color = answered ? (isCorrect ? '#2d6e44' : '#a8264e') : '#a89099';
+    const symbol = answered ? (isCorrect ? '✓' : '✗') : '—';
+    const border = answered ? (isCorrect ? 'rgba(95, 184, 138, 0.3)' : 'rgba(232, 93, 138, 0.3)') : 'rgba(168, 144, 153, 0.2)';
+    html += `
+      <div class="p-2 rounded-xl text-center font-display font-semibold cursor-pointer hover:scale-105 transition-transform" 
+           style="background: ${bg}; color: ${color}; border: 1px solid ${border};" 
+           onclick="goToQuestion(${i})" title="Klik untuk lihat soal ${i+1}">
+        <div class="text-xs">${i + 1}</div>
+        <div class="text-base">${symbol}</div>
+      </div>`;
+  }
+  grid.innerHTML = html;
+  
+  animateCounter('stat-correct', 0, correct, 1000);
+  animateCounter('stat-wrong', 0, wrong, 1000);
+  animateCounter('stat-accuracy', 0, accuracy, 1200, '%');
+  
+  showSlide('slide-stats');
+}
+
+function goToQuestion(i) {
+  showSlide('slide-questions');
+  renderQuestion(i);
+}
+
+function animateCounter(id, from, to, duration, suffix = '') {
+  const el = document.getElementById(id);
+  const start = performance.now();
+  function frame(now) {
+    const t = Math.min((now - start) / duration, 1);
+    const eased = 1 - Math.pow(1 - t, 3);
+    const val = Math.round(from + (to - from) * eased);
+    el.textContent = val + suffix;
+    if (t < 1) requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+}
+
+function reviewAnswers() {
+  showSlide('slide-questions');
+  renderQuestion(0);
+}
+
+function goToReflection() {
+  showSlide('slide-reflection');
+  renderIntroLadder(document.getElementById('reflection-ladder'));
+}
+
+function goToThanks() {
+  showSlide('slide-thanks');
+}
+
+function restartQuiz() {
+  state = {
+    currentQ: 0,
+    studentName: "",
+    answers: new Array(TOTAL_QUESTIONS).fill(null),
+    checked: new Array(TOTAL_QUESTIONS).fill(false),
+    explanationsShown: new Array(TOTAL_QUESTIONS).fill(false)
+  };
+  document.getElementById('student-name').value = '';
+  const reflectionInput = document.getElementById('reflection-input');
+  if (reflectionInput) reflectionInput.value = '';
+  showSlide('slide-welcome');
+}
+
+// Inisialisasi
+renderIntroLadder(document.getElementById('welcome-ladder'));
+
+document.getElementById('student-name').addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') startQuiz();
+});
+</script>
+</body>
+</html>
