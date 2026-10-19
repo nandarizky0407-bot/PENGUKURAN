@@ -1,0 +1,1484 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Konversi Satuan Waktu — Presentasi Interaktif</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:ital,wght@0,400;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<style>
+/* ============ RESET & TOKENS ============ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#FFF9F0; --ink:#273043; --ink-soft:#5B6478; --line:#E9E2D5;
+  --violet:#7C3AED; --violet-soft:#EDE9FE; --violet-deep:#5B21B6;
+  --amber:#F59E0B; --amber-soft:#FEF3C7; --amber-deep:#B45309;
+  --teal:#0D9488; --teal-soft:#CCFBF1; --teal-deep:#0F766E;
+  --rose:#E11D48; --rose-soft:#FFE4E6;
+  --green:#16A34A; --green-soft:#DCFCE7;
+  --blue:#2563EB; --blue-soft:#DBEAFE;
+  --night:#17153A; --night-soft:#2A2660;
+  --shadow:0 10px 30px rgba(39,48,67,.10);
+  --shadow-lg:0 18px 50px rgba(39,48,67,.16);
+  --r-lg:22px; --r-md:16px; --r-sm:10px;
+  --font-head:'Baloo 2','Segoe UI',system-ui,sans-serif;
+  --font-body:'Nunito','Segoe UI',system-ui,sans-serif;
+}
+html,body{height:100%}
+body{
+  font-family:var(--font-body); color:var(--ink); background:var(--bg);
+  overflow:hidden; -webkit-font-smoothing:antialiased;
+}
+button{font-family:inherit; cursor:pointer}
+input,select,textarea{font-family:inherit; font-size:1rem}
+
+/* ============ DECK LAYOUT ============ */
+#deck{position:fixed; inset:0}
+.slide{
+  position:absolute; inset:0; opacity:0; visibility:hidden;
+  transform:translateY(26px) scale(.985);
+  transition:opacity .45s ease, transform .45s ease, visibility .45s;
+  pointer-events:none; z-index:1;
+}
+.slide.active{opacity:1; visibility:visible; transform:none; pointer-events:auto; z-index:2}
+.slide-scroll{height:100%; overflow-y:auto; padding:74px 20px 96px; scrollbar-width:thin; scrollbar-color:#C9BFAE transparent}
+.slide-scroll::-webkit-scrollbar{width:9px}
+.slide-scroll::-webkit-scrollbar-thumb{background:#D8CFBE; border-radius:99px}
+.slide-inner{max-width:1120px; margin:0 auto}
+.slide.night{background:linear-gradient(160deg,#14123A 0%,#221E5C 55%,#312A78 100%); color:#F1EFFB}
+.slide.night .slide-scroll::-webkit-scrollbar-thumb{background:#4C4488}
+
+/* ============ TOP BAR / PROGRESS ============ */
+#topbar{
+  position:fixed; top:0; left:0; right:0; z-index:50; height:56px;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0 18px; pointer-events:none;
+}
+#brand{display:flex; align-items:center; gap:9px; font-family:var(--font-head); font-weight:700; font-size:.98rem; color:var(--violet-deep); background:#fff; border:1px solid var(--line); padding:7px 14px; border-radius:99px; box-shadow:var(--shadow); pointer-events:auto}
+#brand .dot{width:10px;height:10px;border-radius:50%;background:conic-gradient(var(--violet),var(--amber),var(--teal),var(--violet))}
+#progressWrap{position:fixed; top:0; left:0; right:0; height:5px; background:rgba(39,48,67,.08); z-index:60}
+#progressBar{height:100%; width:0%; border-radius:0 99px 99px 0; background:linear-gradient(90deg,var(--violet),var(--amber)); transition:width .4s ease}
+
+/* ============ BOTTOM NAV ============ */
+#navbar{
+  position:fixed; bottom:0; left:0; right:0; z-index:50;
+  display:flex; align-items:center; justify-content:center; gap:12px;
+  padding:12px 16px calc(12px + env(safe-area-inset-bottom));
+}
+.nav-panel{
+  display:flex; align-items:center; gap:10px; background:#fff;
+  border:1px solid var(--line); border-radius:99px; padding:7px 10px;
+  box-shadow:var(--shadow-lg);
+}
+.nav-btn{
+  width:44px; height:44px; border-radius:50%; border:none; font-size:1.15rem;
+  background:var(--violet-soft); color:var(--violet-deep);
+  display:flex; align-items:center; justify-content:center; transition:.2s;
+}
+.nav-btn:hover{background:var(--violet); color:#fff; transform:translateY(-2px)}
+.nav-btn:disabled{opacity:.35; cursor:not-allowed; transform:none}
+#counter{font-weight:800; font-size:.92rem; color:var(--ink-soft); min-width:86px; text-align:center; letter-spacing:.4px}
+#menuBtn{width:44px;height:44px;border-radius:50%;border:none;background:var(--amber-soft);color:var(--amber-deep);font-size:1.1rem;transition:.2s}
+#menuBtn:hover{background:var(--amber);color:#fff}
+#homeBtn{width:44px;height:44px;border-radius:50%;border:none;background:var(--teal-soft);color:var(--teal-deep);font-size:1.05rem;transition:.2s}
+#homeBtn:hover{background:var(--teal);color:#fff}
+
+/* ============ MENU OVERLAY ============ */
+#menuOverlay{
+  position:fixed; inset:0; z-index:90; background:rgba(23,21,58,.55); backdrop-filter:blur(6px);
+  display:flex; align-items:center; justify-content:center; padding:24px;
+  opacity:0; visibility:hidden; transition:.3s;
+}
+#menuOverlay.open{opacity:1; visibility:visible}
+.menu-card{background:#fff; border-radius:var(--r-lg); max-width:640px; width:100%; max-height:82vh; overflow-y:auto; padding:26px; box-shadow:var(--shadow-lg)}
+.menu-card h3{font-family:var(--font-head); font-size:1.4rem; margin-bottom:14px; color:var(--violet-deep)}
+.menu-list{display:grid; grid-template-columns:repeat(auto-fill,minmax(255px,1fr)); gap:8px}
+.menu-item{
+  display:flex; gap:10px; align-items:center; text-align:left; border:1.5px solid var(--line);
+  background:#FCFBF7; border-radius:12px; padding:9px 12px; font-size:.9rem; font-weight:700; color:var(--ink); transition:.18s;
+}
+.menu-item:hover{border-color:var(--violet); background:var(--violet-soft); transform:translateX(3px)}
+.menu-item .num{min-width:26px;height:26px;border-radius:8px;background:var(--violet);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:800}
+#menuClose{margin-top:16px;width:100%;padding:11px;border:none;border-radius:12px;background:var(--ink);color:#fff;font-weight:800}
+
+/* ============ TYPOGRAPHY HELPERS ============ */
+.kicker{
+  display:inline-flex; align-items:center; gap:8px; font-weight:800; font-size:.8rem;
+  letter-spacing:1.6px; text-transform:uppercase; color:var(--violet-deep);
+  background:var(--violet-soft); border-radius:99px; padding:7px 15px; margin-bottom:14px;
+}
+.slide.night .kicker{background:rgba(255,255,255,.12); color:#E9E5FF}
+h2.title{font-family:var(--font-head); font-size:clamp(1.7rem,3.6vw,2.5rem); line-height:1.12; margin-bottom:8px}
+.slide.night h2.title{color:#fff}
+p.sub{color:var(--ink-soft); font-size:1.02rem; max-width:760px; margin-bottom:22px}
+.slide.night p.sub{color:#C9C4EE}
+
+/* ============ BUTTONS ============ */
+.btn{
+  display:inline-flex; align-items:center; gap:9px; border:none; border-radius:14px;
+  padding:13px 22px; font-weight:800; font-size:.98rem; transition:.2s;
+}
+.btn:active{transform:scale(.97)}
+.btn-primary{background:linear-gradient(135deg,var(--violet),#9F67FF); color:#fff; box-shadow:0 8px 22px rgba(124,58,237,.35)}
+.btn-primary:hover{transform:translateY(-2px); box-shadow:0 12px 28px rgba(124,58,237,.45)}
+.btn-amber{background:linear-gradient(135deg,var(--amber),#FBBF24); color:#4A2B04; box-shadow:0 8px 22px rgba(245,158,11,.35)}
+.btn-amber:hover{transform:translateY(-2px)}
+.btn-ghost{background:#fff; color:var(--ink); border:1.5px solid var(--line)}
+.btn-ghost:hover{border-color:var(--violet); color:var(--violet-deep)}
+.btn-teal{background:var(--teal); color:#fff}
+.btn-teal:hover{background:var(--teal-deep)}
+.btn-sm{padding:9px 15px; font-size:.88rem; border-radius:11px}
+
+/* ============ COVER ============ */
+.cover{min-height:calc(100vh - 170px); display:flex; align-items:center; justify-content:center}
+.cover-grid{display:grid; grid-template-columns:1.25fr .85fr; gap:40px; align-items:center; width:100%}
+.cover h1{
+  font-family:var(--font-head); font-size:clamp(2.4rem,6vw,4.3rem); line-height:1.04;
+  color:var(--ink); margin:10px 0 16px;
+}
+.cover h1 .grad{background:linear-gradient(90deg,var(--violet),var(--rose) 55%,var(--amber)); -webkit-background-clip:text; background-clip:text; color:transparent}
+.cover p.lead{font-size:1.12rem; color:var(--ink-soft); margin-bottom:26px; max-width:540px}
+.chips{display:flex; flex-wrap:wrap; gap:9px; margin-bottom:28px}
+.chip{background:#fff; border:1.5px solid var(--line); border-radius:99px; padding:8px 15px; font-weight:800; font-size:.85rem; color:var(--ink-soft)}
+.chip b{color:var(--violet-deep)}
+.clock-stage{display:flex; align-items:center; justify-content:center}
+.clock{
+  width:min(300px,64vw); aspect-ratio:1; border-radius:50%; position:relative;
+  background:radial-gradient(circle at 32% 28%, #FFFFFF, #F1EAFE 68%, #E4D9FB);
+  border:10px solid var(--violet); box-shadow:var(--shadow-lg), inset 0 0 0 6px #fff;
+}
+.clock .tick{position:absolute; left:50%; top:8px; width:4px; height:12px; background:#B9A6E8; border-radius:2px; transform-origin:50% calc(min(300px,64vw)/2 - 8px)}
+.clock .tick.big{height:18px; width:5px; background:var(--violet-deep)}
+.clock .center{position:absolute; left:50%; top:50%; width:18px; height:18px; margin:-9px; border-radius:50%; background:var(--amber); border:4px solid #fff; box-shadow:0 0 0 2px var(--amber); z-index:3}
+.hand{position:absolute; left:50%; bottom:50%; transform-origin:50% 100%; border-radius:99px; z-index:2}
+.hand.h{width:10px; height:26%; margin-left:-5px; background:var(--ink); animation:spin 60s linear infinite}
+.hand.m{width:7px; height:36%; margin-left:-3.5px; background:var(--violet-deep); animation:spin 8s linear infinite}
+.hand.s{width:3px; height:41%; margin-left:-1.5px; background:var(--rose); animation:spin 2.5s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.floaty{animation:floaty 5s ease-in-out infinite}
+@keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+.orbit-emoji{position:absolute; font-size:1.6rem; animation:floaty 4.5s ease-in-out infinite}
+/* ============ CARDS & GRIDS ============ */
+.grid-2{display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:18px}
+.grid-3{display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:16px}
+.grid-4{display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:14px}
+.card{background:#fff; border:1.5px solid var(--line); border-radius:var(--r-lg); padding:20px; box-shadow:var(--shadow)}
+.card h4{font-family:var(--font-head); font-size:1.12rem; margin-bottom:6px}
+.card p{font-size:.93rem; color:var(--ink-soft); line-height:1.55}
+.slide.night .card{background:rgba(255,255,255,.07); border-color:rgba(255,255,255,.16)}
+.slide.night .card p{color:#C9C4EE}
+.unit-card{
+  background:#fff; border:1.5px solid var(--line); border-radius:var(--r-md);
+  padding:14px 15px; box-shadow:var(--shadow); display:flex; gap:12px; align-items:center;
+  transition:.2s; position:relative; overflow:hidden;
+}
+.unit-card::before{content:''; position:absolute; left:0; top:0; bottom:0; width:6px; background:var(--c,var(--violet))}
+.unit-card:hover{transform:translateY(-4px) scale(1.015); box-shadow:var(--shadow-lg)}
+.unit-card .emo{font-size:1.7rem; line-height:1}
+.unit-card .nm{font-weight:800; font-family:var(--font-head); font-size:1.02rem}
+.unit-card .eq{font-size:.85rem; color:var(--ink-soft); font-weight:600}
+.callout{
+  border-radius:var(--r-md); padding:16px 18px; font-size:.95rem; line-height:1.6;
+  background:var(--amber-soft); border:1.5px solid #FDE68A; color:#78350F;
+}
+.callout b{color:#92400E}
+.callout.nightable{background:rgba(255,255,255,.08); border-color:rgba(255,255,255,.2); color:#E9E5FF}
+.callout.nightable b{color:#FDE68A}
+
+/* ============ TANGGA KONVERSI ============ */
+.ladder{display:flex; flex-direction:column; gap:8px; margin-top:10px}
+.rung{
+  display:flex; align-items:center; justify-content:center; gap:12px;
+  border-radius:14px; padding:11px 16px; font-family:var(--font-head);
+  font-weight:700; color:#fff; box-shadow:var(--shadow); position:relative;
+}
+.rung small{font-family:var(--font-body); font-weight:700; opacity:.92; font-size:.8rem}
+.ladder-side{display:grid; grid-template-columns:56px 1fr 56px; gap:0; align-items:stretch; margin-top:10px}
+.side-col{display:flex; flex-direction:column; justify-content:space-around; align-items:center; padding:6px 0}
+.side-tag{font-weight:800; font-size:.78rem; padding:8px 6px; border-radius:10px; text-align:center; line-height:1.25}
+.side-tag.down{background:var(--green-soft); color:#166534; border:1.5px solid #BBF7D0}
+.side-tag.up{background:var(--rose-soft); color:#9F1239; border:1.5px solid #FECDD3}
+
+/* ============ TIMELINE (LINTAS TENGAH MALAM) ============ */
+.timeline{position:relative; margin:26px 0 8px; padding:0 6px}
+.tl-track{position:relative; height:58px; background:#fff; border:2px solid var(--line); border-radius:99px; overflow:hidden}
+.tl-seg{position:absolute; top:0; bottom:0; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:.88rem; color:#fff}
+.tl-mid{position:absolute; top:-10px; bottom:-10px; left:58%; width:0; border-left:3px dashed var(--amber)}
+.tl-label{position:absolute; top:calc(100% + 8px); transform:translateX(-50%); font-weight:800; font-size:.86rem; color:var(--ink); background:#fff; border:1.5px solid var(--line); padding:5px 11px; border-radius:99px; white-space:nowrap}
+.tl-moon{position:absolute; top:-21px; transform:translateX(-50%); font-size:1.3rem; z-index:2}
+
+/* ============ SEGITIGA KECEPATAN ============ */
+.tri-wrap{display:flex; flex-direction:column; align-items:center; margin:8px 0}
+.triangle{
+  width:min(320px,80vw); aspect-ratio:1.06; position:relative; filter:drop-shadow(0 14px 26px rgba(39,48,67,.18));
+}
+.tri-top,.tri-bl,.tri-br{position:absolute; display:flex; flex-direction:column; align-items:center; justify-content:center; font-family:var(--font-head); color:#fff}
+.tri-top{top:0; left:0; right:0; height:46%; clip-path:polygon(50% 0,100% 100%,0 100%); background:linear-gradient(180deg,#7C3AED,#9F67FF)}
+.tri-bl{bottom:0; left:0; width:52%; height:56%; clip-path:polygon(0 0,100% 100%,0 100%); background:linear-gradient(180deg,#0D9488,#14B8A6)}
+.tri-br{bottom:0; right:0; width:52%; height:56%; clip-path:polygon(100% 0,100% 100%,0 100%); background:linear-gradient(180deg,#F59E0B,#FBBF24)}
+.tri-top span,.tri-bl span,.tri-br span{font-size:2rem; font-weight:800; transform:translateY(-10px)}
+.tri-top small,.tri-bl small,.tri-br small{font-size:.8rem; font-weight:700; transform:translateY(-14px); opacity:.95}
+.tri-formula{display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-top:16px}
+.formula-pill{background:#fff; border:2px solid var(--line); border-radius:99px; padding:10px 18px; font-weight:800; box-shadow:var(--shadow)}
+.formula-pill b{color:var(--teal-deep)}
+
+/* ============ LANGKAH INTERAKTIF ============ */
+.soal-box{
+  background:#fff; border:2px solid var(--line); border-left:8px solid var(--violet);
+  border-radius:var(--r-md); padding:18px 20px; margin-bottom:16px; box-shadow:var(--shadow);
+}
+.soal-box .q-tag{display:inline-block; font-size:.75rem; font-weight:800; letter-spacing:1.2px; text-transform:uppercase; color:#fff; background:var(--violet); padding:4px 12px; border-radius:99px; margin-bottom:10px}
+.soal-box p{font-size:1rem; line-height:1.65}
+.steps{display:flex; flex-direction:column; gap:10px}
+.step{
+  display:none; gap:12px; align-items:flex-start; background:var(--violet-soft);
+  border:1.5px solid #DDD1F8; border-radius:var(--r-md); padding:13px 16px;
+  animation:pop .35s ease;
+}
+.step.show{display:flex}
+.step .n{
+  min-width:30px; height:30px; border-radius:50%; background:var(--violet); color:#fff;
+  display:flex; align-items:center; justify-content:center; font-weight:800; font-size:.88rem; margin-top:2px;
+}
+.step .t{font-size:.95rem; line-height:1.6}
+.step .t b{color:var(--violet-deep)}
+.step.final{background:var(--green-soft); border-color:#BBF7D0}
+.step.final .n{background:var(--green)}
+.step.final .t b{color:#166534}
+@keyframes pop{from{opacity:0; transform:translateY(8px) scale(.98)}to{opacity:1; transform:none}}
+.step-ctrl{display:flex; gap:10px; margin-top:14px; flex-wrap:wrap}
+
+/* ============ KUIS / LATIHAN ============ */
+.lat-head{display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap; margin-bottom:6px}
+.score-pill{background:#fff; border:2px solid var(--line); border-radius:99px; padding:9px 18px; font-weight:800; font-size:.92rem; color:var(--ink-soft); box-shadow:var(--shadow)}
+.score-pill b{color:var(--green); font-size:1.05rem}
+.q-card{background:#fff; border:1.5px solid var(--line); border-radius:var(--r-lg); padding:20px; box-shadow:var(--shadow); margin-bottom:16px}
+.q-top{display:flex; gap:10px; align-items:flex-start; margin-bottom:12px}
+.q-num{
+  min-width:34px; height:34px; border-radius:12px; color:#fff; display:flex; align-items:center;
+  justify-content:center; font-weight:800; font-size:.9rem; background:var(--qc,var(--violet));
+}
+.q-type{display:inline-block; font-size:.68rem; font-weight:800; letter-spacing:1px; text-transform:uppercase; padding:3px 9px; border-radius:99px; margin-bottom:6px; background:var(--qc-soft,var(--violet-soft)); color:var(--qc,var(--violet-deep))}
+.q-text{font-size:1rem; font-weight:700; line-height:1.6}
+.q-opts{display:grid; gap:9px; margin:12px 0}
+.q-opt{
+  display:flex; align-items:center; gap:11px; border:2px solid var(--line); border-radius:13px;
+  padding:11px 14px; cursor:pointer; transition:.15s; font-weight:600; font-size:.95rem; background:#FCFBF7;
+}
+.q-opt:hover{border-color:var(--qc,var(--violet)); background:#fff}
+.q-opt .abc{min-width:28px; height:28px; border-radius:9px; background:#EEEBE2; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:.82rem; color:var(--ink-soft)}
+.q-opt.sel{border-color:var(--qc,var(--violet)); background:var(--qc-soft,var(--violet-soft))}
+.q-opt.correct{border-color:var(--green); background:var(--green-soft)}
+.q-opt.correct .abc{background:var(--green); color:#fff}
+.q-opt.wrong{border-color:var(--rose); background:var(--rose-soft)}
+.q-opt.wrong .abc{background:var(--rose); color:#fff}
+.q-opt.missed{border-color:var(--amber); background:var(--amber-soft); border-style:dashed}
+.q-inputs{display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin:12px 0}
+.ans-field{display:flex; align-items:center; gap:8px; background:#FCFBF7; border:2px solid var(--line); border-radius:13px; padding:7px 12px}
+.ans-field:focus-within{border-color:var(--qc,var(--violet)); background:#fff}
+.ans-field label{font-weight:800; font-size:.85rem; color:var(--ink-soft); white-space:nowrap}
+.ans-field input{
+  border:none; outline:none; width:110px; font-weight:800; font-size:1rem; background:transparent; color:var(--ink);
+}
+.ans-field input.good{color:var(--green)}
+.ans-field input.bad{color:var(--rose)}
+.bs-group{display:flex; gap:10px; margin:12px 0}
+.bs-btn{
+  flex:1; max-width:220px; border:2px solid var(--line); background:#FCFBF7; border-radius:13px;
+  padding:12px; font-weight:800; font-size:.98rem; transition:.15s; display:flex; align-items:center; justify-content:center; gap:8px;
+}
+.bs-btn:hover{border-color:var(--qc,var(--violet))}
+.bs-btn.sel{border-color:var(--qc,var(--violet)); background:var(--qc-soft,var(--violet-soft))}
+.bs-btn.correct{border-color:var(--green); background:var(--green-soft)}
+.bs-btn.wrong{border-color:var(--rose); background:var(--rose-soft)}
+.q-actions{display:flex; gap:10px; margin-top:6px; flex-wrap:wrap}
+.pembahasan{
+  display:none; margin-top:14px; border-radius:var(--r-md); padding:15px 17px;
+  background:#F0FDFA; border:1.5px solid #99F6E4; font-size:.93rem; line-height:1.65;
+}
+.pembahasan.show{display:block; animation:pop .3s ease}
+.pembahasan .pb-title{font-weight:800; color:var(--teal-deep); margin-bottom:5px; display:flex; align-items:center; gap:7px}
+.verdict{font-weight:800; margin-top:10px; font-size:.95rem; display:none}
+.verdict.show{display:block; animation:pop .3s ease}
+.verdict.ok{color:var(--green)}
+.verdict.no{color:var(--rose)}
+
+/* ============ REFLEKSI ============ */
+.emoji-rate{display:flex; gap:14px; justify-content:center; margin:18px 0}
+.rate-btn{
+  width:84px; height:84px; border-radius:24px; border:2.5px solid var(--line); background:#fff;
+  font-size:2.2rem; transition:.2s; box-shadow:var(--shadow); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px;
+}
+.rate-btn small{font-size:.68rem; font-weight:800; color:var(--ink-soft)}
+.rate-btn:hover{transform:translateY(-4px)}
+.rate-btn.sel{border-color:var(--violet); background:var(--violet-soft); transform:translateY(-4px) scale(1.04); box-shadow:0 12px 26px rgba(124,58,237,.25)}
+.check-row{display:flex; align-items:center; gap:10px; background:#fff; border:1.5px solid var(--line); border-radius:12px; padding:11px 14px; font-weight:700; font-size:.92rem; cursor:pointer; transition:.15s}
+.check-row:hover{border-color:var(--teal)}
+.check-row input{width:19px; height:19px; accent-color:var(--teal)}
+.check-row.done{background:var(--teal-soft); border-color:var(--teal)}
+
+/* ============ MISC ============ */
+.center{text-align:center}
+.mt{margin-top:18px}
+.mb{margin-bottom:18px}
+.divider-hero{min-height:calc(100vh - 170px); display:flex; flex-direction:column; justify-content:center}
+.big-num{font-family:var(--font-head); font-size:clamp(3rem,8vw,5rem); font-weight:800; line-height:1}
+.jump-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:14px; margin-top:22px}
+.jump-card{border:2px solid rgba(255,255,255,.25); background:rgba(255,255,255,.08); border-radius:var(--r-lg); padding:18px; color:#fff; text-align:left; transition:.2s; font-family:var(--font-head)}
+.jump-card:hover{background:rgba(255,255,255,.16); transform:translateY(-4px)}
+.jump-card .jc-emo{font-size:1.9rem}
+.jump-card .jc-t{font-weight:800; font-size:1.05rem; margin:8px 0 4px}
+.jump-card .jc-s{font-family:var(--font-body); font-size:.84rem; opacity:.85; font-weight:600}
+.summary-row{display:flex; gap:14px; align-items:flex-start; background:#fff; border:1.5px solid var(--line); border-radius:var(--r-md); padding:15px 17px; box-shadow:var(--shadow)}
+.summary-row .ico{font-size:1.5rem; line-height:1.2}
+.summary-row h4{font-family:var(--font-head); font-size:1.02rem; margin-bottom:3px}
+.summary-row p{font-size:.9rem; color:var(--ink-soft); line-height:1.55}
+.thanks-emo{font-size:clamp(3.6rem,9vw,6rem); line-height:1; animation:floaty 4s ease-in-out infinite}
+.stars-bg{position:absolute; inset:0; overflow:hidden; pointer-events:none}
+.stars-bg span{position:absolute; color:#FFE9A8; opacity:.7; animation:twinkle 3s ease-in-out infinite}
+@keyframes twinkle{0%,100%{opacity:.25; transform:scale(.85)}50%{opacity:.95; transform:scale(1.1)}}
+
+@media (max-width:860px){
+  .cover-grid{grid-template-columns:1fr; gap:26px}
+  .clock-stage{order:-1}
+  .clock{width:min(190px,52vw)}
+  .slide-scroll{padding:66px 13px 92px}
+  .card{padding:16px}
+  .q-card{padding:15px}
+  .rate-btn{width:72px;height:72px;font-size:1.8rem}
+}
+</style>
+</head>
+<body>
+<!-- ===== TOP BAR ===== -->
+<div id="progressWrap"><div id="progressBar"></div></div>
+<div id="topbar">
+  <div id="brand"><span class="dot"></span> Konversi Satuan Waktu</div>
+  <div id="brand" style="font-family:var(--font-body);font-weight:800">⏳ Matematika Interaktif</div>
+</div>
+
+<!-- ===== SLIDE 1: COVER ===== -->
+<section class="slide" data-title="Cover">
+  <div class="slide-scroll">
+    <div class="slide-inner cover">
+      <div class="cover-grid">
+        <div>
+          <span class="kicker">⏰ Presentasi Matematika Interaktif</span>
+          <h1>Konversi <span class="grad">Satuan Waktu</span> &amp; Penerapannya</h1>
+          <p class="lead">Ayo berpetualang mengenal waktu! Dari <b>detik</b> sampai <b>milenium</b>, dari <b>penjumlahan</b> sampai <b>kecepatan kereta</b> — semua akan kita jelajahi lewat permainan, kuis, dan tantangan seru.</p>
+          <div class="chips">
+            <span class="chip">🧮 <b>12</b> satuan waktu</span>
+            <span class="chip">📖 <b>6</b> contoh soal interaktif</span>
+            <span class="chip">✏️ <b>50</b> soal latihan</span>
+          </div>
+          <div style="display:flex;gap:12px;flex-wrap:wrap">
+            <button class="btn btn-primary" onclick="go(1)">🚀 Mulai Presentasi</button>
+            <button class="btn btn-ghost" onclick="openMenu()">📋 Daftar Slide</button>
+          </div>
+        </div>
+        <div class="clock-stage floaty">
+          <div class="clock">
+            <div class="tick big" style="transform:rotate(0deg)"></div>
+            <div class="tick" style="transform:rotate(30deg)"></div>
+            <div class="tick big" style="transform:rotate(90deg)"></div>
+            <div class="tick" style="transform:rotate(150deg)"></div>
+            <div class="tick big" style="transform:rotate(180deg)"></div>
+            <div class="tick" style="transform:rotate(210deg)"></div>
+            <div class="tick big" style="transform:rotate(270deg)"></div>
+            <div class="tick" style="transform:rotate(330deg)"></div>
+            <div class="hand h"></div><div class="hand m"></div><div class="hand s"></div>
+            <div class="center"></div>
+            <span class="orbit-emoji" style="top:-30px;right:-14px">⏰</span>
+            <span class="orbit-emoji" style="bottom:-26px;left:-18px;animation-delay:.8s">🕰️</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SLIDE 2: TUJUAN ===== -->
+<section class="slide" data-title="Tujuan Pembelajaran">
+  <div class="slide-scroll">
+    <div class="slide-inner">
+      <span class="kicker">🎯 Peta Perjalanan Kita</span>
+      <h2 class="title">Apa yang Akan Kita Kuasai Hari Ini?</h2>
+      <p class="sub">Setelah presentasi ini, kamu akan mampu melakukan hal-hal berikut dengan percaya diri. Perjalanan kita dibagi menjadi lima stasiun besar!</p>
+      <div class="grid-3">
+        <div class="card"><h4>1️⃣ Mengenal Satuan Waktu</h4><p>Mengurutkan satuan dari detik hingga milenium, serta menghafal hubungan konversi antar satuan: menit, jam, hari, minggu, bulan, tahun, windu, lustrum, dasawarsa, abad.</p></div>
+        <div class="card"><h4>2️⃣ Konversi Antar Satuan</h4><p>Mengubah satuan besar menjadi kecil (kali) dan satuan kecil menjadi besar (bagi) dengan tangga konversi, lalu berlatih memakai kalkulator konversi interaktif.</p></div>
+        <div class="card"><h4>3️⃣ Penjumlahan &amp; Pengurangan</h4><p>Menjumlahkan dan mengurangkan satuan waktu campuran, termasuk teknik "pinjam" 1 jam = 60 menit saat pengurangan.</p></div>
+        <div class="card"><h4>4️⃣ Durasi Lintas Tengah Malam</h4><p>Menghitung lama peristiwa yang melewati pukul 24.00, misalnya perjalanan kereta malam atau pendakian gunung.</p></div>
+        <div class="card"><h4>5️⃣ Usia &amp; Satuan Besar</h4><p>Menghitung usia dalam tahun, windu, dasawarsa, dan abad — dari usia kakek hingga umur candi bersejarah.</p></div>
+        <div class="card"><h4>6️⃣ Waktu, Jarak, Kecepatan</h4><p>Menggunakan hubungan v = s ÷ t untuk menyelesaikan soal perjalanan sehari-hari.</p></div>
+      </div>
+      <div class="callout mt"><b>💡 Cara pakai:</b> Gunakan tombol panah di papan navigasi bawah atau tombol keyboard <b>←</b> dan <b>→</b>. Setiap contoh soal bisa dibuka langkah demi langkah, dan semua soal latihan punya tombol <b>Cek Jawaban</b> beserta pembahasan.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SLIDE 3: PETA SATUAN WAKTU ===== -->
+<section class="slide" data-title="Peta Satuan Waktu">
+  <div class="slide-scroll">
+    <div class="slide-inner">
+      <span class="kicker">🗺️ Stasiun 1 — Mengenal Satuan</span>
+      <h2 class="title">Peta Satuan Waktu: Dari Detik hingga Milenium</h2>
+      <p class="sub">Waktu bisa diukur dengan banyak "kemasan". Semakin ke kanan, semakin besar kemasannya. Arahkan kursor ke kartu untuk melihat animasinya!</p>
+      <div class="grid-4">
+        <div class="unit-card" style="--c:#EF4444"><span class="emo">⚡</span><div><div class="nm">Detik (dtk/s)</div><div class="eq">Satuan terkecil yang umum dipakai · kedipan mata ± 0,3 dtk</div></div></div>
+        <div class="unit-card" style="--c:#F97316"><span class="emo">⏱️</span><div><div class="nm">Menit (mnt)</div><div class="eq">1 menit = 60 detik · menyikat gigi ± 2 menit</div></div></div>
+        <div class="unit-card" style="--c:#F59E0B"><span class="emo">🕐</span><div><div class="nm">Jam (j)</div><div class="eq">1 jam = 60 menit = 3.600 detik · pelajaran di sekolah</div></div></div>
+        <div class="unit-card" style="--c:#84CC16"><span class="emo">📅</span><div><div class="nm">Hari (hari)</div><div class="eq">1 hari = 24 jam = 86.400 detik · bumi berputar 1 kali</div></div></div>
+        <div class="unit-card" style="--c:#16A34A"><span class="emo">🗓️</span><div><div class="nm">Minggu</div><div class="eq">1 minggu = 7 hari = 168 jam · Senin s.d. Minggu</div></div></div>
+        <div class="unit-card" style="--c:#0D9488"><span class="emo">🌙</span><div><div class="nm">Bulan</div><div class="eq">1 bulan ± 30 hari · 1 bulan = 4 minggu ± 2 hari</div></div></div>
+        <div class="unit-card" style="--c:#0891B2"><span class="emo">🎂</span><div><div class="nm">Tahun</div><div class="eq">1 tahun = 12 bulan = 365 hari (kabisat: 366)</div></div></div>
+        <div class="unit-card" style="--c:#2563EB"><span class="emo">🏆</span><div><div class="nm">Lustrum</div><div class="eq">1 lustrum = 5 tahun · dari bahasa Latin <i>lustrum</i></div></div></div>
+        <div class="unit-card" style="--c:#7C3AED"><span class="emo">🎓</span><div><div class="nm">Windu</div><div class="eq">1 windu = 8 tahun · dari bahasa Jawa <i>windu</i></div></div></div>
+        <div class="unit-card" style="--c:#9333EA"><span class="emo">🌟</span><div><div class="nm">Dasawarsa</div><div class="eq">1 dasawarsa = 10 tahun · sering disebut dekade</div></div></div>
+        <div class="unit-card" style="--c:#DB2777"><span class="emo">🏛️</span><div><div class="nm">Abad</div><div class="eq">1 abad = 100 tahun = 10 dasawarsa</div></div></div>
+        <div class="unit-card" style="--c:#BE123C"><span class="emo">🦕</span><div><div class="nm">Milenium</div><div class="eq">1 milenium = 1.000 tahun = 10 abad</div></div></div>
+      </div>
+      <div class="callout mt"><b>✨ Tahukah kamu?</b> Kata <b>windu</b> berasal dari bahasa Jawa, <b>dasawarsa</b> dari bahasa Sanskerta (<i>dasa</i> = sepuluh, <i>warsa</i> = tahun), dan <b>abad</b> dari bahasa Arab. Satuan waktu menyimpan sejarah bahasa Nusantara dan dunia!</div>
+    </div>
+  </div>
+</section>
+<!-- ===== SLIDE 4: TANGGA KONVERSI ===== -->
+<section class="slide" data-title="Tangga Konversi">
+  <div class="slide-scroll">
+    <div class="slide-inner">
+      <span class="kicker">🪜 Stasiun 2 — Konversi</span>
+      <h2 class="title">Tangga Konversi: Turun Dikali, Naik Dibagi</h2>
+      <p class="sub">Bayangkan satuan waktu sebagai anak tangga. <b style="color:#166534">Turun</b> ke satuan yang lebih kecil → <b style="color:#166534">dikali</b>. <b style="color:#9F1239">Naik</b> ke satuan yang lebih besar → <b style="color:#9F1239">dibagi</b>.</p>
+      <div style="display:grid;grid-template-columns:1.15fr .85fr;gap:26px;align-items:start" class="ladder-grid">
+        <div>
+          <div class="ladder-side" style="grid-template-columns:64px 1fr 64px">
+            <div class="side-col"><span class="side-tag down">× 12</span></div>
+            <div class="rung" style="background:#0891B2">TAHUN <small>12 bulan · 365 hari</small></div>
+            <div class="side-col"><span class="side-tag up">÷ 12</span></div>
+          </div>
+          <div class="ladder-side" style="grid-template-columns:64px 1fr 64px">
+            <div class="side-col"><span class="side-tag down">× 4 ±</span></div>
+            <div class="rung" style="background:#0D9488">BULAN <small>± 30 hari</small></div>
+            <div class="side-col"><span class="side-tag up">÷ 4 ±</span></div>
+          </div>
+          <div class="ladder-side" style="grid-template-columns:64px 1fr 64px">
+            <div class="side-col"><span class="side-tag down">× 7</span></div>
+            <div class="rung" style="background:#16A34A">MINGGU <small>7 hari</small></div>
+            <div class="side-col"><span class="side-tag up">÷ 7</span></div>
+          </div>
+          <div class="ladder-side" style="grid-template-columns:64px 1fr 64px">
+            <div class="side-col"><span class="side-tag down">× 24</span></div>
+            <div class="rung" style="background:#65A30D">HARI <small>24 jam</small></div>
+            <div class="side-col"><span class="side-tag up">÷ 24</span></div>
+          </div>
+          <div class="ladder-side" style="grid-template-columns:64px 1fr 64px">
+            <div class="side-col"><span class="side-tag down">× 60</span></div>
+            <div class="rung" style="background:#F59E0B">JAM <small>60 menit</small></div>
+            <div class="side-col"><span class="side-tag up">÷ 60</span></div>
+          </div>
+          <div class="ladder-side" style="grid-template-columns:64px 1fr 64px">
+            <div class="side-col"><span class="side-tag down">× 60</span></div>
+            <div class="rung" style="background:#F97316">MENIT <small>60 detik</small></div>
+            <div class="side-col"><span class="side-tag up">÷ 60</span></div>
+          </div>
+          <div class="ladder-side" style="grid-template-columns:64px 1fr 64px">
+            <div class="side-col"></div>
+            <div class="rung" style="background:#EF4444">DETIK <small>satuan dasar waktu</small></div>
+            <div class="side-col"></div>
+          </div>
+        </div>
+        <div>
+          <div class="card" style="border-top:6px solid var(--violet)">
+            <h4>🌌 Satuan Waktu di Atas "Tahun"</h4>
+            <p style="margin-bottom:12px">Satuan yang lebih besar dari tahun tidak berjenjang rapi satu sama lain, tetapi semuanya dihitung dari <b>tahun</b>:</p>
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <div class="unit-card" style="--c:#2563EB"><span class="emo">🏆</span><div><div class="nm">1 Lustrum</div><div class="eq">= 5 tahun → tahun ke lustrum: <b>÷ 5</b></div></div></div>
+              <div class="unit-card" style="--c:#7C3AED"><span class="emo">🎓</span><div><div class="nm">1 Windu</div><div class="eq">= 8 tahun → tahun ke windu: <b>÷ 8</b></div></div></div>
+              <div class="unit-card" style="--c:#9333EA"><span class="emo">🌟</span><div><div class="nm">1 Dasawarsa</div><div class="eq">= 10 tahun → tahun ke dasawarsa: <b>÷ 10</b></div></div></div>
+              <div class="unit-card" style="--c:#DB2777"><span class="emo">🏛️</span><div><div class="nm">1 Abad</div><div class="eq">= 100 tahun → tahun ke abad: <b>÷ 100</b></div></div></div>
+              <div class="unit-card" style="--c:#BE123C"><span class="emo">🦕</span><div><div class="nm">1 Milenium</div><div class="eq">= 1.000 tahun → tahun ke milenium: <b>÷ 1.000</b></div></div></div>
+            </div>
+          </div>
+          <div class="callout mt"><b>📌 Contoh cepat:</b> 3 jam = 3 × 60 = <b>180 menit</b> (turun). 120 menit = 120 ÷ 60 = <b>2 jam</b> (naik). 2 abad = 2 × 100 = <b>200 tahun</b>.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SLIDE 5: KALKULATOR KONVERSI ===== -->
+<section class="slide" data-title="Kalkulator Konversi">
+  <div class="slide-scroll">
+    <div class="slide-inner">
+      <span class="kicker">🧮 Stasiun 2 — Konversi</span>
+      <h2 class="title">Kalkulator Konversi Interaktif</h2>
+      <p class="sub">Saatnya mencoba! Masukkan angka, pilih satuan asal dan satuan tujuan, lalu tekan tombol konversi. Coba tebak dulu hasilnya sebelum menekan tombol, ya!</p>
+      <div class="card" style="max-width:720px;margin:0 auto;border-top:6px solid var(--violet)">
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <div class="ans-field" style="padding:10px 16px">
+            <label>Nilai</label>
+            <input id="cvInput" type="text" inputmode="decimal" value="3" style="width:100%;flex:1;font-size:1.25rem;text-align:center">
+          </div>
+          <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:center">
+            <select id="cvFrom" style="padding:12px;border:2px solid var(--line);border-radius:12px;font-weight:700;background:#FCFBF7">
+              <option value="detik">Detik</option><option value="menit">Menit</option><option value="jam" selected>Jam</option><option value="hari">Hari</option><option value="minggu">Minggu</option><option value="bulan">Bulan</option><option value="tahun">Tahun</option><option value="lustrum">Lustrum</option><option value="windu">Windu</option><option value="dasawarsa">Dasawarsa</option><option value="abad">Abad</option><option value="milenium">Milenium</option>
+            </select>
+            <span style="font-size:1.5rem;font-weight:800;color:var(--violet)">➜</span>
+            <select id="cvTo" style="padding:12px;border:2px solid var(--line);border-radius:12px;font-weight:700;background:#FCFBF7">
+              <option value="detik" selected>Detik</option><option value="menit">Menit</option><option value="jam">Jam</option><option value="hari">Hari</option><option value="minggu">Minggu</option><option value="bulan">Bulan</option><option value="tahun">Tahun</option><option value="lustrum">Lustrum</option><option value="windu">Windu</option><option value="dasawarsa">Dasawarsa</option><option value="abad">Abad</option><option value="milenium">Milenium</option>
+            </select>
+          </div>
+          <button class="btn btn-primary" style="justify-content:center" onclick="convert()">⚡ Konversi Sekarang</button>
+          <div id="cvResult" class="callout center" style="display:none;font-size:1.15rem"></div>
+        </div>
+      </div>
+      <div class="grid-3 mt">
+        <div class="card center"><h4>⚡ 1 jam</h4><p>= <b>60</b> menit<br>= <b>3.600</b> detik</p></div>
+        <div class="card center"><h4>📅 1 hari</h4><p>= <b>24</b> jam<br>= <b>1.440</b> menit = <b>86.400</b> detik</p></div>
+        <div class="card center"><h4>🎂 1 tahun</h4><p>= <b>12</b> bulan<br>= <b>365</b> hari (kabisat <b>366</b>)</p></div>
+      </div>
+      <p class="center" style="font-size:.8rem;color:var(--ink-soft);margin-top:10px">* Kalkulator memakai 1 bulan = 30 hari dan 1 tahun = 365 hari (pembulatan untuk memudahkan perhitungan).</p>
+    </div>
+  </div>
+</section>
+<!-- ===== SLIDE 6: PENJUMLAHAN ===== -->
+<section class="slide" data-title="Penjumlahan Satuan Waktu">
+  <div class="slide-scroll">
+    <div class="slide-inner">
+      <span class="kicker">➕ Stasiun 3 — Operasi Hitung</span>
+      <h2 class="title">Penjumlahan Satuan Waktu</h2>
+      <p class="sub">Aturan emasnya: <b>jumlahkan satuan yang sama</b> (menit dengan menit, jam dengan jam). Jika hasil menit sudah ≥ 60, "naikkan" menjadi jam!</p>
+      <div class="grid-2">
+        <div>
+          <div class="grid-2" style="gap:12px">
+            <div class="card" style="border-top:5px solid var(--teal)"><h4>📋 Langkah 1</h4><p>Susun ke bawah, satuan sejajar: jam di kiri, menit di kanan.</p></div>
+            <div class="card" style="border-top:5px solid var(--amber)"><h4>➕ Langkah 2</h4><p>Jumlahkan kolom <b>menit</b> terlebih dahulu.</p></div>
+            <div class="card" style="border-top:5px solid var(--rose)"><h4>🔄 Langkah 3</h4><p>Jika menit ≥ 60, ubah: 60 menit = 1 jam, sisanya tetap menit.</p></div>
+            <div class="card" style="border-top:5px solid var(--violet)"><h4>✅ Langkah 4</h4><p>Jumlahkan kolom <b>jam</b>, lalu tulis jawaban akhir.</p></div>
+          </div>
+          <div class="callout mt"><b>🔎 Coba pikirkan:</b> mengapa menit dijumlahkan lebih dulu? Karena menit adalah satuan yang <b>lebih kecil</b> — kelebihannya bisa "dinaikkan" menjadi jam, seperti 100 koin bisa ditukar menjadi 1 lembar uang besar!</div>
+        </div>
+        <div>
+          <div class="soal-box">
+            <span class="q-tag" style="background:var(--teal)">Contoh Soal Interaktif</span>
+            <p>Rina mengikuti les matematika selama <b>1 jam 25 menit</b>, kemudian mengerjakan PR selama <b>45 menit</b>. Berapa <b>total waktu</b> belajar Rina?</p>
+            <div class="steps mt" data-steps>
+              <div class="step"><span class="n">1</span><span class="t">Susun bersusun ke bawah:<br><b>1 jam 25 menit + 45 menit</b></span></div>
+              <div class="step"><span class="n">2</span><span class="t">Jumlahkan menit dulu: <b>25 + 45 = 70 menit</b></span></div>
+              <div class="step"><span class="n">3</span><span class="t">Ubah kelebihan menit: 70 ÷ 60 = 1 sisa 10 → <b>70 menit = 1 jam 10 menit</b></span></div>
+              <div class="step final"><span class="n">✔</span><span class="t">Jumlahkan jam: 1 + 1 = 2 → Total waktu belajar Rina = <b>2 jam 10 menit</b> 🎉</span></div>
+            </div>
+            <div class="step-ctrl">
+              <button class="btn btn-primary btn-sm" data-next-step>Tampilkan Langkah 1</button>
+              <button class="btn btn-ghost btn-sm" data-reset-steps>↺ Ulangi</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SLIDE 7: PENGURANGAN ===== -->
+<section class="slide" data-title="Pengurangan Satuan Waktu">
+  <div class="slide-scroll">
+    <div class="slide-inner">
+      <span class="kicker">➖ Stasiun 3 — Operasi Hitung</span>
+      <h2 class="title">Pengurangan Satuan Waktu &amp; Teknik Meminjam</h2>
+      <p class="sub">Kalau menit yang dikurangi <b>lebih besar</b> dari menit yang dimiliki, kita <b>pinjam 1 jam</b> dan mengubahnya menjadi 60 menit — persis seperti meminjam pada pengurangan biasa!</p>
+      <div class="grid-2">
+        <div>
+          <div class="soal-box" style="border-left-color:var(--rose)">
+            <span class="q-tag" style="background:var(--rose)">Contoh Soal Interaktif</span>
+            <p>Ibu membutuhkan <b>4 jam 15 menit</b> untuk menyelesaikan satu loyang kue. Setelah bekerja <b>1 jam 50 menit</b>, Ibu beristirahat. Berapa <b>sisa waktu</b> memasak Ibu?</p>
+            <div class="steps mt" data-steps>
+              <div class="step"><span class="n">1</span><span class="t">Tulis: <b>4 jam 15 menit − 1 jam 50 menit</b></span></div>
+              <div class="step"><span class="n">2</span><span class="t">15 − 50 tidak bisa! Pinjam 1 jam = 60 menit → <b>4 j 15 m = 3 j 75 m</b></span></div>
+              <div class="step"><span class="n">3</span><span class="t">Kurangkan menit: <b>75 − 50 = 25 menit</b></span></div>
+              <div class="step"><span class="n">4</span><span class="t">Kurangkan jam: <b>3 − 1 = 2 jam</b></span></div>
+              <div class="step final"><span class="n">✔</span><span class="t">Sisa waktu memasak Ibu = <b>2 jam 25 menit</b> 🎂</span></div>
+            </div>
+            <div class="step-ctrl">
+              <button class="btn btn-primary btn-sm" data-next-step>Tampilkan Langkah 1</button>
+              <button class="btn btn-ghost btn-sm" data-reset-steps>↺ Ulangi</button>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="grid-2" style="gap:12px">
+            <div class="card" style="border-top:5px solid var(--rose)"><h4>🚧 Cek dulu!</h4><p>Bandingkan menit: apakah menit atas <b>cukup</b> untuk dikurangi?</p></div>
+            <div class="card" style="border-top:5px solid var(--amber)"><h4>🤲 Pinjam</h4><p>Jika kurang, pinjam 1 jam dari kolom jam: <b>1 jam = 60 menit</b>.</p></div>
+            <div class="card" style="border-top:5px solid var(--teal)"><h4>➖ Kurangi</h4><p>Kurangkan menit dulu, baru kurangkan jam.</p></div>
+            <div class="card" style="border-top:5px solid var(--green)"><h4>🔍 Uji balik</h4><p>2 j 25 m + 1 j 50 m = 3 j 75 m = <b>4 j 15 m</b> ✔ jawaban benar!</p></div>
+          </div>
+          <div class="callout mt"><b>🧠 Trik alternatif:</b> ubah semuanya ke satuan terkecil dulu. 4 j 15 m = 255 menit, 1 j 50 m = 110 menit → 255 − 110 = 145 menit = <b>2 jam 25 menit</b>. Hasilnya sama, pilih cara yang paling nyaman bagimu!</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SLIDE 8: DIVIDER APLIKASI ===== -->
+<section class="slide night" data-title="Bagian 2: Aplikasi">
+  <div class="stars-bg">
+    <span style="top:12%;left:8%;font-size:1.4rem">✦</span><span style="top:22%;left:80%;font-size:1rem;animation-delay:.6s">✦</span><span style="top:60%;left:12%;font-size:.9rem;animation-delay:1.2s">✦</span><span style="top:75%;left:70%;font-size:1.3rem;animation-delay:.3s">✦</span><span style="top:35%;left:45%;font-size:.8rem;animation-delay:1.6s">✦</span><span style="top:15%;left:55%;font-size:1.1rem;animation-delay:.9s">✦</span>
+  </div>
+  <div class="slide-scroll">
+    <div class="slide-inner divider-hero center">
+      <span class="kicker">🚀 Bagian 2</span>
+      <div class="big-num" style="color:#FDE68A">Aplikasi &amp; Contoh Soal</div>
+      <p class="sub" style="margin:14px auto 0;color:#C9C4EE">Sekarang saatnya menerapkan ilmu kita pada masalah nyata. Ada <b style="color:#fff">tiga bab</b> menarik, masing-masing dengan <b style="color:#fff">2 contoh soal interaktif</b> yang bisa dibuka langkah demi langkah!</p>
+      <div class="jump-grid" style="max-width:900px;width:100%">
+        <button class="jump-card" onclick="go(8)"><span class="jc-emo">🌙</span><div class="jc-t">Bab 1 — Durasi Lintas Tengah Malam</div><div class="jc-s">Menghitung perjalanan &amp; kegiatan yang melewati pukul 24.00</div></button>
+        <button class="jump-card" onclick="go(11)"><span class="jc-emo">🎂</span><div class="jc-t">Bab 2 — Usia &amp; Satuan Besar</div><div class="jc-s">Windu, dasawarsa, abad, dan menghitung usia</div></button>
+        <button class="jump-card" onclick="go(14)"><span class="jc-emo">🏎️</span><div class="jc-t">Bab 3 — Waktu, Jarak &amp; Kecepatan</div><div class="jc-s">Rumus ajaib v = s ÷ t dalam kehidupan sehari-hari</div></button>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- ===== SLIDE 9: BAB 1 KONSEP ===== -->
+<section class="slide night" data-title="Bab 1: Durasi Lintas Tengah Malam">
+  <div class="stars-bg">
+    <span style="top:10%;left:6%;font-size:1.3rem">✦</span><span style="top:18%;left:88%;font-size:1rem;animation-delay:.5s">✦</span><span style="top:70%;left:10%;font-size:.9rem;animation-delay:1.1s">✦</span><span style="top:82%;left:75%;font-size:1.2rem;animation-delay:.2s">✦</span><span style="top:40%;left:92%;font-size:.9rem;animation-delay:1.5s">✦</span>
+  </div>
+  <div class="slide-scroll">
+    <div class="slide-inner">
+      <span class="kicker">🌙 Bab 1 — Aplikasi Waktu</span>
+      <h2 class="title">Durasi Lintas Tengah Malam</h2>
+      <p class="sub">Ada peristiwa yang dimulai <b style="color:#FDE68A">sebelum</b> pukul 24.00 dan berakhir <b style="color:#FDE68A">sesudahnya</b> — misalnya kereta malam atau pendakian gunung. Jam tidak bisa langsung dikurangi, jadi kita perlu trik khusus!</p>
+      <div class="timeline">
+        <div class="tl-track">
+          <div class="tl-seg" style="left:0;width:58%;background:#4F46E5">Bagian malam · 1 j 30 m</div>
+          <div class="tl-seg" style="left:58%;width:42%;background:#7C3AED">Bagian dini hari · 45 m</div>
+        </div>
+        <div class="tl-mid" style="left:58%"></div>
+        <span class="tl-moon" style="left:58%">🌙</span>
+        <span class="tl-label" style="left:3%">22.30</span>
+        <span class="tl-label" style="left:58%">24.00 = 00.00</span>
+        <span class="tl-label" style="left:95%">00.15</span>
+      </div>
+      <div class="grid-2 mt" style="margin-top:64px">
+        <div class="card"><h4>✂️ Cara 1 — Pecah di Pukul 24.00</h4><p>Hitung durasi <b>sampai tengah malam</b> dulu, lalu <b>dari tengah malam</b> sampai selesai, terakhir jumlahkan keduanya.<br><br><b>Contoh:</b> 22.30 → 00.15<br>22.30 → 24.00 = 1 j 30 m<br>00.00 → 00.15 = 15 m<br>Total = <b>1 jam 45 menit</b></p></div>
+        <div class="card"><h4>🧮 Cara 2 — Rumus Kilat</h4><p><b>Durasi = (24.00 − jam mulai) + jam selesai</b><br><br>Contoh: mulai 22.30, selesai 00.15<br>(24.00 − 22.30) = 1 j 30 m<br>+ 00.15 = 15 m<br>Total = <b>1 jam 45 menit</b></p></div>
+      </div>
+      <div class="callout nightable mt"><b>⚠️ Hati-hati!</b> Kesalahan paling umum: mengurangkan langsung 00.15 − 22.30 (hasilnya negatif!). Selalu <b>pecah di pukul 24.00</b> dulu, atau hitung mundur: berapa lama lagi sampai 24.00?</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SLIDE 10: BAB 1 SOAL 1 ===== -->
+<section class="slide" data-title="Bab 1: Soal 1">
+  <div class="slide-scroll">
+    <div class="slide-inner">
+      <span class="kicker">🌙 Bab 1 — Contoh Soal 1</span>
+      <h2 class="title">Perjalanan Kereta Api Malam 🚆</h2>
+      <div class="soal-box" style="max-width:820px;margin:14px auto 0">
+        <span class="q-tag">Soal</span>
+        <p>Kereta api <b>Argo Bengalam</b> berangkat dari Stasiun Gambir pukul <b>22.15</b> dan tiba di Stasiun Tugu pukul <b>03.40</b> keesokan harinya. Berapa <b>lama perjalanan</b> kereta tersebut?</p>
+        <div class="steps mt" data-steps>
+          <div class="step"><span class="n">1</span><span class="t">Perjalanan melewati tengah malam → <b>pecah di pukul 24.00</b>. Cek dulu: 22.15 → 24.00 berapa lama?</span></div>
+          <div class="step"><span class="n">2</span><span class="t">Dari 22.15 ke 24.00: jam 22.15 + 1 jam = 23.15, masih perlu 45 menit ke 24.00 → durasi = <b>1 jam 45 menit</b></span></div>
+          <div class="step"><span class="n">3</span><span class="t">Dari 00.00 ke 03.40 = <b>3 jam 40 menit</b></span></div>
+          <div class="step"><span class="n">4</span><span class="t">Jumlahkan kedua bagian: 1 j 45 m + 3 j 40 m = 4 j 85 m = 4 j + (85 − 60) m = <b>5 jam 25 menit</b></span></div>
+          <div class="step final"><span class="n">✔</span><span class="t">Lama perjalanan kereta = <b>5 jam 25 menit</b> 🚉</span></div>
+        </div>
+        <div class="step-ctrl">
+          <button class="btn btn-primary btn-sm" data-next-step>Tampilkan Langkah 1</button>
+          <button class="btn btn-ghost btn-sm" data-reset-steps>↺ Ulangi</button>
+        </div>
+      </div>
+      <div class="callout" style="max-width:820px;margin:0 auto"><b>💡 Perhatikan langkah 4:</b> 1 j 45 m + 3 j 40 m → menit: 45 + 40 = 85 menit. Karena 85 ≥ 60, ubah menjadi 1 jam 25 menit. Maka totalnya 5 jam 25 menit — penjumlahan satuan waktu dari stasiun sebelumnya dipakai lagi di sini!</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SLIDE 11: BAB 1 SOAL 2 ===== -->
+<section class="slide" data-title="Bab 1: Soal 2">
+  <div class="slide-scroll">
+    <div class="slide-inner">
+      <span class="kicker">🌙 Bab 1 — Contoh Soal 2</span>
+      <h2 class="title">Perjalanan Bis Malam 🚌</h2>
+      <div class="soal-box" style="max-width:820px;margin:14px auto 0;border-left-color:var(--teal)">
+        <span class="q-tag" style="background:var(--teal)">Soal</span>
+        <p>Bunda berangkat dengan bis malam dari Jakarta pukul <b>21.40</b> dan tiba di Bandung pukul <b>01.25</b>. Berapa <b>durasi perjalanan</b> Bunda?</p>
+        <div class="steps mt" data-steps>
+          <div class="step"><span class="n">1</span><span class="t">Pakai rumus kilat: <b>Durasi = (24.00 − jam mulai) + jam selesai</b></span></div>
+          <div class="step"><span class="n">2</span><span class="t">Bagian malam: 24.00 − 21.40 → pinjam: 24.00 = 23.60 → 23.60 − 21.40 = <b>2 jam 20 menit</b></span></div>
+          <div class="step"><span class="n">3</span><span class="t">Bagian dini hari: 00.00 sampai 01.25 = <b>1 jam 25 menit</b></span></div>
+          <div class="step final"><span class="n">✔</span><span class="t">Total: 2 j 20 m + 1 j 25 m = 3 j 45 m → <b>Durasi perjalanan = 3 jam 45 menit</b> 🌉</span></div>
+        </div>
+        <div class="step-ctrl">
+          <button class="btn btn-primary btn-sm" data-next-step>Tampilkan Langkah 1</button>
+          <button class="btn btn-ghost btn-sm" data-reset-steps>↺ Ulangi</button>
+        </div>
+      </div>
+      <div class="callout" style="max-width:820px;margin:0 auto"><b>🤓 Trik pada langkah 2:</b> 24.00 − 21.40 terasa sulit karena menit 00 lebih kecil dari 40. Tulis 24.00 sebagai <b>23.60</b> (meminjam 1 jam = 60 menit), lalu kurangkan: 23.60 − 21.40 = 2.20 → 2 jam 20 menit.</div>
+    </div>
+  </div>
+</section>
+<!-- ===== SLIDE 12: BAB 2 KONSEP ===== -->
+<section class="slide" data-title="Bab 2: Usia & Satuan Besar">
+  <div class="slide-scroll">
+    <div class="slide-inner">
+      <span class="kicker">🎂 Bab 2 — Aplikasi Waktu</span>
+      <h2 class="title">Usia &amp; Satuan Waktu Besar</h2>
+      <p class="sub">Usia manusia dan bangunan bersejarah sering dinyatakan dalam satuan besar. Mari pelajari dua keterampilan: <b>menghitung usia</b> dan <b>mengubahnya</b> ke windu, dasawarsa, bahkan abad!</p>
+      <div class="grid-2">
+        <div class="card" style="border-top:6px solid var(--amber)">
+          <h4>🗓️ Menghitung Usia / Lama Waktu</h4>
+          <p style="margin-bottom:10px">Rumus dasarnya sederhana:</p>
+          <div class="formula-pill" style="justify-content:center;display:flex">Usia = <b style="margin-left:6px">tahun sekarang − tahun lahir</b></div>
+          <p class="mt">Contoh: anak yang lahir tahun <b>2015</b>, pada tahun <b>2026</b> berusia 2026 − 2015 = <b>11 tahun</b>. Cara yang sama dipakai untuk menghitung umur sekolah, kota, atau perusahaan.</p>
+        </div>
+        <div class="card" style="border-top:6px solid var(--violet)">
+          <h4>🔄 Mengubah Usia ke Satuan Besar</h4>
+          <p>Setelah mendapat usia dalam tahun, gunakan pembagian:</p>
+          <div style="display:flex;flex-direction:column;gap:7px;margin-top:10px">
+            <div class="unit-card" style="--c:#7C3AED;padding:10px 12px"><div class="nm">÷ 8</div><div class="eq">tahun → windu &nbsp;(sisa = tahun)</div></div>
+            <div class="unit-card" style="--c:#9333EA;padding:10px 12px"><div class="nm">÷ 10</div><div class="eq">tahun → dasawarsa &nbsp;(sisa = tahun)</div></div>
+            <div class="unit-card" style="--c:#DB2777;padding:10px 12px"><div class="nm">÷ 100</div><div class="eq">tahun → abad &nbsp;(sisa = tahun)</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="grid-3 mt">
+        <div class="card center"><h4>👨‍🦳 78 tahun</h4><p>= 9 windu 6 tahun<br>= 7 dasawarsa 8 tahun</p></div>
+        <div class="card center"><h4>🏫 40 tahun</h4><p>= 5 windu = 8 lustrum<br>= 0,4 abad</p></div>
+        <div class="card center"><h4>🦕 ± 1.200 tahun</h4><p>= 12 abad lebih<br>(usia Candi Borobudur!)</p></div>
+      </div>
+      <div class="callout mt"><b>🇮🇩 Konteks Indonesia:</b> Hari Kemerdekaan Indonesia diperingati setiap 17 Agustus. Tahun 2025 Indonesia berusia 2025 − 1945 = <b>80 tahun</b> = <b>10 windu</b> = <b>8 dasawarsa</b> — sebuah angka yang indah!</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SLIDE 13: BAB 2 SOAL 1 ===== -->
+<section class="slide" data-title="Bab 2: Soal 1">
+  <div class="slide-scroll">
+    <div class="slide-inner">
+      <span class="kicker">🎂 Bab 2 — Contoh Soal 1</span>
+      <h2 class="title">Usia Kakek Tersayang 👴</h2>
+      <div class="soal-box" style="max-width:820px;margin:14px auto 0">
+        <span class="q-tag">Soal</span>
+        <p>Kakek Darmawan lahir pada tahun <b>1948</b>. Jika sekarang adalah tahun <b>2026</b>, berapa <b>usia Kakek</b>? Nyatakan jawabanmu juga dalam <b>dasawarsa dan tahun</b>!</p>
+        <div class="steps mt" data-steps>
+          <div class="step"><span class="n">1</span><span class="t">Gunakan rumus usia: <b>usia = tahun sekarang − tahun lahir</b></span></div>
+          <div class="step"><span class="n">2</span><span class="t">Hitung: 2026 − 1948 = <b>78 tahun</b></span></div>
+          <div class="step"><span class="n">3</span><span class="t">Ubah ke dasawarsa: 78 ÷ 10 = 7 sisa 8 → <b>7 dasawarsa 8 tahun</b></span></div>
+          <div class="step final"><span class="n">✔</span><span class="t">Usia Kakek = <b>78 tahun</b> atau <b>7 dasawarsa 8 tahun</b> 🎂 (Bonus: 78 ÷ 8 = 9 sisa 6 → juga 9 windu 6 tahun!)</span></div>
+        </div>
+        <div class="step-ctrl">
+          <button class="btn btn-primary btn-sm" data-next-step>Tampilkan Langkah 1</button>
+          <button class="btn btn-ghost btn-sm" data-reset-steps>↺ Ulangi</button>
+        </div>
+      </div>
+      <div class="callout" style="max-width:820px;margin:0 auto"><b>🔍 Pengecekan:</b> 7 dasawarsa = 70 tahun, ditambah 8 tahun = 78 tahun ✔. Berarti Kakek Darmawan telah melihat lebih dari <b>7 dasawarsa</b> perkembangan dunia — keren sekali!</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SLIDE 14: BAB 2 SOAL 2 ===== -->
+<section class="slide" data-title="Bab 2: Soal 2">
+  <div class="slide-scroll">
+    <div class="slide-inner">
+      <span class="kicker">🎂 Bab 2 — Contoh Soal 2</span>
+      <h2 class="title">Hari Jadi Sekolah 🏫</h2>
+      <div class="soal-box" style="max-width:820px;margin:14px auto 0;border-left-color:var(--teal)">
+        <span class="q-tag" style="background:var(--teal)">Soal</span>
+        <p>SD Nusantara berdiri pada tahun <b>1986</b>. Pada tahun <b>2026</b> sekolah tersebut akan merayakan hari jadinya. Berapa <b>usia sekolah</b>? Nyatakan dalam <b>tahun, windu, dan lustrum</b>!</p>
+        <div class="steps mt" data-steps>
+          <div class="step"><span class="n">1</span><span class="t">Hitung usia: 2026 − 1986 = <b>40 tahun</b></span></div>
+          <div class="step"><span class="n">2</span><span class="t">Ubah ke windu: 40 ÷ 8 = 5 sisa 0 → <b>tepat 5 windu</b></span></div>
+          <div class="step"><span class="n">3</span><span class="t">Ubah ke lustrum: 40 ÷ 5 = 8 sisa 0 → <b>tepat 8 lustrum</b></span></div>
+          <div class="step final"><span class="n">✔</span><span class="t">Usia sekolah = <b>40 tahun = 5 windu = 8 lustrum</b> 🎉 (≈ 0,4 abad)</span></div>
+        </div>
+        <div class="step-ctrl">
+          <button class="btn btn-primary btn-sm" data-next-step>Tampilkan Langkah 1</button>
+          <button class="btn btn-ghost btn-sm" data-reset-steps>↺ Ulangi</button>
+        </div>
+      </div>
+      <div class="callout" style="max-width:820px;margin:0 auto"><b>🌟 Menarik:</b> 40 tahun bisa dibagi rapi oleh 5 (lustrum) dan 8 (windu) tanpa sisa! Karena itu perayaan hari jadi ke-40 sering disebut perayaan yang "istimewa" — dua satuan besar sama-sama genap.</div>
+    </div>
+  </div>
+</section>
+<!-- ===== SLIDE 15: BAB 3 KONSEP ===== -->
+<section class="slide" data-title="Bab 3: Waktu, Jarak, Kecepatan">
+  <div class="slide-scroll">
+    <div class="slide-inner">
+      <span class="kicker">🏎️ Bab 3 — Aplikasi Waktu</span>
+      <h2 class="title">Waktu, Jarak, dan Kecepatan</h2>
+      <p class="sub">Setiap perjalanan melibatkan tiga sahabat: <b>kecepatan (v)</b>, <b>jarak (s)</b>, dan <b>waktu (t)</b>. Ketiganya terikat dalam satu segitiga ajaib — tutup salah satunya, maka kamu bisa menemukan rumusnya!</p>
+      <div class="grid-2" style="align-items:center">
+        <div class="tri-wrap">
+          <div class="triangle">
+            <div class="tri-top"><span>s</span><small>JARAK</small></div>
+            <div class="tri-bl"><span>v</span><small>KECEPATAN</small></div>
+            <div class="tri-br"><span>t</span><small>WAKTU</small></div>
+          </div>
+          <div class="tri-formula">
+            <span class="formula-pill">v = <b>s ÷ t</b></span>
+            <span class="formula-pill">s = <b>v × t</b></span>
+            <span class="formula-pill">t = <b>s ÷ v</b></span>
+          </div>
+        </div>
+        <div>
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <div class="card"><h4>🚶 Apa itu kecepatan?</h4><p>Kecepatan menunjukkan <b>seberapa jauh</b> benda berpindah dalam <b>satu satuan waktu</b>. Contoh: 60 km/jam artinya 60 kilometer ditempuh setiap 1 jam.</p></div>
+            <div class="card"><h4>📏 Satuan yang sering dipakai</h4><p>Kecepatan: <b>km/jam</b> atau <b>m/detik</b> · Jarak: <b>km</b> atau <b>m</b> · Waktu: <b>jam</b>, <b>menit</b>, atau <b>detik</b>. Pastikan satuannya serasi sebelum berhitung!</p></div>
+            <div class="card"><h4>⚠️ Konversi waktu dulu!</h4><p>2 jam 40 menit ≠ 2,40 jam! Ubah dulu: 40 menit = 40/60 jam = ⅔ jam → 2 jam 40 menit = <b>2⅔ jam</b>. Kesalahan ini sangat sering terjadi, waspada!</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SLIDE 16: BAB 3 SOAL 1 ===== -->
+<section class="slide" data-title="Bab 3: Soal 1">
+  <div class="slide-scroll">
+    <div class="slide-inner">
+      <span class="kicker">🏎️ Bab 3 — Contoh Soal 1</span>
+      <h2 class="title">Berangkat Sekolah Tepat Waktu 🏫</h2>
+      <div class="soal-box" style="max-width:820px;margin:14px auto 0">
+        <span class="q-tag">Soal</span>
+        <p>Jarak rumah Raka ke sekolah adalah <b>1.200 meter</b>. Raka berjalan kaki dengan kecepatan <b>60 meter per menit</b>. Jika Raka berangkat pukul <b>06.40</b>, pukul berapa Raka <b>tiba di sekolah</b>?</p>
+        <div class="steps mt" data-steps>
+          <div class="step"><span class="n">1</span><span class="t">Yang dicari adalah <b>waktu (t)</b>, maka gunakan: <b>t = s ÷ v</b></span></div>
+          <div class="step"><span class="n">2</span><span class="t">Hitung: t = 1.200 ÷ 60 = <b>20 menit</b></span></div>
+          <div class="step"><span class="n">3</span><span class="t">Tambahkan ke jam berangkat: 06.40 + 20 menit → menit: 40 + 20 = 60 menit = 1 jam → <b>07.00</b></span></div>
+          <div class="step final"><span class="n">✔</span><span class="t">Raka tiba di sekolah pukul <b>07.00</b> — tepat waktu untuk upacara bendera! 🎒</span></div>
+        </div>
+        <div class="step-ctrl">
+          <button class="btn btn-primary btn-sm" data-next-step>Tampilkan Langkah 1</button>
+          <button class="btn btn-ghost btn-sm" data-reset-steps>↺ Ulangi</button>
+        </div>
+      </div>
+      <div class="callout" style="max-width:820px;margin:0 auto"><b>🔎 Cek satuan:</b> jarak dalam <b>meter</b> dan kecepatan dalam <b>meter/menit</b> sudah serasi, maka hasilnya langsung dalam <b>menit</b>. Kalau kecepatannya 60 m/detik, hasilnya 20 detik — satuan menentukan segalanya!</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SLIDE 17: BAB 3 SOAL 2 ===== -->
+<section class="slide" data-title="Bab 3: Soal 2">
+  <div class="slide-scroll">
+    <div class="slide-inner">
+      <span class="kicker">🏎️ Bab 3 — Contoh Soal 2</span>
+      <h2 class="title">Perjalanan Kereta Cepat 🚄</h2>
+      <div class="soal-box" style="max-width:820px;margin:14px auto 0;border-left-color:var(--teal)">
+        <span class="q-tag" style="background:var(--teal)">Soal</span>
+        <p>Sebuah kereta melaju dengan kecepatan rata-rata <b>90 km/jam</b> selama <b>2 jam 40 menit</b>. Berapa <b>jarak</b> yang ditempuh kereta tersebut?</p>
+        <div class="steps mt" data-steps>
+          <div class="step"><span class="n">1</span><span class="t">Yang dicari adalah <b>jarak (s)</b>, maka gunakan: <b>s = v × t</b></span></div>
+          <div class="step"><span class="n">2</span><span class="t">Serasikan satuan waktu: 2 jam 40 menit = 2 + 40/60 = <b>2⅔ jam</b> (= 8/3 jam)</span></div>
+          <div class="step"><span class="n">3</span><span class="t">Hitung: s = 90 × 8/3 = 720/3 = <b>240 km</b></span></div>
+          <div class="step final"><span class="n">✔</span><span class="t">Jarak yang ditempuh kereta = <b>240 km</b> 🚉</span></div>
+        </div>
+        <div class="step-ctrl">
+          <button class="btn btn-primary btn-sm" data-next-step>Tampilkan Langkah 1</button>
+          <button class="btn btn-ghost btn-sm" data-reset-steps>↺ Ulangi</button>
+        </div>
+      </div>
+      <div class="callout" style="max-width:820px;margin:0 auto"><b>🧠 Cara lain:</b> pecah 2 jam 40 menit = 2 jam + 40 menit. Dalam 2 jam kereta menempuh 180 km. Dalam 40 menit (= ⅔ jam) menempuh 90 × ⅔ = 60 km. Total 180 + 60 = <b>240 km</b>. Sama, kan?</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SLIDE 18: DIVIDER LATIHAN ===== -->
+<section class="slide" data-title="Bagian 3: Latihan Soal" style="background:linear-gradient(150deg,#7C3AED 0%,#9F67FF 50%,#C084FC 100%);color:#fff">
+  <div class="stars-bg">
+    <span style="top:14%;left:10%;font-size:1.5rem">✦</span><span style="top:24%;left:84%;font-size:1.1rem;animation-delay:.7s">✦</span><span style="top:68%;left:14%;font-size:1rem;animation-delay:1.3s">✦</span><span style="top:78%;left:72%;font-size:1.4rem;animation-delay:.4s">✦</span>
+  </div>
+  <div class="slide-scroll">
+    <div class="slide-inner divider-hero center">
+      <span class="kicker" style="background:rgba(255,255,255,.15);color:#fff">✏️ Bagian 3</span>
+      <div class="big-num" style="color:#fff">Latihan Soal</div>
+      <p class="sub" style="margin:14px auto 0;color:#F3EFFF"><b style="color:#fff">50 soal</b> dalam 5 materi — setiap materi berisi <b style="color:#fff">isian singkat, pilihan ganda, benar-salah, dan pilihan ganda kompleks</b>. Tekan "Cek Jawaban" untuk melihat hasil dan pembahasan lengkap!</p>
+      <div class="jump-grid" style="max-width:980px;width:100%">
+        <button class="jump-card" onclick="go(18)"><span class="jc-emo">🧮</span><div class="jc-t">Latihan 1 · Konversi Satuan</div><div class="jc-s">10 soal · skor: <b data-score="konversi">0/10</b></div></button>
+        <button class="jump-card" onclick="go(19)"><span class="jc-emo">➕</span><div class="jc-t">Latihan 2 · Jumlah &amp; Kurang</div><div class="jc-s">10 soal · skor: <b data-score="jumlahkurang">0/10</b></div></button>
+        <button class="jump-card" onclick="go(20)"><span class="jc-emo">🌙</span><div class="jc-t">Latihan 3 · Lintas Tengah Malam</div><div class="jc-s">10 soal · skor: <b data-score="lintas">0/10</b></div></button>
+        <button class="jump-card" onclick="go(21)"><span class="jc-emo">🎂</span><div class="jc-t">Latihan 4 · Usia &amp; Satuan Besar</div><div class="jc-s">10 soal · skor: <b data-score="usia">0/10</b></div></button>
+        <button class="jump-card" onclick="go(22)"><span class="jc-emo">🏎️</span><div class="jc-t">Latihan 5 · Waktu, Jarak, Kecepatan</div><div class="jc-s">10 soal · skor: <b data-score="wjk">0/10</b></div></button>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- ===== SLIDE 19: LATIHAN 1 ===== -->
+<section class="slide" data-title="Latihan 1: Konversi Satuan">
+  <div class="slide-scroll">
+    <div class="slide-inner">
+      <div class="lat-head">
+        <div>
+          <span class="kicker">🧮 Latihan 1 dari 5</span>
+          <h2 class="title">Latihan: Konversi Satuan Waktu</h2>
+        </div>
+        <div class="score-pill">Skor: <b data-score="konversi">0</b>/10</div>
+      </div>
+      <p class="sub" style="margin-bottom:16px">Isi jawabanmu, pilih opsi, atau centang kotak yang benar. Lalu tekan <b>Cek Jawaban</b> di setiap soal untuk melihat hasil dan pembahasannya.</p>
+      <div data-quiz="konversi"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SLIDE 20: LATIHAN 2 ===== -->
+<section class="slide" data-title="Latihan 2: Jumlah & Kurang">
+  <div class="slide-scroll">
+    <div class="slide-inner">
+      <div class="lat-head">
+        <div>
+          <span class="kicker" style="background:var(--blue-soft);color:#1E40AF">➕ Latihan 2 dari 5</span>
+          <h2 class="title">Latihan: Penjumlahan &amp; Pengurangan Satuan Waktu</h2>
+        </div>
+        <div class="score-pill">Skor: <b data-score="jumlahkurang">0</b>/10</div>
+      </div>
+      <p class="sub" style="margin-bottom:16px">Ingat teknik <b>menaikkan</b> (60 menit = 1 jam) dan <b>meminjam</b> (1 jam = 60 menit). Semangat!</p>
+      <div data-quiz="jumlahkurang"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SLIDE 21: LATIHAN 3 ===== -->
+<section class="slide night" data-title="Latihan 3: Lintas Tengah Malam">
+  <div class="slide-scroll">
+    <div class="slide-inner">
+      <div class="lat-head">
+        <div>
+          <span class="kicker">🌙 Latihan 3 dari 5</span>
+          <h2 class="title">Latihan: Durasi Lintas Tengah Malam</h2>
+        </div>
+        <div class="score-pill">Skor: <b data-score="lintas">0</b>/10</div>
+      </div>
+      <p class="sub" style="color:#C9C4EE;margin-bottom:16px">Selalu pecah di pukul <b style="color:#FDE68A">24.00</b> atau pakai rumus kilat: (24.00 − jam mulai) + jam selesai.</p>
+      <div data-quiz="lintas"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SLIDE 22: LATIHAN 4 ===== -->
+<section class="slide" data-title="Latihan 4: Usia & Satuan Besar">
+  <div class="slide-scroll">
+    <div class="slide-inner">
+      <div class="lat-head">
+        <div>
+          <span class="kicker" style="background:var(--amber-soft);color:var(--amber-deep)">🎂 Latihan 4 dari 5</span>
+          <h2 class="title">Latihan: Usia &amp; Satuan Besar</h2>
+        </div>
+        <div class="score-pill">Skor: <b data-score="usia">0</b>/10</div>
+      </div>
+      <p class="sub" style="margin-bottom:16px">Gunakan <b>usia = tahun sekarang − tahun lahir</b>, lalu bagi dengan 5, 8, 10, atau 100 untuk lustrum, windu, dasawarsa, dan abad.</p>
+      <div data-quiz="usia"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SLIDE 23: LATIHAN 5 ===== -->
+<section class="slide" data-title="Latihan 5: Waktu, Jarak, Kecepatan">
+  <div class="slide-scroll">
+    <div class="slide-inner">
+      <div class="lat-head">
+        <div>
+          <span class="kicker" style="background:var(--teal-soft);color:var(--teal-deep)">🏎️ Latihan 5 dari 5</span>
+          <h2 class="title">Latihan: Waktu, Jarak &amp; Kecepatan</h2>
+        </div>
+        <div class="score-pill">Skor: <b data-score="wjk">0</b>/10</div>
+      </div>
+      <p class="sub" style="margin-bottom:16px">Ingat segitiga ajaib: <b>v = s ÷ t</b>, <b>s = v × t</b>, <b>t = s ÷ v</b> — dan serasi satuanmu!</p>
+      <div data-quiz="wjk"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SLIDE 24: KESIMPULAN ===== -->
+<section class="slide" data-title="Kesimpulan">
+  <div class="slide-scroll">
+    <div class="slide-inner">
+      <span class="kicker">🏆 Rekap Perjalanan Kita</span>
+      <h2 class="title">Kesimpulan: Harta Karun Hari Ini</h2>
+      <p class="sub">Hari ini kita sudah menjelajahi dunia satuan waktu. Ini dia harta karun pengetahuan yang berhasil kita kumpulkan!</p>
+      <div class="grid-2">
+        <div class="summary-row"><span class="ico">🧮</span><div><h4>Satuan waktu berjenjang dari kecil ke besar</h4><p>Detik → menit → jam → hari → minggu → bulan → tahun → lustrum (5 th) → windu (8 th) → dasawarsa (10 th) → abad (100 th) → milenium (1.000 th).</p></div></div>
+        <div class="summary-row"><span class="ico">🪜</span><div><h4>Turun dikali, naik dibagi</h4><p>Mengubah ke satuan lebih kecil = mengali; ke satuan lebih besar = membagi. Contoh: 3 jam = 180 menit (×60); 120 menit = 2 jam (÷60).</p></div></div>
+        <div class="summary-row"><span class="ico">➕</span><div><h4>Penjumlahan: satuan sama, naikkan jika ≥ 60</h4><p>Jumlahkan menit dengan menit dan jam dengan jam. Jika menit mencapai 60 atau lebih, ubah sebagian menjadi jam.</p></div></div>
+        <div class="summary-row"><span class="ico">🤲</span><div><h4>Pengurangan: pinjam 1 jam = 60 menit</h4><p>Jika menit atas kurang dari menit bawah, pinjam 1 jam. Alternatif: ubah semuanya ke satuan terkecil dulu.</p></div></div>
+        <div class="summary-row"><span class="ico">🌙</span><div><h4>Durasi lintas tengah malam dipecah di 24.00</h4><p>Durasi = (24.00 − jam mulai) + jam selesai. Contoh: 22.15 → 03.40 = 1 j 45 m + 3 j 40 m = 5 jam 25 menit.</p></div></div>
+        <div class="summary-row"><span class="ico">🎂</span><div><h4>Usia = tahun sekarang − tahun lahir</h4><p>Hasilnya bisa diubah: ÷8 untuk windu, ÷10 untuk dasawarsa, ÷100 untuk abad.</p></div></div>
+        <div class="summary-row"><span class="ico">🏎️</span><div><h4>Segitiga v, s, t</h4><p>v = s ÷ t, s = v × t, t = s ÷ v. Selalu serasi satuan sebelum berhitung: 2 jam 40 menit = 2⅔ jam, bukan 2,40 jam.</p></div></div>
+        <div class="summary-row"><span class="ico">🌟</span><div><h4>Waktu ada di mana-mana</h4><p>Perjalanan, belajar, memasak, hingga usia candi bersejarah — semua melibatkan satuan waktu. Matematika membuat kita tepat waktu!</p></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SLIDE 25: REFLEKSI ===== -->
+<section class="slide" data-title="Refleksi">
+  <div class="slide-scroll">
+    <div class="slide-inner">
+      <span class="kicker">🪞 Saatnya Berpikir</span>
+      <h2 class="title">Refleksi Diri</h2>
+      <p class="sub center" style="margin-left:auto;margin-right:auto">Jawab dengan jujur, ya — refleksi membantu kita tahu apa yang sudah kuat dan apa yang masih perlu dilatih. Ini hanya untukmu sendiri!</p>
+      <div class="card" style="max-width:760px;margin:0 auto">
+        <h4 style="text-align:center">Bagaimana perasaanmu hari ini?</h4>
+        <div class="emoji-rate">
+          <button class="rate-btn" data-rate="Paham sekali">🤩<small>Paham!</small></button>
+          <button class="rate-btn" data-rate="Cukup paham">🙂<small>Oke</small></button>
+          <button class="rate-btn" data-rate="Masih bingung">🤔<small>Bingung</small></button>
+        </div>
+        <h4 class="mt">Materi yang sudah kamu pahami: (centang semua yang sesuai)</h4>
+        <div style="display:flex;flex-direction:column;gap:9px;margin-top:10px">
+          <label class="check-row"><input type="checkbox" value="Konversi satuan waktu"> Konversi satuan waktu (tangga konversi)</label>
+          <label class="check-row"><input type="checkbox" value="Penjumlahan & pengurangan"> Penjumlahan &amp; pengurangan satuan waktu</label>
+          <label class="check-row"><input type="checkbox" value="Durasi lintas tengah malam"> Durasi lintas tengah malam</label>
+          <label class="check-row"><input type="checkbox" value="Usia & satuan besar"> Usia &amp; satuan besar (windu, dasawarsa, abad)</label>
+          <label class="check-row"><input type="checkbox" value="Waktu, jarak, kecepatan"> Waktu, jarak, dan kecepatan</label>
+        </div>
+        <div class="mt" style="display:flex;flex-direction:column;gap:6px">
+          <label style="font-weight:800;font-size:.92rem">Catatan untuk dirimu sendiri:</label>
+          <textarea id="reflectNote" rows="2" placeholder="Contoh: Aku masih perlu berlatih pengurangan dengan meminjam 1 jam..." style="border:2px solid var(--line);border-radius:12px;padding:11px 13px;outline:none;resize:vertical"></textarea>
+        </div>
+        <div class="mt" style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+          <button class="btn btn-teal" onclick="submitReflect()">💌 Kirim Refleksi</button>
+        </div>
+        <div id="reflectResult" class="callout mt" style="display:none"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SLIDE 26: THANK YOU ===== -->
+<section class="slide" style="background:linear-gradient(150deg,#7C3AED 0%,#9F67FF 55%,#F59E0B 130%);color:#fff" data-title="Terima Kasih">
+  <div class="stars-bg">
+    <span style="top:12%;left:12%;font-size:1.6rem">✦</span><span style="top:20%;left:78%;font-size:1.2rem;animation-delay:.6s">✦</span><span style="top:65%;left:16%;font-size:1.1rem;animation-delay:1.2s">✦</span><span style="top:75%;left:82%;font-size:1.5rem;animation-delay:.3s">✦</span><span style="top:40%;left:50%;font-size:1rem;animation-delay:1.7s">✦</span>
+  </div>
+  <div class="slide-scroll">
+    <div class="slide-inner divider-hero center">
+      <div class="thanks-emo">🕰️✨</div>
+      <div class="big-num" style="color:#fff;margin-top:10px">Terima Kasih!</div>
+      <p style="font-family:var(--font-head);font-size:1.5rem;color:#FDE68A;font-weight:700;margin-top:6px">Thank you for today! 🙏</p>
+      <p class="sub" style="color:#F3EFFF;margin:16px auto 0;max-width:620px">Kamu telah menyelesaikan petualangan satuan waktu — dari detik yang sekejap mata hingga milenium yang membentang sejarah. Teruslah berlatih, karena setiap detik adalah kesempatan baru untuk belajar!</p>
+      <div class="chips" style="justify-content:center;margin-top:22px">
+        <span class="chip" style="background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.3);color:#fff">🧮 Konversi ✔</span>
+        <span class="chip" style="background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.3);color:#fff">➕ Jumlah &amp; Kurang ✔</span>
+        <span class="chip" style="background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.3);color:#fff">🌙 Lintas Malam ✔</span>
+        <span class="chip" style="background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.3);color:#fff">🎂 Usia ✔</span>
+        <span class="chip" style="background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.3);color:#fff">🏎️ Kecepatan ✔</span>
+      </div>
+      <div class="mt">
+        <button class="btn btn-amber" onclick="go(0)">🔄 Kembali ke Awal</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== NAVBAR ===== -->
+<nav id="navbar" aria-label="Navigasi slide">
+  <div class="nav-panel">
+    <button class="nav-btn" id="prevBtn" onclick="prev()" aria-label="Slide sebelumnya">◀</button>
+    <span id="counter">1 / 26</span>
+    <button class="nav-btn" id="nextBtn" onclick="next()" aria-label="Slide berikutnya">▶</button>
+  </div>
+  <div class="nav-panel">
+    <button id="homeBtn" onclick="go(0)" aria-label="Ke cover">🏠</button>
+    <button id="menuBtn" onclick="openMenu()" aria-label="Daftar slide">☰</button>
+  </div>
+</nav>
+
+<!-- ===== MENU OVERLAY ===== -->
+<div id="menuOverlay">
+  <div class="menu-card">
+    <h3>📋 Daftar Slide</h3>
+    <div class="menu-list" id="menuList"></div>
+    <button id="menuClose" onclick="closeMenu()">Tutup (Esc)</button>
+  </div>
+</div>
+<script>
+/* ================= NAVIGASI SLIDE ================= */
+const slides = Array.from(document.querySelectorAll('.slide'));
+let cur = 0;
+function go(i){
+  cur = Math.max(0, Math.min(slides.length-1, i));
+  slides.forEach((s,idx)=>s.classList.toggle('active', idx===cur));
+  document.getElementById('progressBar').style.width = ((cur+1)/slides.length*100)+'%';
+  document.getElementById('counter').textContent = (cur+1)+' / '+slides.length;
+  document.getElementById('prevBtn').disabled = cur===0;
+  document.getElementById('nextBtn').disabled = cur===slides.length-1;
+  const sc = slides[cur].querySelector('.slide-scroll');
+  if(sc) sc.scrollTop = 0;
+}
+function next(){ go(cur+1); }
+function prev(){ go(cur-1); }
+document.addEventListener('keydown', e=>{
+  const tag=(document.activeElement&&document.activeElement.tagName)||'';
+  if(e.key==='Escape'){ closeMenu(); return; }
+  if(tag==='INPUT'||tag==='TEXTAREA'||tag==='SELECT') return;
+  if(e.key==='ArrowRight'||e.key==='PageDown'||e.key===' '){ e.preventDefault(); next(); }
+  else if(e.key==='ArrowLeft'||e.key==='PageUp'){ e.preventDefault(); prev(); }
+});
+let tx=0, ty=0;
+document.addEventListener('touchstart', e=>{ tx=e.touches[0].clientX; ty=e.touches[0].clientY; }, {passive:true});
+document.addEventListener('touchend', e=>{
+  const dx=e.changedTouches[0].clientX-tx, dy=e.changedTouches[0].clientY-ty;
+  if(Math.abs(dx)>70 && Math.abs(dx)>Math.abs(dy)*1.5){ dx<0 ? next() : prev(); }
+}, {passive:true});
+
+/* ================= MENU DAFTAR SLIDE ================= */
+const menuOverlay = document.getElementById('menuOverlay');
+function openMenu(){
+  const list = document.getElementById('menuList');
+  list.innerHTML = '';
+  slides.forEach((s,i)=>{
+    const b = document.createElement('button');
+    b.className = 'menu-item';
+    b.innerHTML = '<span class="num">'+(i+1)+'</span> '+s.dataset.title;
+    b.onclick = ()=>{ go(i); closeMenu(); };
+    list.appendChild(b);
+  });
+  menuOverlay.classList.add('open');
+}
+function closeMenu(){ menuOverlay.classList.remove('open'); }
+menuOverlay.addEventListener('click', e=>{ if(e.target===menuOverlay) closeMenu(); });
+
+/* ================= LANGKAH INTERAKTIF ================= */
+document.querySelectorAll('[data-steps]').forEach(box=>{
+  const steps = Array.from(box.querySelectorAll('.step'));
+  const ctrl  = box.parentElement;
+  const btn   = ctrl.querySelector('[data-next-step]');
+  const reset = ctrl.querySelector('[data-reset-steps]');
+  let idx = 0;
+  function updateBtn(){
+    if(idx >= steps.length){ btn.textContent = '🎉 Semua langkah sudah terlihat!'; btn.disabled = true; }
+    else { btn.textContent = 'Tampilkan Langkah '+(idx+1); btn.disabled = false; }
+  }
+  btn.addEventListener('click', ()=>{
+    if(idx < steps.length){
+      steps[idx].classList.add('show');
+      idx++;
+      updateBtn();
+    }
+  });
+  reset.addEventListener('click', ()=>{
+    steps.forEach(s=>s.classList.remove('show'));
+    idx = 0; updateBtn();
+  });
+  updateBtn();
+});
+
+/* ================= KALKULATOR KONVERSI ================= */
+const SEC = { detik:1, menit:60, jam:3600, hari:86400, minggu:604800, bulan:2592000,
+  tahun:31536000, lustrum:157680000, windu:252288000, dasawarsa:315360000,
+  abad:3153600000, milenium:31536000000 };
+function fmtNum(n){
+  const r = Math.round(n*1000)/1000;
+  return Number.isInteger(r) ? r.toLocaleString('id-ID') : r.toLocaleString('id-ID',{maximumFractionDigits:3});
+}
+function convert(){
+  const inp  = document.getElementById('cvInput');
+  const from = document.getElementById('cvFrom').value;
+  const to   = document.getElementById('cvTo').value;
+  const res  = document.getElementById('cvResult');
+  let val = parseFloat((''+inp.value).replace(/\s/g,'').replace(/\./g,'').replace(',','.'));
+  res.style.display = 'block';
+  if(isNaN(val) || val < 0){ res.innerHTML = '⚠️ Masukkan angka yang valid dulu, ya!'; return; }
+  const out = (val * SEC[from]) / SEC[to];
+  res.innerHTML = '✨ '+fmtNum(val)+' <b>'+from+'</b> = <b style="color:var(--violet-deep)">'+fmtNum(out)+' '+to+'</b> ✨';
+}
+document.getElementById('cvInput').addEventListener('keydown', e=>{ if(e.key==='Enter') convert(); });
+
+/* ================= REFLEKSI ================= */
+let rateVal = '';
+document.querySelectorAll('.rate-btn').forEach(b=>{
+  b.addEventListener('click', ()=>{
+    document.querySelectorAll('.rate-btn').forEach(x=>x.classList.remove('sel'));
+    b.classList.add('sel');
+    rateVal = b.dataset.rate;
+  });
+});
+document.querySelectorAll('.check-row input').forEach(c=>{
+  c.addEventListener('change', ()=> c.closest('.check-row').classList.toggle('done', c.checked));
+});
+function submitReflect(){
+  const topics = Array.from(document.querySelectorAll('.check-row input:checked')).map(c=>c.value);
+  const note = document.getElementById('reflectNote').value.trim();
+  const res = document.getElementById('reflectResult');
+  res.style.display = 'block';
+  if(!rateVal){ res.innerHTML = '😊 Pilih dulu perasaanmu dengan menekan salah satu emoji di atas, ya!'; return; }
+  res.innerHTML = '💌 <b>Terima kasih sudah berefleksi!</b><br>'
+    + 'Perasaan hari ini: <b>'+rateVal+'</b><br>'
+    + 'Materi yang sudah dipahami: <b>'+(topics.length ? topics.join(', ') : 'belum ada yang dicentang')+'</b>'
+    + (note ? '<br>Catatanku: “<i>'+note.replace(/</g,'&lt;')+'</i>”' : '')
+    + '<br><b>Terus semangat belajar, ya! 🌟</b>';
+}
+</script>
+<script>
+/* ================= BANK SOAL LATIHAN ================= */
+const QUIZ = {
+konversi: { color:'#7C3AED', soft:'#EDE9FE', qs:[
+ {t:'pg', q:'1 jam = … detik.', opts:['60 detik','360 detik','3.600 detik','6.000 detik'], a:2,
+  exp:'1 jam = 60 menit dan 1 menit = 60 detik, maka 1 jam = 60 × 60 = <b>3.600 detik</b>.'},
+ {t:'isian', q:'4 menit = … detik.', fields:[{label:'Detik'}], a:['240'],
+  exp:'Turun ke satuan lebih kecil artinya <b>dikali</b>: 4 × 60 = <b>240 detik</b>.'},
+ {t:'pg', q:'3 hari = … jam.', opts:['24 jam','48 jam','72 jam','96 jam'], a:2,
+  exp:'1 hari = 24 jam, maka 3 hari = 3 × 24 = <b>72 jam</b>.'},
+ {t:'bs', q:'1 windu sama dengan 8 tahun.', a:true,
+  exp:'<b>Benar.</b> Windu (dari bahasa Jawa) = 8 tahun. Contoh: 2 windu = 16 tahun.'},
+ {t:'isian', q:'2 abad = … tahun.', fields:[{label:'Tahun'}], a:['200'],
+  exp:'1 abad = 100 tahun, maka 2 abad = 2 × 100 = <b>200 tahun</b>.'},
+ {t:'pg', q:'5.400 detik = … jam.', opts:['0,5 jam','1 jam','1,5 jam','2 jam'], a:2,
+  exp:'1 jam = 3.600 detik, maka 5.400 ÷ 3.600 = <b>1,5 jam</b> (naik ke satuan besar dibagi).'},
+ {t:'bs', q:'1 dasawarsa sama dengan 100 tahun.', a:false,
+  exp:'<b>Salah.</b> 1 dasawarsa = 10 tahun. Yang berumur 100 tahun adalah 1 abad.'},
+ {t:'pgk', q:'Pilihlah SEMUA pernyataan yang BENAR!', opts:['1 lustrum = 5 tahun','1 milenium = 100 tahun','1 abad = 10 dasawarsa','1 windu = 7 tahun'], a:[0,2],
+  exp:'A ✔ lustrum = 5 tahun; C ✔ abad = 100 tahun = 10 dasawarsa. B ✘ milenium = 1.000 tahun; D ✘ windu = 8 tahun.'},
+ {t:'isian', q:'48 jam = … hari.', fields:[{label:'Hari'}], a:['2'],
+  exp:'Naik ke satuan lebih besar artinya <b>dibagi</b>: 48 ÷ 24 = <b>2 hari</b>.'},
+ {t:'pgk', q:'Pasangan yang nilainya SAMA besar adalah …', opts:['2 minggu = 14 hari','72 jam = 2 hari','1 tahun = 365 hari','90 menit = 1,5 jam'], a:[0,2,3],
+  exp:'A ✔ 2 × 7 = 14 hari; C ✔ 1 tahun = 365 hari; D ✔ 90 ÷ 60 = 1,5 jam. B ✘ karena 72 jam = 3 hari.'}
+]},
+jumlahkurang: { color:'#2563EB', soft:'#DBEAFE', qs:[
+ {t:'isian', q:'2 jam 30 menit + 1 jam 45 menit = … menit.', fields:[{label:'Total menit'}], a:['255'],
+  exp:'2 j 30 m = 150 menit dan 1 j 45 m = 105 menit → 150 + 105 = <b>255 menit</b> (= 4 jam 15 menit).'},
+ {t:'pg', q:'5 jam 20 menit − 2 jam 45 menit = …', opts:['2 jam 35 menit','3 jam 35 menit','2 jam 25 menit','3 jam 15 menit'], a:0,
+  exp:'20 − 50 tidak bisa → pinjam 1 jam: 5 j 20 m = 4 j 80 m → 4 j 80 m − 2 j 45 m = <b>2 jam 35 menit</b>.'},
+ {t:'isian', q:'7 menit 25 detik + 4 menit 50 detik = … menit … detik.', fields:[{label:'Menit'},{label:'Detik'}], a:['12','15'],
+  exp:'Detik: 25 + 50 = 75 detik = 1 menit 15 detik. Menit: 7 + 4 + 1 = 12 → <b>12 menit 15 detik</b>.'},
+ {t:'bs', q:'1 jam 10 menit + 2 jam 55 menit = 4 jam 5 menit.', a:true,
+  exp:'<b>Benar.</b> 1 j 10 m = 70 menit; 2 j 55 m = 175 menit → 70 + 175 = 245 menit = <b>4 jam 5 menit</b> ✔.'},
+ {t:'pg', q:'6 hari 5 jam − 2 hari 11 jam = …', opts:['3 hari 18 jam','4 hari 6 jam','3 hari 16 jam','4 hari 18 jam'], a:0,
+  exp:'5 − 11 tidak bisa → pinjam 1 hari = 24 jam: 6 h 5 j = 5 h 29 j → 5 h 29 j − 2 h 11 j = <b>3 hari 18 jam</b>.'},
+ {t:'isian', q:'45 menit + 50 menit = … jam … menit.', fields:[{label:'Jam'},{label:'Menit'}], a:['1','35'],
+  exp:'45 + 50 = 95 menit → 95 ÷ 60 = 1 sisa 35 → <b>1 jam 35 menit</b>.'},
+ {t:'bs', q:'3 jam 15 menit − 1 jam 40 menit = 1 jam 35 menit.', a:true,
+  exp:'<b>Benar.</b> Pinjam 1 jam: 3 j 15 m = 2 j 75 m → 2 j 75 m − 1 j 40 m = <b>1 jam 35 menit</b> ✔.'},
+ {t:'pgk', q:'Manakah perhitungan yang BENAR?', opts:['2 jam 30 menit + 45 menit = 3 jam 15 menit','4 hari − 15 jam = 3 hari 9 jam','90 detik + 90 detik = 2 menit','1 jam − 45 menit = 25 menit'], a:[0,1],
+  exp:'A ✔ 150 + 45 = 195 menit = 3 j 15 m; B ✔ 96 − 15 = 81 jam = 3 hari 9 jam. C ✘ 180 detik = 3 menit; D ✘ 60 − 45 = 15 menit.'},
+ {t:'isian', q:'Usia kakak 12 tahun 8 bulan dan usia adik 9 tahun 11 bulan. Selisih usia mereka = … tahun … bulan.', fields:[{label:'Tahun'},{label:'Bulan'}], a:['2','9'],
+  exp:'8 − 11 tidak bisa → pinjam 1 tahun = 12 bulan: 12 t 8 bln = 11 t 20 bln → 11 t 20 bln − 9 t 11 bln = <b>2 tahun 9 bulan</b>.'},
+ {t:'pg', q:'Rani pergi ke perpustakaan selama 2 jam 40 menit. Jika ia pulang lewat jalan yang sama, total waktu pergi-pulang = …', opts:['4 jam 40 menit','5 jam 20 menit','5 jam 40 menit','4 jam 80 menit'], a:1,
+  exp:'2 × (2 j 40 m) = 4 j 80 m = <b>5 jam 20 menit</b>. Ingat: 80 menit harus disederhanakan menjadi 1 jam 20 menit!'}
+]},
+lintas: { color:'#4338CA', soft:'#E0E7FF', qs:[
+ {t:'pg', q:'Film mulai tayang pukul 22.30 dan selesai pukul 00.15. Durasi film = …', opts:['1 jam 45 menit','2 jam 15 menit','1 jam 15 menit','2 jam 45 menit'], a:0,
+  exp:'22.30 → 24.00 = 1 j 30 m; 00.00 → 00.15 = 15 m. Total = <b>1 jam 45 menit</b>.'},
+ {t:'isian', q:'Kereta berangkat pukul 22.15 dan tiba pukul 03.40 keesokan harinya. Durasi perjalanan = … jam … menit.', fields:[{label:'Jam'},{label:'Menit'}], a:['5','25'],
+  exp:'(24.00 − 22.15) = 1 j 45 m; (00.00 → 03.40) = 3 j 40 m → 1 j 45 m + 3 j 40 m = 4 j 85 m = <b>5 jam 25 menit</b>.'},
+ {t:'pg', q:'Ronda malam dimulai pukul 23.20 dan berakhir pukul 01.50. Durasi ronda = …', opts:['2 jam 30 menit','1 jam 30 menit','2 jam 20 menit','3 jam 30 menit'], a:0,
+  exp:'23.20 → 24.00 = 40 menit; 00.00 → 01.50 = 1 j 50 m. Total = <b>2 jam 30 menit</b>.'},
+ {t:'bs', q:'Durasi dari pukul 21.00 sampai pukul 02.00 adalah 5 jam.', a:true,
+  exp:'<b>Benar.</b> 21.00 → 24.00 = 3 jam, lalu 24.00 → 02.00 = 2 jam → total <b>5 jam</b> ✔.'},
+ {t:'isian', q:'Pesawat lepas landas pukul 23.50 dan mendarat pukul 05.20. Durasi penerbangan = … jam … menit.', fields:[{label:'Jam'},{label:'Menit'}], a:['5','30'],
+  exp:'23.50 → 24.00 = 10 menit; 00.00 → 05.20 = 5 j 20 m. Total = <b>5 jam 30 menit</b>.'},
+ {t:'pg', q:'Pendaki berangkat dari basecamp pukul 23.30 dan tiba di puncak pukul 04.10. Waktu pendakian = …', opts:['4 jam 40 menit','5 jam 40 menit','4 jam 20 menit','5 jam 20 menit'], a:0,
+  exp:'23.30 → 24.00 = 30 menit; 00.00 → 04.10 = 4 j 10 m. Total = <b>4 jam 40 menit</b>.'},
+ {t:'bs', q:'Durasi dari pukul 23.40 sampai pukul 01.10 adalah 2 jam 30 menit.', a:false,
+  exp:'<b>Salah.</b> 23.40 → 24.00 = 20 menit; 00.00 → 01.10 = 1 j 10 m → total <b>1 jam 30 menit</b>, bukan 2 jam 30 menit.'},
+ {t:'pgk', q:'Pilih SEMUA pernyataan yang BENAR tentang durasi lintas tengah malam:', opts:['Bisa dihitung dengan memecah durasi di pukul 24.00','Durasi 22.00 → 02.00 adalah 4 jam','Durasi 23.00 → 01.00 adalah 3 jam','Rumus: (24.00 − jam mulai) + jam selesai'], a:[0,1,3],
+  exp:'A ✔, B ✔ (2 + 2 = 4 jam), D ✔. C ✘ karena 23.00 → 01.00 = 1 + 1 = <b>2 jam</b>, bukan 3 jam.'},
+ {t:'isian', q:'Bis malam berangkat pukul 21.40 dan tiba pukul 01.25. Durasi perjalanan = … jam … menit.', fields:[{label:'Jam'},{label:'Menit'}], a:['3','45'],
+  exp:'(24.00 − 21.40) = 2 j 20 m (pakai 23.60 − 21.40); + 1 j 25 m = <b>3 jam 45 menit</b>.'},
+ {t:'pg', q:'Petugas mulai menjaga menara pukul 22.10 selama 3 jam 35 menit. Pukul berapa petugas itu digantikan?', opts:['01.45','25.45','01.35','02.45'], a:0,
+  exp:'22.10 + 3 jam = 01.10 (melewati tengah malam), lalu + 35 menit = <b>01.45</b>. Hati-hati: pukul 25.45 tidak ada pada penulisan jam harian!'}
+]},
+usia: { color:'#D97706', soft:'#FEF3C7', qs:[
+ {t:'pg', q:'Usia kakek adalah 7 dasawarsa 5 tahun. Usia kakek = … tahun.', opts:['57 tahun','70 tahun','75 tahun','35 tahun'], a:2,
+  exp:'1 dasawarsa = 10 tahun → 7 × 10 + 5 = <b>75 tahun</b>.'},
+ {t:'isian', q:'Kakek lahir pada tahun 1948. Usia Kakek pada tahun 2026 = … tahun.', fields:[{label:'Tahun'}], a:['78'],
+  exp:'Usia = tahun sekarang − tahun lahir = 2026 − 1948 = <b>78 tahun</b>.'},
+ {t:'pg', q:'4 windu = … tahun.', opts:['24 tahun','32 tahun','40 tahun','48 tahun'], a:1,
+  exp:'1 windu = 8 tahun → 4 × 8 = <b>32 tahun</b>.'},
+ {t:'bs', q:'Usia 90 tahun sama dengan 0,9 abad.', a:true,
+  exp:'<b>Benar.</b> 1 abad = 100 tahun → 90 ÷ 100 = <b>0,9 abad</b> ✔.'},
+ {t:'isian', q:'SD Nusantara berdiri tahun 1986. Pada tahun 2026, usia sekolah tersebut = … windu.', fields:[{label:'Windu'}], a:['5'],
+  exp:'2026 − 1986 = 40 tahun → 40 ÷ 8 = <b>5 windu</b> (tepat, tanpa sisa!).'},
+ {t:'pg', q:'Usia paman adalah 3 lustrum 2 tahun = … tahun.', opts:['13 tahun','15 tahun','17 tahun','23 tahun'], a:2,
+  exp:'1 lustrum = 5 tahun → 3 × 5 + 2 = <b>17 tahun</b>.'},
+ {t:'bs', q:'2 milenium sama dengan 2.000 tahun.', a:true,
+  exp:'<b>Benar.</b> 1 milenium = 1.000 tahun → 2 × 1.000 = <b>2.000 tahun</b> ✔.'},
+ {t:'pgk', q:'Pilih SEMUA pernyataan yang BENAR:', opts:['78 tahun = 9 windu 6 tahun','50 tahun = 5 lustrum','25 tahun = ¼ abad','100 tahun = 10 windu'], a:[0,1,2],
+  exp:'A ✔ 9 × 8 = 72, sisa 6; B ✔ 5 × 5 = 50; C ✔ 25 ÷ 100 = ¼. D ✘ karena 100 ÷ 8 = 12,5 windu, bukan 10.'},
+ {t:'isian', q:'Paman berusia 4 dasawarsa 2 tahun. Jika sekarang tahun 2026, Paman lahir pada tahun …', fields:[{label:'Tahun lahir'}], a:['1984'],
+  exp:'4 dasawarsa 2 tahun = 42 tahun → tahun lahir = 2026 − 42 = <b>1984</b>.'},
+ {t:'pg', q:'Candi Borobudur mulai dibangun sekitar tahun 800. Usia Candi Borobudur pada tahun 2026 kira-kira …', opts:['± 120 tahun','± 1.200 tahun','± 12.000 tahun','± 220 tahun'], a:1,
+  exp:'2026 − 800 = 1.226 ≈ <b>± 1.200 tahun</b> (lebih dari 12 abad!) — luar biasa tua, kan?'}
+]},
+wjk: { color:'#0D9488', soft:'#CCFBF1', qs:[
+ {t:'pg', q:'Jarak dua kota 180 km ditempuh mobil dengan kecepatan 60 km/jam. Waktu tempuh = …', opts:['2 jam','2,5 jam','3 jam','4 jam'], a:2,
+  exp:'t = s ÷ v = 180 ÷ 60 = <b>3 jam</b>.'},
+ {t:'isian', q:'Jarak rumah ke sekolah 1.200 m. Raka berjalan dengan kecepatan 60 m/menit. Waktu tempuh = … menit.', fields:[{label:'Menit'}], a:['20'],
+  exp:'t = s ÷ v = 1.200 ÷ 60 = <b>20 menit</b>.'},
+ {t:'pg', q:'Ayah bersepeda menempuh 24 km dalam 2 jam. Kecepatan ayah = …', opts:['10 km/jam','12 km/jam','24 km/jam','48 km/jam'], a:1,
+  exp:'v = s ÷ t = 24 ÷ 2 = <b>12 km/jam</b>.'},
+ {t:'bs', q:'Untuk jarak yang sama, semakin besar kecepatan maka semakin lama waktu yang dibutuhkan.', a:false,
+  exp:'<b>Salah.</b> Justru sebaliknya: karena t = s ÷ v, semakin besar kecepatan (v), semakin <b>singkat</b> waktu (t) yang dibutuhkan.'},
+ {t:'isian', q:'Kereta melaju 90 km/jam selama 2 jam 40 menit. Jarak yang ditempuh = … km.', fields:[{label:'Kilometer'}], a:['240'],
+  exp:'2 j 40 m = 2⅔ jam = 8/3 jam → s = v × t = 90 × 8/3 = <b>240 km</b>.'},
+ {t:'pg', q:'Raka berangkat pukul 06.40 dan berjalan 20 menit menuju sekolah. Raka tiba pukul …', opts:['06.60','07.00','07.20','06.20'], a:1,
+  exp:'06.40 + 20 menit → 40 + 20 = 60 menit = 1 jam → tiba pukul <b>07.00</b>. Penulisan 06.60 tidak ada karena 1 jam hanya 60 menit!'},
+ {t:'bs', q:'72 km/jam sama dengan 72.000 m/jam.', a:true,
+  exp:'<b>Benar.</b> 1 km = 1.000 m → 72 × 1.000 = <b>72.000 m/jam</b> ✔.'},
+ {t:'pgk', q:'Pilih SEMUA pernyataan yang BENAR:', opts:['t = s ÷ v','s = v × t','v = s × t','30 menit = 0,5 jam'], a:[0,1,3],
+  exp:'A ✔, B ✔, D ✔. C ✘ karena rumus yang benar adalah <b>v = s ÷ t</b>, bukan s × t.'},
+ {t:'isian', q:'Pesawat melaju 900 km/jam selama 2 jam 30 menit. Jarak yang ditempuh = … km.', fields:[{label:'Kilometer'}], a:['2250'],
+  exp:'2 j 30 m = 2,5 jam → s = 900 × 2,5 = <b>2.250 km</b>.'},
+ {t:'pg', q:'Rani berlari menempuh 400 meter dalam 80 detik. Kecepatan Rani = …', opts:['4 m/detik','5 m/detik','8 m/detik','10 m/detik'], a:1,
+  exp:'v = s ÷ t = 400 ÷ 80 = <b>5 m/detik</b>.'}
+]}
+};
+/* ================= MESIN KUIS ================= */
+const state = { konversi:{}, jumlahkurang:{}, lintas:{}, usia:{}, wjk:{} };
+const TYPE_LABEL = { pg:'Pilihan Ganda', isian:'Isian Singkat', bs:'Benar / Salah', pgk:'Pilihan Ganda Kompleks' };
+
+function qCard(key, i, q){
+  let body = '';
+  if(q.t === 'pg' || q.t === 'pgk'){
+    body = '<div class="q-opts">' + q.opts.map((o,j)=>
+      '<div class="q-opt" role="button" tabindex="0" data-role="opt" data-j="'+j+'">'
+      + '<span class="abc">'+String.fromCharCode(65+j)+'</span><span>'+o+'</span></div>').join('')
+      + '</div>' + (q.t==='pgk' ? '<p style="font-size:.82rem;color:var(--ink-soft);font-weight:800">☑ Pilihan ganda kompleks — boleh centang lebih dari satu jawaban!</p>' : '');
+  } else if(q.t === 'bs'){
+    body = '<div class="bs-group">'
+      + '<button class="bs-btn" data-role="bs" data-v="1">✔ Benar</button>'
+      + '<button class="bs-btn" data-role="bs" data-v="0">✘ Salah</button></div>';
+  } else {
+    body = '<div class="q-inputs">' + q.fields.map((f,j)=>
+      '<span class="ans-field"><label>'+f.label+'</label>'
+      + '<input data-role="in" data-j="'+j+'" inputmode="decimal" autocomplete="off" placeholder="…"></span>').join('') + '</div>';
+  }
+  return '<div class="q-card" data-key="'+key+'" data-i="'+i+'">'
+    + '<div class="q-top"><span class="q-num">'+(i+1)+'</span>'
+    + '<div><span class="q-type">'+TYPE_LABEL[q.t]+'</span><div class="q-text">'+q.q+'</div></div></div>'
+    + body
+    + '<div class="q-actions">'
+    + '<button class="btn btn-primary btn-sm" data-role="check">✅ Cek Jawaban</button>'
+    + '<button class="btn btn-ghost btn-sm" data-role="reset">↺ Ulangi</button></div>'
+    + '<div class="verdict" data-role="verdict"></div>'
+    + '<div class="pembahasan" data-role="pembahasan"><div class="pb-title">💡 Pembahasan</div>'+q.exp+'</div>'
+    + '</div>';
+}
+
+function parseNum(s){
+  s = (''+s).trim().replace(/\s/g,'');
+  if(s === '') return NaN;
+  s = s.replace(/\./g,'').replace(/,/g,'.');
+  if(!/^-?\d+(\.\d+)?$/.test(s)) return NaN;
+  return parseFloat(s);
+}
+
+function clearMarks(card){
+  card.querySelectorAll('.q-opt').forEach(o=>o.classList.remove('correct','wrong','missed'));
+  card.querySelectorAll('.bs-btn').forEach(b=>b.classList.remove('correct','wrong'));
+  const v = card.querySelector('[data-role="verdict"]');
+  v.classList.remove('show','ok','no');
+}
+
+Object.keys(QUIZ).forEach(key=>{
+  const host = document.querySelector('[data-quiz="'+key+'"]');
+  host.style.setProperty('--qc', QUIZ[key].color);
+  host.style.setProperty('--qc-soft', QUIZ[key].soft);
+  host.innerHTML = QUIZ[key].qs.map((q,i)=>qCard(key,i,q)).join('');
+  host.addEventListener('click', onQuizClick);
+  host.addEventListener('keydown', e=>{
+    if((e.key==='Enter'||e.key===' ') && e.target.classList && e.target.classList.contains('q-opt')){
+      e.preventDefault(); e.target.click();
+    }
+  });
+});
+
+function onQuizClick(e){
+  const role = e.target.closest('[data-role]');
+  if(!role) return;
+  const card = e.target.closest('.q-card');
+  const key = card.dataset.key, i = +card.dataset.i;
+  const q = QUIZ[key].qs[i];
+  const r = role.dataset.role;
+  if(r === 'opt'){
+    if(q.t === 'pg'){
+      card.querySelectorAll('.q-opt').forEach(o=>o.classList.remove('sel'));
+      role.classList.add('sel');
+    } else {
+      role.classList.toggle('sel');
+    }
+    clearMarks(card);
+  } else if(r === 'bs'){
+    card.querySelectorAll('.bs-btn').forEach(b=>b.classList.remove('sel'));
+    role.classList.add('sel');
+    clearMarks(card);
+  } else if(r === 'check'){
+    checkQ(card, key, i, q);
+  } else if(r === 'reset'){
+    resetQ(card, key, i);
+  }
+}
+
+function checkQ(card, key, i, q){
+  let ok = false;
+  if(q.t === 'pg'){
+    const sel = card.querySelector('.q-opt.sel');
+    card.querySelectorAll('.q-opt').forEach((o,j)=>{
+      o.classList.remove('correct','wrong');
+      if(j === q.a) o.classList.add('correct');
+      else if(o === sel) o.classList.add('wrong');
+    });
+    ok = !!sel && +sel.dataset.j === q.a;
+  } else if(q.t === 'pgk'){
+    const sel = new Set(Array.from(card.querySelectorAll('.q-opt.sel')).map(o=>+o.dataset.j));
+    const ans = new Set(q.a);
+    card.querySelectorAll('.q-opt').forEach((o,j)=>{
+      o.classList.remove('correct','wrong','missed');
+      if(ans.has(j) && sel.has(j)) o.classList.add('correct');
+      else if(sel.has(j)) o.classList.add('wrong');
+      else if(ans.has(j)) o.classList.add('missed');
+    });
+    ok = sel.size === ans.size && Array.from(sel).every(j=>ans.has(j));
+  } else if(q.t === 'bs'){
+    const sel = card.querySelector('.bs-btn.sel');
+    const correctBtn = card.querySelector('.bs-btn[data-v="'+(q.a ? '1' : '0')+'"]');
+    card.querySelectorAll('.bs-btn').forEach(b=>b.classList.remove('correct','wrong'));
+    correctBtn.classList.add('correct');
+    if(sel && +sel.dataset.v !== (q.a ? 1 : 0)) sel.classList.add('wrong');
+    ok = !!sel && +sel.dataset.v === (q.a ? 1 : 0);
+  } else {
+    const inputs = Array.from(card.querySelectorAll('input[data-role="in"]'));
+    ok = inputs.every(inp=>{
+      const expected = parseFloat(q.a[+inp.dataset.j]);
+      const got = parseNum(inp.value);
+      const good = !isNaN(got) && Math.abs(got - expected) < 0.001;
+      inp.classList.remove('good','bad');
+      inp.classList.add(good ? 'good' : 'bad');
+      return good;
+    });
+    if(!ok && inputs.every(inp=>inp.value.trim()==='')){
+      const v = card.querySelector('[data-role="verdict"]');
+      v.className = 'verdict show no';
+      v.innerHTML = '✏️ <b>Isi jawabanmu dulu, ya!</b>';
+      return;
+    }
+  }
+  const v = card.querySelector('[data-role="verdict"]');
+  v.className = 'verdict show ' + (ok ? 'ok' : 'no');
+  v.innerHTML = ok ? '🎉 <b>Benar sekali!</b> Kerja bagus!' : '❌ <b>Belum tepat.</b> Baca pembahasan di bawah, lalu tekan ↺ Ulangi dan coba lagi!';
+  card.querySelector('[data-role="pembahasan"]').classList.add('show');
+  state[key][i] = ok;
+  updateScore(key);
+}
+
+function resetQ(card, key, i){
+  card.querySelectorAll('.q-opt').forEach(o=>o.classList.remove('sel','correct','wrong','missed'));
+  card.querySelectorAll('.bs-btn').forEach(b=>b.classList.remove('sel','correct','wrong'));
+  card.querySelectorAll('input[data-role="in"]').forEach(inp=>{ inp.value=''; inp.classList.remove('good','bad'); });
+  card.querySelector('[data-role="verdict"]').className = 'verdict';
+  card.querySelector('[data-role="pembahasan"]').classList.remove('show');
+  delete state[key][i];
+  updateScore(key);
+}
+
+function updateScore(key){
+  const s = state[key];
+  const n = QUIZ[key].qs.reduce((acc,_,i)=>acc + (s[i] ? 1 : 0), 0);
+  document.querySelectorAll('[data-score="'+key+'"]').forEach(el=>{
+    el.textContent = el.closest('.jump-card') ? (n+'/10') : (''+n);
+  });
+}
+
+/* ================= INIT ================= */
+go(0);
+</script>
+</body>
+</html>
