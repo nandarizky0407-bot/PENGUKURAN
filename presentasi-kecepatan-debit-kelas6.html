@@ -1,0 +1,2298 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kecepatan &amp; Debit — Presentasi Interaktif Matematika Kelas 6 SD</title>
+<meta name="description" content="Slide presentasi interaktif materi kecepatan dan debit untuk siswa kelas 6 SD: materi, konversi satuan, rumus, perbandingan, 50 soal HOTS dengan pembahasan.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   KECEPATAN & DEBIT — Tema "Balap Seru" (oranye-merah energik)
+   ============================================================ */
+:root{
+  --merah:#E8331A; --merah2:#C22A14;
+  --oranye:#FF7A00; --oranye2:#FF9D33;
+  --kuning:#FFC531; --kuning2:#FFE08A;
+  --gelap:#23252F;  --gelap2:#2E3140;
+  --krem:#FFF4E8;   --krem2:#FFFBF3;
+  --putih:#FFFFFF;
+  --biru:#2FA8D5;   --biru2:#7FD1F0; --biru3:#EAF7FD;
+  --hijau:#27A55B;  --hijau2:#E9F9EF;
+  --salah:#D64550;  --salah2:#FDEDF0;
+  --abu:#5A564C;    --garis:#EFE7D8;
+  --radius:22px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{
+  font-family:'Baloo 2','Trebuchet MS','Segoe UI',Verdana,sans-serif;
+  background:var(--gelap); color:var(--gelap); overflow:hidden;
+}
+button{font-family:inherit}
+img{max-width:100%}
+
+/* ---------- Deck & Slide ---------- */
+.deck{
+  position:fixed; inset:0;
+  background:var(--krem);
+  background-image:radial-gradient(rgba(232,51,26,.05) 2.2px, transparent 2.2px);
+  background-size:38px 38px;
+}
+.slide{
+  position:absolute; inset:0; padding:88px 56px 112px;
+  overflow-y:auto; overflow-x:hidden;
+  opacity:0; visibility:hidden; transform:translateX(70px);
+  transition:opacity .45s ease, transform .45s ease, visibility 0s linear .45s;
+  pointer-events:none; scrollbar-width:thin; scrollbar-color:var(--oranye) transparent;
+}
+.slide.active{
+  opacity:1; visibility:visible; transform:none; pointer-events:auto;
+  transition:opacity .45s ease, transform .45s ease, visibility 0s;
+}
+.slide.leave{transform:translateX(-70px)}
+.slide::-webkit-scrollbar{width:9px}
+.slide::-webkit-scrollbar-thumb{background:var(--oranye);border-radius:99px}
+.slide::-webkit-scrollbar-track{background:rgba(35,37,47,.06)}
+.wrap{max-width:1150px;margin:0 auto}
+.center{text-align:center}
+
+/* ---------- Tipografi ---------- */
+.kicker{
+  display:inline-flex;gap:8px;align-items:center;
+  background:var(--gelap);color:var(--kuning);
+  font-weight:800;padding:7px 18px;border-radius:99px;
+  font-size:14px;letter-spacing:1.5px;text-transform:uppercase;
+}
+.kicker.light{background:#fff;color:var(--merah);border:2.5px solid var(--gelap)}
+h1.display{font-size:66px;line-height:1.04;font-weight:800;color:var(--gelap);margin:18px 0 10px}
+h1.display .amp{color:var(--merah)}
+h1.display .grad{background:linear-gradient(180deg,var(--oranye),var(--merah));-webkit-background-clip:text;background-clip:text;color:transparent}
+h2.title{font-size:40px;font-weight:800;margin:12px 0 4px;color:var(--gelap);line-height:1.15}
+h3.subTitle{font-size:24px;font-weight:800;color:var(--merah2)}
+.sub{font-size:19px;color:var(--abu);max-width:860px;line-height:1.6;font-weight:600}
+.small{font-size:14.5px;color:var(--abu)}
+b,strong{font-weight:800}
+.merah{color:var(--merah)}.oranye{color:var(--oranye)}.biru{color:var(--biru)}
+
+/* ---------- Dekorasi balap ---------- */
+.checker{
+  height:26px;border-radius:10px;
+  background:repeating-conic-gradient(var(--gelap) 0% 25%, #fff 0% 50%);
+  background-size:26px 26px; border:3px solid var(--gelap);
+}
+.stripe{
+  height:12px;border-radius:99px;
+  background:repeating-linear-gradient(90deg,var(--merah) 0 46px, var(--kuning) 46px 92px, var(--gelap) 92px 138px);
+}
+.speedline{font-size:22px;letter-spacing:6px;color:var(--oranye);font-weight:800}
+
+/* ---------- Kartu & Grid ---------- */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start}
+.grid2.eq{align-items:stretch}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.card{
+  background:var(--putih);border:3px solid var(--gelap);border-radius:var(--radius);
+  padding:20px 22px;box-shadow:7px 7px 0 rgba(35,37,47,.14);
+}
+.card.accent{border-color:var(--oranye);box-shadow:7px 7px 0 rgba(255,122,0,.28)}
+.card.biru{border-color:var(--biru);box-shadow:7px 7px 0 rgba(47,168,213,.28)}
+.card.gelap{background:var(--gelap);color:#fff;border-color:var(--gelap)}
+.card.gelap h3{color:var(--kuning)}
+.card h3{font-size:21px;font-weight:800;margin-bottom:8px;color:var(--gelap)}
+.card p{font-size:16px;line-height:1.65;color:#3E3B33;font-weight:600}
+.card.gelap p{color:#EDEBE4}
+.iconBadge{
+  width:52px;height:52px;border-radius:16px;display:flex;align-items:center;justify-content:center;
+  font-size:27px;background:linear-gradient(180deg,var(--kuning),var(--oranye));border:3px solid var(--gelap);
+  margin-bottom:12px;flex:none;
+}
+.iconBadge.biru{background:linear-gradient(180deg,var(--biru2),var(--biru))}
+.chip{
+  display:inline-flex;align-items:center;gap:6px;background:var(--krem2);
+  border:2.5px solid var(--gelap);border-radius:99px;padding:5px 14px;
+  font-weight:800;font-size:14.5px;margin:4px 6px 4px 0;
+}
+.chip.road{background:#FFEFD9}
+.tbl{width:100%;border-collapse:separate;border-spacing:0;border:3px solid var(--gelap);border-radius:18px;overflow:hidden;background:#fff}
+.tbl th{background:var(--gelap);color:var(--kuning);padding:13px 16px;font-size:16.5px;text-align:left;font-weight:800}
+.tbl td{padding:13px 16px;border-top:2px solid var(--garis);font-size:15.5px;vertical-align:top;font-weight:600;line-height:1.5}
+.tbl tr:nth-child(even) td{background:var(--krem2)}
+.tbl .em{font-size:20px}
+.callout{
+  display:flex;gap:14px;align-items:flex-start;background:#FFF8E1;
+  border:3px dashed var(--kuning);border-radius:18px;padding:14px 18px;font-size:16px;font-weight:600;line-height:1.6;
+}
+.callout .cIcon{font-size:26px;flex:none}
+.mt{margin-top:18px}.mt2{margin-top:28px}.mb{margin-bottom:18px}
+
+/* ---------- Topbar ---------- */
+.topbar{
+  position:fixed;top:0;left:0;right:0;height:58px;z-index:60;
+  background:var(--gelap);color:#fff;display:flex;align-items:center;gap:14px;
+  padding:0 18px;border-bottom:4px solid var(--kuning);
+}
+.brand{font-weight:800;font-size:16.5px;display:flex;gap:8px;align-items:center;white-space:nowrap}
+.progressWrap{flex:1;height:13px;background:rgba(255,255,255,.16);border-radius:99px;overflow:hidden}
+.progress{height:100%;width:0%;background:linear-gradient(90deg,var(--kuning),var(--oranye),var(--merah));transition:width .4s ease;border-radius:99px}
+.counter{font-weight:800;font-size:14.5px;background:rgba(255,255,255,.13);padding:5px 13px;border-radius:99px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.iconbtn{
+  background:rgba(255,255,255,.13);border:none;color:#fff;font-size:17px;
+  width:38px;height:38px;border-radius:12px;cursor:pointer;transition:.15s;flex:none;
+}
+.iconbtn:hover{background:var(--oranye);transform:translateY(-1px)}
+
+/* ---------- Bottombar ---------- */
+.bottombar{
+  position:fixed;bottom:0;left:0;right:0;height:78px;z-index:60;
+  display:flex;align-items:center;justify-content:center;gap:16px;pointer-events:none;
+  background:linear-gradient(transparent, rgba(35,37,47,.08));
+}
+.navbtn{
+  pointer-events:auto;border:none;cursor:pointer;font-weight:800;font-size:17px;
+  padding:14px 28px;border-radius:99px;background:var(--gelap);color:#fff;
+  box-shadow:0 5px 0 rgba(0,0,0,.28);transition:.15s;display:inline-flex;gap:9px;align-items:center;
+}
+.navbtn.primary{background:linear-gradient(180deg,var(--oranye),var(--merah))}
+.navbtn:hover{transform:translateY(-2px)}
+.navbtn:active{transform:translateY(3px);box-shadow:0 1px 0 rgba(0,0,0,.28)}
+.navbtn:disabled{opacity:.35;cursor:not-allowed;transform:none}
+.keyhint{font-size:13px;font-weight:700;color:var(--abu);background:rgba(255,255,255,.75);padding:6px 12px;border-radius:99px;pointer-events:auto}
+
+/* ---------- Overlay Daftar Isi ---------- */
+.tocOverlay{
+  position:fixed;inset:0;z-index:70;background:rgba(35,37,47,.82);
+  display:none;align-items:center;justify-content:center;padding:30px;
+}
+.tocOverlay.open{display:flex}
+.tocBox{
+  background:var(--krem);border:4px solid var(--gelap);border-radius:26px;
+  max-width:900px;width:100%;max-height:86vh;overflow-y:auto;padding:26px;
+  box-shadow:10px 10px 0 rgba(0,0,0,.35);
+}
+.tocBox h2{font-size:30px;font-weight:800;margin-bottom:4px}
+.tocGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:13px;margin-top:16px}
+.tocItem{
+  background:#fff;border:3px solid var(--gelap);border-radius:16px;padding:13px 14px;
+  cursor:pointer;transition:.15s;text-align:left;
+}
+.tocItem:hover{transform:translateY(-3px);border-color:var(--oranye);box-shadow:0 6px 0 rgba(255,122,0,.3)}
+.tocItem .tNum{font-size:12.5px;font-weight:800;color:var(--merah);letter-spacing:1px}
+.tocItem .tName{font-size:16px;font-weight:800;line-height:1.3}
+.tocItem .tIco{font-size:22px}
+</style>
+<style>
+/* ---------- Cover ---------- */
+.coverInner{min-height:calc(100vh - 200px);display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center}
+.coverCars{font-size:54px;letter-spacing:18px;margin:20px 0 6px}
+.coverCars span{display:inline-block;animation:driveDemo 2.4s ease-in-out infinite}
+.coverCars span:nth-child(2){animation-delay:.2s}
+.coverCars span:nth-child(3){animation-delay:.4s}
+@keyframes driveDemo{0%,100%{transform:translateX(0)}50%{transform:translateX(26px)}}
+.bigstart{font-size:21px;padding:17px 40px;margin-top:22px}
+.coverBadges{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:24px}
+.coverBadge{background:#fff;border:2.5px solid var(--gelap);border-radius:99px;padding:8px 18px;font-weight:800;font-size:15px;box-shadow:4px 4px 0 rgba(35,37,47,.14)}
+
+/* ---------- Divider bab ---------- */
+.divider{display:flex;flex-direction:column;justify-content:center;min-height:calc(100vh - 200px)}
+.babNum{font-size:118px;font-weight:800;line-height:1;background:linear-gradient(180deg,var(--oranye),var(--merah));-webkit-background-clip:text;background-clip:text;color:transparent}
+.dividerList{margin:14px 0 0;padding:0;list-style:none;display:grid;gap:10px}
+.dividerList li{display:flex;gap:12px;align-items:center;font-size:18.5px;font-weight:700;color:#3E3B33}
+.dividerList li .dot{width:34px;height:34px;border-radius:12px;background:linear-gradient(180deg,var(--kuning),var(--oranye));border:2.5px solid var(--gelap);display:flex;align-items:center;justify-content:center;font-size:17px;flex:none}
+
+/* ---------- Widget umum ---------- */
+.widget{
+  background:#fff;border:3px solid var(--gelap);border-radius:20px;
+  padding:18px 20px;box-shadow:7px 7px 0 rgba(35,37,47,.14);
+}
+.widget h4{font-size:17.5px;font-weight:800;color:var(--merah2);margin-bottom:10px;display:flex;gap:8px;align-items:center}
+input[type=range]{width:100%;accent-color:var(--oranye);cursor:pointer;height:26px}
+.wlabel{display:flex;justify-content:space-between;font-weight:800;font-size:15px;margin:2px 0 2px}
+.wlabel .val{background:var(--gelap);color:var(--kuning);padding:2px 12px;border-radius:99px;font-variant-numeric:tabular-nums}
+.wout{
+  margin-top:12px;background:var(--biru3);border:2.5px solid var(--biru);border-radius:14px;
+  padding:11px 14px;font-size:16px;font-weight:700;line-height:1.55;
+}
+.wout.oranyeOut{background:#FFF3E3;border-color:var(--oranye)}
+.wbtn{
+  border:none;cursor:pointer;font-weight:800;font-size:15.5px;color:#fff;
+  background:linear-gradient(180deg,var(--oranye),var(--merah));
+  padding:10px 20px;border-radius:99px;box-shadow:0 4px 0 rgba(35,37,47,.25);transition:.15s;
+}
+.wbtn:hover{transform:translateY(-2px)}
+.wbtn:active{transform:translateY(2px);box-shadow:0 1px 0 rgba(35,37,47,.25)}
+.wbtn.ghost{background:#fff;color:var(--gelap);border:2.5px solid var(--gelap);box-shadow:0 4px 0 rgba(35,37,47,.15)}
+.numIn,select.numIn{
+  font-family:inherit;font-weight:800;font-size:16px;padding:9px 12px;border-radius:12px;
+  border:2.5px solid var(--gelap);background:var(--krem2);color:var(--gelap);width:100%;
+}
+.numIn:focus{outline:3px solid var(--oranye);outline-offset:1px}
+
+/* ---------- Widget: jalan & mobil ---------- */
+.road{
+  position:relative;height:118px;background:#3A3D4D;border-radius:16px;overflow:hidden;
+  border:3px solid var(--gelap);background-image:radial-gradient(rgba(255,255,255,.06) 2px,transparent 2px);background-size:26px 26px;
+}
+.road .lane{position:absolute;left:0;right:0;top:50%;height:5px;transform:translateY(-50%);background:repeating-linear-gradient(90deg,#FFD84D 0 28px,transparent 28px 56px)}
+.road .car{position:absolute;bottom:12px;left:-64px;font-size:42px;transform:scaleX(-1);will-change:left}
+.road .finish{position:absolute;right:0;top:0;bottom:0;width:22px;background:repeating-conic-gradient(#fff 0% 25%, var(--gelap) 0% 50%);background-size:14px 14px;border-left:3px solid #fff}
+.road .cloud{position:absolute;top:8px;font-size:20px;opacity:.85}
+.road.running .car{animation:drive var(--dur,4s) linear forwards}
+@keyframes drive{from{left:-64px}to{left:calc(100% - 46px)}}
+
+/* ---------- Widget: keran & ember ---------- */
+.flowStage{display:flex;align-items:flex-end;justify-content:center;gap:26px;padding:8px 0 2px;min-height:230px}
+.tapCol{display:flex;flex-direction:column;align-items:center;gap:6px}
+.tapEmoji{font-size:58px;transform:scaleX(-1);line-height:1}
+.stream{width:10px;height:44px;border-radius:0 0 8px 8px;background:linear-gradient(180deg,var(--biru2),var(--biru));opacity:0}
+.flowStage.on .stream{opacity:1;animation:streamFlow .45s linear infinite}
+@keyframes streamFlow{0%{transform:translateY(-8px)}100%{transform:translateY(8px)}}
+.drops{font-size:17px;opacity:0}
+.flowStage.on .drops{opacity:1;animation:dropsFall .5s linear infinite}
+@keyframes dropsFall{0%{transform:translateY(-6px)}100%{transform:translateY(10px)}}
+.tank{
+  width:170px;height:200px;border:4px solid var(--gelap);border-top:none;
+  border-radius:0 0 22px 22px;background:#EDF6FA;position:relative;overflow:hidden;
+}
+.tank .water{position:absolute;bottom:0;left:0;right:0;height:0%;background:linear-gradient(180deg,var(--biru2),var(--biru));transition:height .4s ease}
+.tank .water::before{content:"";position:absolute;top:0;left:0;right:0;height:7px;background:rgba(255,255,255,.45)}
+.tank .mark{position:absolute;left:0;right:0;height:0;border-top:2.5px dashed rgba(35,37,47,.28);font-size:10.5px;font-weight:800;color:var(--abu);padding-left:6px}
+.tankFull{width:170px;text-align:center;font-weight:800;font-size:13px;color:var(--abu)}
+
+/* ---------- Segitiga rumus ---------- */
+.triArea{display:flex;flex-direction:column;align-items:center;gap:12px}
+.tri{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;width:250px;height:224px}
+.tri .cell{
+  border:3.5px solid var(--gelap);display:flex;align-items:center;justify-content:center;
+  font-weight:800;font-size:38px;cursor:pointer;transition:.2s;user-select:none;
+}
+.tri .top{grid-column:1/3;border-radius:18px 18px 0 0;border-bottom:3px dashed var(--merah);background:#FFEFD9}
+.tri .bl{border-radius:0 0 0 18px;background:var(--biru3);border-right:3px dashed var(--merah)}
+.tri .br{border-radius:0 0 18px 0;background:#FDEEF0}
+.tri .cell:hover{filter:brightness(.96)}
+.tri .cell.gone{opacity:0}
+.tri .cell span{transition:.2s}
+.triResult{
+  min-height:58px;width:250px;background:var(--gelap);color:var(--kuning);border-radius:16px;
+  display:flex;align-items:center;justify-content:center;font-size:23px;font-weight:800;
+}
+
+/* ---------- Langkah reveal ---------- */
+.steps{display:grid;gap:12px;margin-top:8px}
+.step{
+  display:flex;gap:13px;background:#fff;border:3px solid var(--gelap);border-radius:16px;
+  padding:14px 16px;box-shadow:5px 5px 0 rgba(35,37,47,.12);transition:.3s;
+}
+.step .sTag{
+  flex:none;background:var(--gelap);color:var(--kuning);font-weight:800;font-size:13px;
+  border-radius:10px;padding:4px 11px;height:fit-content;letter-spacing:.5px;white-space:nowrap;
+}
+.step.jawab .sTag{background:var(--hijau);color:#fff}
+.step .sBody{font-size:16px;font-weight:600;line-height:1.6}
+.step.hiddenStep{display:none}
+.revealBtn{margin-top:14px}
+
+/* ---------- Kalkulator & konverter ---------- */
+.calcRow{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end}
+.calcField{flex:1;min-width:150px}
+.calcField label{display:block;font-weight:800;font-size:13.5px;margin-bottom:5px;color:var(--abu)}
+.calcResult{
+  margin-top:14px;background:var(--gelap);color:#fff;border-radius:16px;padding:15px 18px;
+  font-size:17px;font-weight:700;display:none;line-height:1.6;
+}
+.calcResult.show{display:block}
+.calcResult .big{font-size:24px;color:var(--kuning);font-weight:800}
+.convArrow{display:flex;align-items:center;gap:10px;background:var(--krem2);border:2.5px solid var(--gelap);border-radius:14px;padding:10px 14px;font-weight:800;font-size:15.5px;flex-wrap:wrap}
+.convArrow .op{background:var(--merah);color:#fff;border-radius:99px;padding:3px 12px;font-size:14px}
+.convChain{display:grid;gap:9px;margin-top:12px}
+
+/* ---------- Laboratorium air & balap ---------- */
+.labRow{display:grid;grid-template-columns:1.2fr .8fr;gap:20px;align-items:start}
+.track{position:relative;height:86px;background:#3A3D4D;border-radius:14px;border:3px solid var(--gelap);overflow:hidden;margin-top:6px}
+.track .tlane{position:absolute;left:0;right:0;height:3px;background:repeating-linear-gradient(90deg,#FFD84D 0 22px,transparent 22px 44px)}
+.track .tlane.t1{top:28px}.track .tlane.t2{top:56px}
+.track .rcar{position:absolute;font-size:30px;transform:scaleX(-1);transition:left 1.6s cubic-bezier(.25,.6,.35,1);left:6px}
+.track .rcar.a{top:12px}
+.track .rcar.b{top:40px}
+.track .rfinish{position:absolute;right:0;top:0;bottom:0;width:18px;background:repeating-conic-gradient(#fff 0% 25%,var(--gelap) 0% 50%);background-size:12px 12px}
+.ratioIn{display:flex;gap:10px;align-items:center;font-weight:800;font-size:17px}
+.ratioIn input{width:76px}
+
+/* ---------- Refleksi ---------- */
+.moodRow{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:8px}
+.mood{
+  font-size:40px;background:#fff;border:3px solid var(--gelap);border-radius:18px;
+  width:78px;height:78px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:.15s;
+}
+.mood:hover{transform:translateY(-4px)}
+.mood.picked{background:#FFF3E3;border-color:var(--oranye);box-shadow:inset 0 0 0 3px var(--oranye), 0 6px 0 rgba(255,122,0,.3)}
+.checkItem{display:flex;gap:12px;align-items:flex-start;background:#fff;border:2.5px solid var(--gelap);border-radius:14px;padding:12px 14px;font-weight:700;font-size:15.5px;cursor:pointer;transition:.15s}
+.checkItem:hover{border-color:var(--oranye)}
+.checkItem input{width:21px;height:21px;accent-color:var(--hijau);flex:none;margin-top:1px;cursor:pointer}
+.checkItem.done{background:var(--hijau2);border-color:var(--hijau)}
+.reflectResult{display:none;margin-top:16px}
+.reflectResult.show{display:block}
+
+/* ---------- Kuis ---------- */
+.quizHead{
+  display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;
+  background:var(--gelap);border-radius:20px;padding:16px 20px;margin-bottom:16px;
+}
+.quizHead .qhLeft{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.quizHead h3{color:#fff;font-size:23px;font-weight:800}
+.scorechip{background:linear-gradient(180deg,var(--kuning),var(--oranye));color:var(--gelap);font-weight:800;padding:7px 16px;border-radius:99px;font-size:15.5px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.qcard{background:#fff;border:3px solid var(--gelap);border-radius:20px;padding:18px 20px;margin:15px 0;box-shadow:6px 6px 0 rgba(35,37,47,.13)}
+.qcard.doneOk{border-color:var(--hijau)}
+.qcard.doneNo{border-color:var(--salah)}
+.qtop{display:flex;gap:9px;align-items:center;flex-wrap:wrap}
+.qnum{background:var(--merah);color:#fff;font-weight:800;border-radius:10px;padding:4px 13px;font-size:14px}
+.qlevel{background:#FFEFD9;border:2px solid var(--oranye);color:var(--merah2);font-weight:800;border-radius:10px;padding:2.5px 11px;font-size:12.5px}
+.qtext{font-size:17.5px;font-weight:700;line-height:1.6;margin:11px 0 13px}
+.qopts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.opt{
+  border:2.5px solid #D8D2C4;background:var(--krem2);border-radius:14px;padding:11px 13px;
+  text-align:left;cursor:pointer;font-size:15.5px;font-weight:700;transition:.15s;
+  display:flex;gap:10px;align-items:flex-start;line-height:1.45;
+}
+.opt .letter{background:var(--gelap);color:#fff;min-width:28px;height:28px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13.5px;flex:none}
+.opt:hover{border-color:var(--oranye);transform:translateY(-1px)}
+.opt.picked{border-color:var(--oranye);background:#FFF3E3;box-shadow:inset 0 0 0 2.5px var(--oranye)}
+.opt.correct{border-color:var(--hijau);background:var(--hijau2);box-shadow:inset 0 0 0 2.5px var(--hijau)}
+.opt.correct .letter{background:var(--hijau)}
+.opt.wrong{border-color:var(--salah);background:var(--salah2);box-shadow:inset 0 0 0 2.5px var(--salah)}
+.opt.wrong .letter{background:var(--salah)}
+.opt.locked{cursor:default}
+.qactions{display:flex;gap:12px;margin-top:13px;align-items:center;flex-wrap:wrap}
+.checkbtn{
+  background:linear-gradient(180deg,var(--oranye),var(--merah));color:#fff;border:none;
+  font-weight:800;font-size:15.5px;padding:11px 22px;border-radius:99px;cursor:pointer;
+  box-shadow:0 4px 0 rgba(35,37,47,.25);transition:.15s;
+}
+.checkbtn:hover{transform:translateY(-2px)}
+.checkbtn:disabled{opacity:.4;cursor:not-allowed;transform:none}
+.badge{font-weight:800;padding:7px 15px;border-radius:99px;font-size:14.5px;display:inline-flex;gap:6px;align-items:center}
+.badge.ok{background:var(--hijau2);color:var(--hijau);border:2.5px solid var(--hijau)}
+.badge.no{background:var(--salah2);color:var(--salah);border:2.5px solid var(--salah)}
+.qexp{
+  display:none;margin-top:13px;border-radius:15px;border:2.5px dashed var(--biru);
+  background:var(--biru3);padding:14px 16px;font-size:15.5px;line-height:1.7;font-weight:600;
+}
+.qexp.show{display:block}
+.qexp .expTitle{color:var(--merah2);font-weight:800}
+.qtip{display:none;margin-top:10px;background:#FFF8E1;border:2.5px solid var(--kuning);border-radius:15px;padding:13px 16px;font-size:15px;line-height:1.65;font-weight:600}
+.qtip.show{display:block}
+.qtip .tipTitle{color:var(--merah2);font-weight:800}
+.shake{animation:shake .45s}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-7px)}40%{transform:translateX(7px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
+.quizSummary{display:none;margin-top:6px;background:linear-gradient(180deg,#FFF3E3,#fff);border:3px solid var(--oranye);border-radius:18px;padding:16px 20px;text-align:center}
+.quizSummary.show{display:block}
+.quizSummary .starRow{font-size:34px;letter-spacing:5px;margin:4px 0}
+.quizSummary .sumText{font-size:18px;font-weight:800}
+
+/* ---------- Confetti canvas ---------- */
+#confettiCv{position:fixed;inset:0;pointer-events:none;z-index:99}
+
+/* ---------- Responsif ---------- */
+@media (max-width:900px){
+  .slide{padding:80px 20px 104px}
+  h1.display{font-size:44px}
+  h2.title{font-size:30px}
+  .babNum{font-size:76px}
+  .grid2,.grid3,.labRow{grid-template-columns:1fr}
+  .qopts{grid-template-columns:1fr}
+  .tocGrid{grid-template-columns:1fr 1fr}
+  .brand span.bname{display:none}
+  .keyhint{display:none}
+  .flowStage{min-height:210px}
+}
+</style>
+</head>
+<body>
+<canvas id="confettiCv"></canvas>
+
+<!-- ======= TOPBAR ======= -->
+<header class="topbar">
+  <div class="brand">🏁 <span class="bname">Kecepatan &amp; Debit • Kelas 6</span></div>
+  <div class="progressWrap"><div class="progress" id="progressBar"></div></div>
+  <div class="counter" id="slideCounter">1 / 34</div>
+  <button class="iconbtn" id="soundBtn" title="Nyalakan/matikan suara">🔊</button>
+  <button class="iconbtn" id="menuBtn" title="Daftar isi (M)">☰</button>
+</header>
+
+<!-- ======= BOTTOMBAR ======= -->
+<nav class="bottombar">
+  <button class="navbtn" id="prevBtn">◀ Sebelumnya</button>
+  <span class="keyhint">Ganti slide: tombol ➜ ⬅️ di keyboard</span>
+  <button class="navbtn primary" id="nextBtn">Berikutnya ▶</button>
+</nav>
+
+<!-- ======= OVERLAY DAFTAR ISI ======= -->
+<div class="tocOverlay" id="tocOverlay">
+  <div class="tocBox">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <div>
+        <h2>🗺️ Peta Perjalanan Belajar</h2>
+        <p class="small">Klik tujuan mana pun untuk langsung melompat ke slide tersebut.</p>
+      </div>
+      <button class="iconbtn" id="tocClose" style="background:var(--gelap)">✕</button>
+    </div>
+    <div class="tocGrid" id="tocGrid"></div>
+  </div>
+</div>
+
+<main class="deck" id="deck">
+<!-- ============ SLIDE 0 : COVER ============ -->
+<section class="slide active" data-title="Cover" data-icon="🏁">
+  <div class="wrap">
+    <div class="coverInner">
+      <div class="checker" style="width:150px"></div>
+      <div class="kicker" style="margin-top:20px">Matematika • Kelas 6 SD</div>
+      <h1 class="display">KECEPATAN <span class="amp">&amp;</span> <span class="grad">DEBIT</span></h1>
+      <p class="sub">Bersiap mengikuti balapan seru: mengukur seberapa cepat kendaraan bergerak dan seberapa deras air mengalir. Kumpulkan bintang di setiap kuis dan jadilah juara lintasan belajar hari ini!</p>
+      <div class="coverCars"><span>🏍️</span><span>💨</span><span>🚗</span><span>💨</span><span>🚙</span></div>
+      <button class="navbtn primary bigstart" data-go="1">🚦 Mulai Balapan Belajar</button>
+      <div class="coverBadges">
+        <span class="coverBadge">📚 5 Bab Materi</span>
+        <span class="coverBadge">🧠 50 Soal HOTS</span>
+        <span class="coverBadge">🎮 Widget Interaktif</span>
+        <span class="coverBadge">⭐ Skor &amp; Bintang</span>
+      </div>
+      <p class="small" style="margin-top:16px">Gunakan tombol <b>Berikutnya</b>, tombol panah keyboard, atau menu ☰ untuk berpindah slide.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 1 : DAFTAR ISI ============ -->
+<section class="slide" data-title="Peta Perjalanan" data-icon="🗺️">
+  <div class="wrap">
+    <span class="kicker light">🗺️ Peta Perjalanan Belajar</span>
+    <h2 class="title">Lintasan Balapan Kita Hari Ini</h2>
+    <p class="sub">Sepatuinya peta balap! Setiap bab adalah satu putaran lintasan. Selesaikan satu putaran, kumpulkan kemenangannya, lalu lanjut ke putaran berikutnya. Klik kartu di bawah untuk langsung menuju bab tersebut.</p>
+    <div class="grid3 mt">
+      <button class="card tocCard" data-go="2" style="cursor:pointer;text-align:left">
+        <div class="iconBadge">1️⃣</div>
+        <h3>Apa Itu Kecepatan &amp; Debit?</h3>
+        <p>Mengenal arti kecepatan dan debit beserta contohnya di kehidupan sehari-hari.</p>
+      </button>
+      <button class="card tocCard" data-go="7" style="cursor:pointer;text-align:left">
+        <div class="iconBadge">2️⃣</div>
+        <h3>Satuan &amp; Cara Konversi</h3>
+        <p>Km/jam, m/s, liter/menit, m³ — dan trik mengubah satuannya.</p>
+      </button>
+      <button class="card tocCard" data-go="14" style="cursor:pointer;text-align:left">
+        <div class="iconBadge">3️⃣</div>
+        <h3>Kecepatan, Jarak &amp; Waktu</h3>
+        <p>Segitiga rumus ajaib untuk mencari kecepatan, jarak, maupun waktu.</p>
+      </button>
+      <button class="card tocCard" data-go="20" style="cursor:pointer;text-align:left">
+        <div class="iconBadge">4️⃣</div>
+        <h3>Debit, Volume &amp; Waktu</h3>
+        <p>Trik segitiga rumus untuk urusan air: debit, volume, dan waktu.</p>
+      </button>
+      <button class="card tocCard" data-go="26" style="cursor:pointer;text-align:left">
+        <div class="iconBadge">5️⃣</div>
+        <h3>Kecepatan &amp; Perbandingan</h3>
+        <p>Menghubungkan kecepatan dan debit dengan materi perbandingan.</p>
+      </button>
+      <button class="card tocCard" data-go="6" style="cursor:pointer;text-align:left">
+        <div class="iconBadge" style="background:linear-gradient(180deg,#FFE08A,#FFC531)">🧠</div>
+        <h3>Kuis 1 — Definisi</h3>
+        <p>10 soal HOTS: paham arti kecepatan dan debit.</p>
+      </button>
+      <button class="card tocCard" data-go="13" style="cursor:pointer;text-align:left">
+        <div class="iconBadge" style="background:linear-gradient(180deg,#FFE08A,#FFC531)">🧠</div>
+        <h3>Kuis 2 — Satuan &amp; Konversi</h3>
+        <p>10 soal HOTS: jago mengubah satuan.</p>
+      </button>
+      <button class="card tocCard" data-go="19" style="cursor:pointer;text-align:left">
+        <div class="iconBadge" style="background:linear-gradient(180deg,#FFE08A,#FFC531)">🧠</div>
+        <h3>Kuis 3 — Rumus Kecepatan</h3>
+        <p>10 soal HOTS: mencari kecepatan, jarak, dan waktu.</p>
+      </button>
+      <button class="card tocCard" data-go="25" style="cursor:pointer;text-align:left">
+        <div class="iconBadge" style="background:linear-gradient(180deg,#FFE08A,#FFC531)">🧠</div>
+        <h3>Kuis 4 — Rumus Debit</h3>
+        <p>10 soal HOTS: mencari debit, volume, dan waktu.</p>
+      </button>
+      <button class="card tocCard" data-go="30" style="cursor:pointer;text-align:left">
+        <div class="iconBadge" style="background:linear-gradient(180deg,#FFE08A,#FFC531)">🧠</div>
+        <h3>Kuis 5 — Perbandingan</h3>
+        <p>10 soal HOTS: kecepatan dipadukan perbandingan.</p>
+      </button>
+      <button class="card tocCard" data-go="31" style="cursor:pointer;text-align:left">
+        <div class="iconBadge" style="background:linear-gradient(180deg,#7FD1F0,#2FA8D5)">🏆</div>
+        <h3>Kesimpulan</h3>
+        <p>Peta kemenangan: seluruh rumus dalam satu layar.</p>
+      </button>
+      <button class="card tocCard" data-go="33" style="cursor:pointer;text-align:left">
+        <div class="iconBadge" style="background:linear-gradient(180deg,#7FD1F0,#2FA8D5)">📣</div>
+        <h3>Refleksi &amp; Penutup</h3>
+        <p>Ceritakan perasaanmu dan rayakan kemenanganmu!</p>
+      </button>
+    </div>
+  </div>
+</section>
+<!-- ============ SLIDE 2 : DIVIDER BAB 1 ============ -->
+<section class="slide" data-title="Bab 1 — Definisi" data-icon="1️⃣">
+  <div class="wrap divider">
+    <span class="kicker light">Putaran 1</span>
+    <div class="babNum">01</div>
+    <h2 class="title">Apa Itu Kecepatan &amp; Debit?</h2>
+    <p class="sub">Sebelum memacu kendaraan, kita kenalan dulu dengan dua "kembar" matematika yang selalu membandingkan sesuatu dengan waktu.</p>
+    <div class="stripe mt" style="max-width:520px"></div>
+    <ul class="dividerList">
+      <li><span class="dot">🚗</span> Arti kecepatan dan contohnya di sekitarmu</li>
+      <li><span class="dot">🚰</span> Arti debit dan contohnya di rumahmu</li>
+      <li><span class="dot">🤝</span> Hubungan keduanya: saudara kandung!</li>
+      <li><span class="dot">🧠</span> Kuis 1 — 10 soal HOTS</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ SLIDE 3 : DEFINISI KECEPATAN ============ -->
+<section class="slide" data-title="Apa itu Kecepatan?" data-icon="🚗" data-init="car">
+  <div class="wrap">
+    <span class="kicker light">🚗 Bab 1 • Konsep</span>
+    <h2 class="title">Apa Itu Kecepatan?</h2>
+    <div class="grid2 mt">
+      <div style="display:grid;gap:16px">
+        <div class="card accent">
+          <h3>📖 Definisi</h3>
+          <p><b class="merah">Kecepatan</b> adalah <b>jarak yang ditempuh suatu benda pada setiap satu satuan waktu</b>. Satuan waktu yang biasa dipakai adalah jam, menit, atau detik.</p>
+        </div>
+        <div class="card">
+          <h3>🏁 Contoh Sederhana</h3>
+          <p>Mobil bergerak <b>40 km setiap 1 jam</b> → kecepatannya <b class="merah">40 km/jam</b>, dibaca "empat puluh kilometer per jam". Artinya, untuk setiap 1 jam berjalan, mobil itu selalu berpindah sejauh 40 km.</p>
+        </div>
+        <div class="card biru">
+          <h3>🔎 Contoh di Sekitarmu</h3>
+          <p>🚶 Anak berjalan kaki ± <b>5 km/jam</b><br>🚲 Sepeda santai ± <b>15 km/jam</b><br>🚗 Mobil dalam kota ± <b>40 km/jam</b><br>🚄 Kereta cepat ± <b>200 km/jam</b><br>✈️ Pesawat jet ± <b>800 km/jam</b></p>
+        </div>
+      </div>
+      <div class="widget">
+        <h4>🎮 Coba Sendiri: Lintasan Uji Kecepatan</h4>
+        <div class="wlabel"><span>Kecepatan mobil</span><span class="val" id="carVal">40 km/jam</span></div>
+        <input type="range" id="carSpeed" min="10" max="120" step="5" value="40">
+        <div class="road" id="roadBox">
+          <span class="cloud">☁️</span>
+          <div class="lane"></div>
+          <div class="car" id="carEmoji">🚗</div>
+          <div class="finish"></div>
+        </div>
+        <div class="wbtn ghost" style="margin-top:12px" id="carGo">Gas! Jalankan Mobil 🏁</div>
+        <div class="wout" id="carOut">Dengan kecepatan <b>40 km/jam</b>, setiap <b>1 jam</b> mobil menempuh <b>40 km</b>. Semakin besar angkanya, semakin cepat mobil berpindah!</div>
+        <p class="small mt">Perhatikan: saat kecepatan diperbesar, mobil menyusuri lintasan makin cepat. Itulah arti sebenarnya dari "cepat".</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 4 : DEFINISI DEBIT ============ -->
+<section class="slide" data-title="Apa itu Debit?" data-icon="🚰" data-init="tap">
+  <div class="wrap">
+    <span class="kicker light">🚰 Bab 1 • Konsep</span>
+    <h2 class="title">Apa Itu Debit?</h2>
+    <div class="grid2 mt">
+      <div style="display:grid;gap:16px">
+        <div class="card biru">
+          <h3>📖 Definisi</h3>
+          <p><b class="biru">Debit</b> adalah <b>banyak volume cairan yang mengalir pada setiap satu satuan waktu</b>. Cairan bisa air, susu, atau bensin; waktunya bisa detik, menit, atau jam.</p>
+        </div>
+        <div class="card">
+          <h3>🚰 Contoh Sederhana</h3>
+          <p>Keran mengalirkan <b>12 liter setiap 1 menit</b> → debitnya <b class="biru">12 liter/menit</b>, dibaca "dua belas liter per menit". Artinya, pada setiap 1 menit, keran itu mengalirkan 12 liter air.</p>
+        </div>
+        <div class="card accent">
+          <h3>🔎 Contoh di Sekitarmu</h3>
+          <p>🚿 Shower ± <b>9 liter/menit</b><br>🚰 Keran wastafel ± <b>12 liter/menit</b><br>⛲ Selang taman ± <b>20 liter/menit</b><br>🚒 Pompa pemadam ± <b>1.500 liter/menit</b><br>🌊 Sungai besar ± <b>1.000 m³/detik</b></p>
+        </div>
+      </div>
+      <div class="widget">
+        <h4>🎮 Coba Sendiri: Kran Ajaib</h4>
+        <div class="wlabel"><span>Bukaan keran (debit)</span><span class="val" id="tapVal">12 liter/menit</span></div>
+        <input type="range" id="tapRate" min="2" max="20" step="1" value="12">
+        <div class="flowStage" id="flowStage">
+          <div class="tapCol">
+            <span class="tapEmoji">🚰</span>
+            <span class="drops">💧💧💧</span>
+            <div class="stream"></div>
+          </div>
+          <div>
+            <div class="tank"><div class="water" id="tapWater"></div><div class="mark" style="bottom:50%"></div></div>
+            <div class="tankFull">ember 20 liter</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:10px;margin-top:12px;flex-wrap:wrap">
+          <div class="wbtn" id="tapGo">Alirkan Air! 💧</div>
+          <div class="wbtn ghost" id="tapReset">Kosongkan Ember 🧹</div>
+        </div>
+        <div class="wout" id="tapOut">Keran dengan debit <b>12 liter/menit</b> mengalirkan <b>12 liter</b> pada setiap 1 menit. Perhatikan ember terisi!</div>
+        <p class="small mt">Bukaan keran dibesarkan → air makin deras → ember cepat penuh. Itulah debit yang lebih besar.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 5 : KECEPATAN VS DEBIT ============ -->
+<section class="slide" data-title="Kecepatan vs Debit" data-icon="🤝">
+  <div class="wrap">
+    <span class="kicker light">🤝 Bab 1 • Hubungan</span>
+    <h2 class="title">Kecepatan &amp; Debit: Sepasang Kembar!</h2>
+    <p class="sub">Keduanya sama-sama "sesuatu dibagi waktu". Bedanya, kecepatan membandingkan <b>jarak</b>, sedangkan debit membandingkan <b>volume air</b>.</p>
+    <div class="mt">
+      <table class="tbl">
+        <tr>
+          <th style="width:24%">Hal yang Dibandingkan</th>
+          <th>🚗 Kecepatan</th>
+          <th>🚰 Debit</th>
+        </tr>
+        <tr>
+          <td><b>Apa yang dibagi waktu?</b></td>
+          <td>Jarak yang ditempuh benda (km, m)</td>
+          <td>Volume air yang mengalir (liter, m³)</td>
+        </tr>
+        <tr>
+          <td><b>Cara berpikirnya</b></td>
+          <td>Jarak <b>:</b> waktu</td>
+          <td>Volume <b>:</b> waktu</td>
+        </tr>
+        <tr>
+          <td><b>Satuan yang biasa</b></td>
+          <td>km/jam &nbsp;•&nbsp; m/detik &nbsp;•&nbsp; m/menit</td>
+          <td>liter/menit &nbsp;•&nbsp; liter/detik &nbsp;•&nbsp; m³/detik</td>
+        </tr>
+        <tr>
+          <td><b>Contoh kalimat</b></td>
+          <td>"Motor itu melaju 60 km setiap 1 jam."</td>
+          <td>"Keran itu mengalirkan 12 liter setiap 1 menit."</td>
+        </tr>
+        <tr>
+          <td><b>Jika dibuat semakin besar</b></td>
+          <td>Makin cepat sampai tujuan 🏁</td>
+          <td>Makin cepat wadah penuh 💦</td>
+        </tr>
+      </table>
+    </div>
+    <div class="grid2 mt">
+      <div class="callout"><span class="cIcon">💡</span><div><b>Tahukah kamu?</b> Semua yang bentuknya "sesuatu <b>per</b> satuan waktu" berpola sama: harga per kg, jarak per liter bensin, sampai detak jantung per menit. Kalau kamu paham kecepatan dan debit, kamu paham pola besar bernama <b>laju</b>!</div></div>
+      <div class="callout"><span class="cIcon">🧭</span><div><b>Kata kunci soal:</b> saat membaca soal, cari kata <b>"per", "setiap", atau "dalam"</b> (contoh: per jam, setiap menit, dalam 5 detik). Kata itu adalah isyarat bahwa yang dibicarakan adalah kecepatan atau debit.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 6 : KUIS 1 ============ -->
+<section class="slide" data-title="Kuis 1 — Definisi" data-icon="🧠">
+  <div class="wrap">
+    <div class="quizHead">
+      <div class="qhLeft">
+        <h3>🧠 Kuis 1 • Definisi Kecepatan &amp; Debit</h3>
+        <span class="chip road" style="background:#FFEFD9">10 Soal HOTS</span>
+      </div>
+      <div class="qhLeft">
+        <span class="scorechip" id="score-q1">Skor: 0/10</span>
+        <button class="wbtn ghost" data-reset-quiz="q1" style="font-size:13.5px;padding:7px 14px">Ulangi 🔄</button>
+      </div>
+    </div>
+    <p class="sub mb" style="font-size:16.5px">Petunjuk: pilih satu jawaban, lalu tekan <b>Cek Jawaban</b>. Jawaban benar memunculkan confetti dan penjelasan lengkap. Jawab semuanya untuk mengumpulkan bintang! ⭐</p>
+    <div class="quiz-root" data-quiz="q1"></div>
+  </div>
+</section>
+<!-- ============ SLIDE 7 : DIVIDER BAB 2 ============ -->
+<section class="slide" data-title="Bab 2 — Satuan & Konversi" data-icon="2️⃣">
+  <div class="wrap divider">
+    <span class="kicker light">Putaran 2</span>
+    <div class="babNum">02</div>
+    <h2 class="title">Satuan &amp; Cara Konversinya</h2>
+    <p class="sub">Setiap kendaraan punya "bahasa" kecepatan sendiri, dan setiap pipa punya "bahasa" debit sendiri. Belajarlah mengubah satu bahasa ke bahasa lain!</p>
+    <div class="stripe mt" style="max-width:520px"></div>
+    <ul class="dividerList">
+      <li><span class="dot">📏</span> Satuan-satuan kecepatan</li>
+      <li><span class="dot">🧴</span> Satuan-satuan debit</li>
+      <li><span class="dot">🔄</span> Trik konversi cepat antar satuan</li>
+      <li><span class="dot">🧮</span> Mesin konverter interaktif</li>
+      <li><span class="dot">🧠</span> Kuis 2 — 10 soal HOTS</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ SLIDE 8 : SATUAN KECEPATAN ============ -->
+<section class="slide" data-title="Satuan Kecepatan" data-icon="📏">
+  <div class="wrap">
+    <span class="kicker light">📏 Bab 2 • Satuan</span>
+    <h2 class="title">Satuan pada Kecepatan</h2>
+    <p class="sub">Satuan kecepatan selalu berupa <b class="merah">satuan jarak / satuan waktu</b>. Yang paling sering dipakai adalah tiga satuan ini:</p>
+    <div class="grid3 mt">
+      <div class="card accent">
+        <div class="iconBadge">🚗</div>
+        <h3>km/jam <span class="small">(kilometer per jam)</span></h3>
+        <p>Dipakai untuk kendaraan di jalan raya: mobil, motor, bus, kereta. <b>1 km = 1.000 m</b>, <b>1 jam = 60 menit</b>.</p>
+        <p class="mt"><span class="chip road">Mobil: 60 km/jam</span><span class="chip road">Kereta: 120 km/jam</span></p>
+      </div>
+      <div class="card biru">
+        <div class="iconBadge biru">🏃</div>
+        <h3>m/detik <span class="small">(meter per detik)</span></h3>
+        <p>Dipakai untuk benda yang cepat tetapi jaraknya pendek: pelari, angin, bola yang ditendang.</p>
+        <p class="mt"><span class="chip">Pelari: 5 m/detik</span><span class="chip">Angin: 10 m/detik</span></p>
+      </div>
+      <div class="card">
+        <div class="iconBadge">🛒</div>
+        <h3>m/menit <span class="small">(meter per menit)</span></h3>
+        <p>Dipakai untuk gerakan lambat: eskalator, troli bandara, ban berjalan di pabrik.</p>
+        <p class="mt"><span class="chip">Eskalator: 30 m/menit</span><span class="chip">Troli: 60 m/menit</span></p>
+      </div>
+    </div>
+    <div class="callout mt"><span class="cIcon">🧭</span><div><b>Cara membaca satuan:</b> tanda "/" dibaca "<b>per</b>", artinya "untuk setiap". Jadi 60 km/jam = "60 kilometer untuk setiap 1 jam". Kalimatnya selalu lengkap: ada angka, ada jarak, ada waktu!</div></div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 9 : SATUAN DEBIT ============ -->
+<section class="slide" data-title="Satuan Debit" data-icon="🧴">
+  <div class="wrap">
+    <span class="kicker light">🧴 Bab 2 • Satuan</span>
+    <h2 class="title">Satuan pada Debit</h2>
+    <p class="sub">Satuan debit selalu berupa <b class="biru">satuan volume / satuan waktu</b>. Perhatikan tiga satuan yang paling sering muncul:</p>
+    <div class="grid3 mt">
+      <div class="card biru">
+        <div class="iconBadge biru">🥤</div>
+        <h3>liter/detik</h3>
+        <p>Untuk aliran yang deras tapi waktu singkat: selang pemadam kecil, air terjun kecil, keran dibuka penuh.</p>
+        <p class="mt"><span class="chip">Keran penuh: 0,3 L/detik</span><span class="chip">Pompa kecil: 2 L/detik</span></p>
+      </div>
+      <div class="card accent">
+        <div class="iconBadge">🚰</div>
+        <h3>liter/menit</h3>
+        <p>Satuan paling akrab di rumah: keran, shower, dan selang taman biasanya diukur dalam liter/menit.</p>
+        <p class="mt"><span class="chip road">Shower: 9 L/menit</span><span class="chip road">Selang: 20 L/menit</span></p>
+      </div>
+      <div class="card">
+        <div class="iconBadge">🌊</div>
+        <h3>m³/detik</h3>
+        <p>Untuk aliran sangat besar: sungai, waduk, irigasi sawah. <b>1 m³ = 1.000 liter</b> (sebesar 10 ember!).</p>
+        <p class="mt"><span class="chip">Sungai: 500 m³/detik</span><span class="chip">Irigasi: 15 m³/detik</span></p>
+      </div>
+    </div>
+    <div class="callout mt"><span class="cIcon">💧</span><div><b>Bayangkan ukurannya:</b> 1 liter ≈ satu gelas besar (4 gelas). 1 m³ = 1.000 liter ≈ satu bak mandi penuh. Kalau sungai mengalirkan 500 m³/detik, setiap detiknya mengalir 500 bak mandi penuh air — wah, derasnya!</div></div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 10 : KONVERSI KECEPATAN ============ -->
+<section class="slide" data-title="Konversi Kecepatan" data-icon="🔄">
+  <div class="wrap">
+    <span class="kicker light">🔄 Bab 2 • Konversi</span>
+    <h2 class="title">Cara Konversi Satuan Kecepatan</h2>
+    <div class="grid2 mt">
+      <div style="display:grid;gap:14px">
+        <div class="card accent">
+          <h3>⭐ Aturan Bintang: km/jam ↔ m/detik</h3>
+          <p>Keduanya terhubung oleh angka ajaib <b class="merah">3,6</b>:</p>
+          <p class="mt">⬇️ km/jam → m/detik : <b>bagi 3,6</b> &nbsp;|&nbsp; m/detik → km/jam : <b>kali 3,6</b> ⬆️</p>
+          <p class="mt small">Mengapa 3,6? Karena 1 km = 1.000 m dan 1 jam = 3.600 detik, maka 3.600 : 1.000 = 3,6.</p>
+        </div>
+        <div class="card">
+          <h3>🏁 Contoh Berantai (m/menit → km/jam)</h3>
+          <p><b>1.200 m/menit</b> = … km/jam?<br>Langkah 1: ×60 → 1.200 × 60 = <b>72.000 m/jam</b><br>Langkah 2: :1.000 → 72.000 : 1.000 = <b class="merah">72 km/jam</b> ✅</p>
+        </div>
+      </div>
+      <div class="widget">
+        <h4>🎮 Tangga Konversi Kecepatan — Klik Ujungnya!</h4>
+        <div class="convChain">
+          <div class="convArrow">🚄 36 km/jam <span class="op">: 3,6</span> ➜ <b class="merah">10 m/detik</b></div>
+          <div class="convArrow">🏃 15 m/detik <span class="op">× 3,6</span> ➜ <b class="merah">54 km/jam</b></div>
+          <div class="convArrow">🛒 800 m/menit <span class="op">× 60</span> ➜ 48.000 m/jam <span class="op">: 1.000</span> ➜ <b class="merah">48 km/jam</b></div>
+          <div class="convArrow">🚶 5 km/jam <span class="op">× 1.000</span> ➜ 5.000 m/jam <span class="op">: 60</span> ➜ <b class="merah">≈ 83 m/menit</b></div>
+        </div>
+        <div class="callout mt" style="font-size:14.5px"><span class="cIcon">🧠</span><div><b>Jurusan pintar:</b> kalau lupa aturannya, buat dua perubahan bertingkat — ubah dulu <b>jaraknya</b> (km ↔ m), lalu ubah <b>waktunya</b> (jam ↔ menit ↔ detik). Dua langkah kecil, satu jawaban tepat.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 11 : KONVERSI DEBIT ============ -->
+<section class="slide" data-title="Konversi Debit" data-icon="🧮">
+  <div class="wrap">
+    <span class="kicker light">🧮 Bab 2 • Konversi</span>
+    <h2 class="title">Cara Konversi Satuan Debit</h2>
+    <div class="grid2 mt">
+      <div style="display:grid;gap:14px">
+        <div class="card biru">
+          <h3>⭐ Aturan Waktu: liter/menit ↔ liter/detik</h3>
+          <p>Terhubung oleh angka <b class="biru">60</b> (1 menit = 60 detik):</p>
+          <p class="mt">⬇️ liter/menit → liter/detik : <b>bagi 60</b> &nbsp;|&nbsp; liter/detik → liter/menit : <b>kali 60</b> ⬆️</p>
+          <p class="mt small">Waktu yang lebih kecil (detik) membuat angka debit juga lebih kecil; waktu lebih besar (menit) membuat angkanya membesar.</p>
+        </div>
+        <div class="card accent">
+          <h3>⭐ Aturan Lompatan: m³ ↔ liter</h3>
+          <p><b class="merah">1 m³ = 1.000 liter</b>. m³ → liter <b>kali 1.000</b>, liter → m³ <b>bagi 1.000</b>.</p>
+          <p class="mt small">Hati-hati: lompatannya besar! 2,5 m³ = 2.500 liter, bukan 250 liter. Hitung nolnya dengan cermat.</p>
+        </div>
+      </div>
+      <div class="widget">
+        <h4>🎮 Tangga Konversi Debit — Baca Polanya!</h4>
+        <div class="convChain">
+          <div class="convArrow">🚰 120 liter/menit <span class="op">: 60</span> ➜ <b class="biru">2 liter/detik</b></div>
+          <div class="convArrow">💧 3 liter/detik <span class="op">× 60</span> ➜ <b class="biru">180 liter/menit</b></div>
+          <div class="convArrow">🚒 300 liter/menit <span class="op">× 60</span> ➜ <b class="biru">18.000 liter/jam</b></div>
+          <div class="convArrow">🌊 2,5 m³/menit <span class="op">× 1.000</span> ➜ <b class="biru">2.500 liter/menit</b></div>
+          <div class="convArrow">⛲ 1.800 liter <span class="op">: 1.000</span> ➜ <b class="biru">1,8 m³</b></div>
+        </div>
+        <div class="callout mt" style="font-size:14.5px"><span class="cIcon">🧠</span><div><b>Jurusan pintar:</b> ubah dulu <b>volumenya</b> (m³ ↔ liter), lalu ubah <b>waktunya</b> (jam ↔ menit ↔ detik). Kerjakan satu demi satu supaya tidak ada angka yang tersesat.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 12 : MESIN KONVERTER ============ -->
+<section class="slide" data-title="Mesin Konverter" data-icon="🧮" data-init="conv">
+  <div class="wrap">
+    <span class="kicker light">🧮 Bab 2 • Widget Interaktif</span>
+    <h2 class="title">Mesin Konverter Serba Bisa</h2>
+    <p class="sub">Masukkan angkanya, pilih satuan awal dan satuan tujuan, lalu tekan tombol konversi. Mesin ini juga menampilkan <b>langkah pengerjaannya</b> — cocok untuk mengecek pekerjaanmu!</p>
+    <div class="grid2 mt">
+      <div class="widget">
+        <h4>🎮 Panel Konversi</h4>
+        <div class="calcRow">
+          <div class="calcField"><label>Nilai</label><input type="number" class="numIn" id="convVal" value="36" step="any"></div>
+          <div class="calcField"><label>Jenis besaran</label>
+            <select class="numIn" id="convKind">
+              <option value="v">Kecepatan</option>
+              <option value="q">Debit</option>
+            </select>
+          </div>
+          <div class="calcField"><label>Dari satuan</label><select class="numIn" id="convFrom"></select></div>
+          <div class="calcField"><label>Ke satuan</label><select class="numIn" id="convTo"></select></div>
+        </div>
+        <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap">
+          <button class="wbtn" id="convGo">🔄 Konversikan!</button>
+          <button class="wbtn ghost" id="convSwap">Tukar Arah ⇄</button>
+        </div>
+        <div class="calcResult" id="convOut"></div>
+      </div>
+      <div style="display:grid;gap:14px;align-content:start">
+        <div class="callout"><span class="cIcon">🎯</span><div><b>Tantanganmu:</b> tebak dulu hasilnya sebelum menekan tombol, lalu bandingkan! Contoh: berapa m/detik yang setara dengan 72 km/jam?</div></div>
+        <div class="card">
+          <h3>📋 Kartu Hafalan Cepat</h3>
+          <p>🚗 km/jam ↔ m/detik → angka <b>3,6</b><br>⏱️ menit ↔ detik → angka <b>60</b><br>🕐 jam ↔ menit → angka <b>60</b><br>🪣 m³ ↔ liter → angka <b>1.000</b></p>
+        </div>
+        <div class="card biru">
+          <h3>🧪 Uji Logika</h3>
+          <p>Mengubah km/jam ke m/detik <b>memperkecil</b> angka (karena meter lebih pendek dari km, tetapi detik lebih pendek dari jam). Coba buktikan dengan mesin: 90 km/jam = ? m/detik</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 13 : KUIS 2 ============ -->
+<section class="slide" data-title="Kuis 2 — Satuan & Konversi" data-icon="🧠">
+  <div class="wrap">
+    <div class="quizHead">
+      <div class="qhLeft">
+        <h3>🧠 Kuis 2 • Satuan &amp; Konversi</h3>
+        <span class="chip road" style="background:#FFEFD9">10 Soal HOTS</span>
+      </div>
+      <div class="qhLeft">
+        <span class="scorechip" id="score-q2">Skor: 0/10</span>
+        <button class="wbtn ghost" data-reset-quiz="q2" style="font-size:13.5px;padding:7px 14px">Ulangi 🔄</button>
+      </div>
+    </div>
+    <p class="sub mb" style="font-size:16.5px">Siapkan kartu hafalanmu: <b>3,6</b>, <b>60</b>, dan <b>1.000</b> adalah tiga angka sakti bab ini. Bacalah soal dengan teliti — satuan apa yang diminta!</p>
+    <div class="quiz-root" data-quiz="q2"></div>
+  </div>
+</section>
+<!-- ============ SLIDE 14 : DIVIDER BAB 3 ============ -->
+<section class="slide" data-title="Bab 3 — Rumus Kecepatan" data-icon="3️⃣">
+  <div class="wrap divider">
+    <span class="kicker light">Putaran 3</span>
+    <div class="babNum">03</div>
+    <h2 class="title">Mencari Kecepatan, Jarak &amp; Waktu</h2>
+    <p class="sub">Waktunya naik gigi! Dengan satu segitiga ajaib, kamu bisa mencari tiga hal sekaligus: seberapa cepat, seberapa jauh, dan berapa lama.</p>
+    <div class="stripe mt" style="max-width:520px"></div>
+    <ul class="dividerList">
+      <li><span class="dot">🔺</span> Segitiga rumus: trik "tutup yang dicari"</li>
+      <li><span class="dot">🚗</span> Contoh soal mencari kecepatan</li>
+      <li><span class="dot">📏</span> Contoh soal mencari jarak &amp; waktu</li>
+      <li><span class="dot">🧮</span> Mesin hitung v-s-t interaktif</li>
+      <li><span class="dot">🧠</span> Kuis 3 — 10 soal HOTS</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ SLIDE 15 : SEGITIGA RUMUS V-S-T ============ -->
+<section class="slide" data-title="Segitiga Rumus v-s-t" data-icon="🔺" data-init="triVST">
+  <div class="wrap">
+    <span class="kicker light">🔺 Bab 3 • Rumus</span>
+    <h2 class="title">Segitiga Rumus Ajaib: v, s, t</h2>
+    <div class="grid2 mt">
+      <div class="widget">
+        <h4>🎮 Klik salah satu untuk "menutup" besaran yang dicari</h4>
+        <div class="triArea">
+          <div class="tri" id="triVST">
+            <div class="cell top" data-pos="v"><span>v</span></div>
+            <div class="cell bl" data-pos="s"><span>s</span></div>
+            <div class="cell br" data-pos="t"><span>t</span></div>
+          </div>
+          <div class="triResult" id="triVSTOut">👆 Klik bagian segitiga!</div>
+          <button class="wbtn ghost" id="triVSTReset">Tampilkan Semua Lagi 🔄</button>
+        </div>
+      </div>
+      <div style="display:grid;gap:14px;align-content:start">
+        <div class="card">
+          <h3>🔑 Arti Hurufnya</h3>
+          <p><b class="merah">v</b> = kecepatan (<i>velocity</i>) — dalam km/jam atau m/detik<br><b class="merah">s</b> = jarak yang ditempuh — dalam km atau m<br><b class="merah">t</b> = waktu tempuh — dalam jam, menit, atau detik</p>
+        </div>
+        <div class="card accent">
+          <h3>🪄 Trik Tutup yang Dicari</h3>
+          <p><b>Tutup v</b> → s di atas, t di bawah → <b class="merah">v = s : t</b><br><b>Tutup s</b> → v dan t berdampingan → <b class="merah">s = v × t</b><br><b>Tutup t</b> → s di atas, v di bawah → <b class="merah">t = s : v</b></p>
+          <p class="mt small">Samping berdampingan = dikali, yang di atas = dibagi. Mudah, kan?</p>
+        </div>
+        <div class="callout"><span class="cIcon">🎯</span><div><b>Cara mengingat:</b> kecepatan MEMANG jarak dibagi waktu (itu definisinya!). Dua rumus lainnya hanyalah "perpindahan anggota" — persis seperti perkalian dan pembagian biasa: jika 6 = 12 : 2, maka 12 = 6 × 2 dan 2 = 12 : 6.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 16 : MENCARI KECEPATAN ============ -->
+<section class="slide" data-title="Mencari Kecepatan" data-icon="🚗">
+  <div class="wrap">
+    <span class="kicker light">🚗 Bab 3 • Contoh Soal</span>
+    <h2 class="title">Mencari Kecepatan (v = s : t)</h2>
+    <div class="grid2 mt">
+      <div class="card" style="border-color:var(--oranye)">
+        <h3>❓ Soal Contoh</h3>
+        <p style="font-size:17px">Ayah mengendarai mobil dari Bandung ke Cimahi. Jarak yang ditempuh <b>150 km</b> dan waktu yang dibutuhkan <b>3 jam</b>. <b>Berapa kecepatan rata-rata mobil ayah?</b></p>
+        <div class="callout mt" style="font-size:14.5px"><span class="cIcon">🗺️</span><div><b>Ciri soal "mencari kecepatan":</b> soal memberitahu JARAK dan WAKTU, lalu menanyakan "berapa kecepatan…".</div></div>
+        <button class="wbtn revealBtn" data-reveal="rev1">Tampilkan Langkah Berikutnya 👉</button>
+      </div>
+      <div class="steps" id="rev1">
+        <div class="step"><span class="sTag">DIKETAHUI</span><div class="sBody">Jarak (s) = 150 km<br>Waktu (t) = 3 jam</div></div>
+        <div class="step hiddenStep"><span class="sTag">DITANYA</span><div class="sBody">Kecepatan (v) = … km/jam?</div></div>
+        <div class="step hiddenStep"><span class="sTag">JAWAB</span><div class="sBody">v = s : t = 150 : 3 = <b class="merah">50 km/jam</b></div></div>
+        <div class="step hiddenStep jawab"><span class="sTag">MAKNANYA</span><div class="sBody">Mobil ayah menempuh <b>50 km setiap 1 jam</b>. Cek balik: 50 × 3 = 150 km ✅</div></div>
+      </div>
+    </div>
+    <div class="callout mt"><span class="cIcon">⚠️</span><div><b>Waspada jebakan:</b> jika soal bertanya "kecepatan rata-rata", jawaban harusnya memakai <b>total jarak : total waktu</b> seluruh perjalanan, bukan hanya sebagian jalan. Bahas detailnya di Kuis 3, soal nomor 6!</div></div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 17 : MENCARI JARAK & WAKTU ============ -->
+<section class="slide" data-title="Mencari Jarak & Waktu" data-icon="📏">
+  <div class="wrap">
+    <span class="kicker light">📏 Bab 3 • Contoh Soal</span>
+    <h2 class="title">Mencari Jarak &amp; Mencari Waktu</h2>
+    <div class="grid2 mt">
+      <div>
+        <div class="card" style="border-color:var(--biru)">
+          <h3>🚲 Contoh A — Mencari Jarak (s = v × t)</h3>
+          <p style="font-size:16.5px">Dina bersepeda dengan kecepatan <b>12 km/jam</b> selama <b>2 jam</b>. Berapa jarak yang ditempuh Dina?</p>
+        </div>
+        <div class="steps" id="rev2">
+          <div class="step"><span class="sTag">DIKETAHUI</span><div class="sBody">Kecepatan (v) = 12 km/jam<br>Waktu (t) = 2 jam</div></div>
+          <div class="step hiddenStep"><span class="sTag">DITANYA</span><div class="sBody">Jarak (s) = … km?</div></div>
+          <div class="step hiddenStep jawab"><span class="sTag">JAWAB</span><div class="sBody">s = v × t = 12 × 2 = <b class="merah">24 km</b><br>Kecepatan <b>dikali</b> waktu karena 12 km diulang 2 kali.</div></div>
+        </div>
+      </div>
+      <div>
+        <div class="card" style="border-color:var(--kuning)">
+          <h3>⏰ Contoh B — Mencari Waktu (t = s : v)</h3>
+          <p style="font-size:16.5px">Sebuah bus akan menempuh jarak <b>180 km</b> dengan kecepatan <b>60 km/jam</b>. Berapa lama waktu yang dibutuhkan?</p>
+        </div>
+        <div class="steps" id="rev3">
+          <div class="step"><span class="sTag">DIKETAHUI</span><div class="sBody">Jarak (s) = 180 km<br>Kecepatan (v) = 60 km/jam</div></div>
+          <div class="step hiddenStep"><span class="sTag">DITANYA</span><div class="sBody">Waktu (t) = … jam?</div></div>
+          <div class="step hiddenStep jawab"><span class="sTag">JAWAB</span><div class="sBody">t = s : v = 180 : 60 = <b class="merah">3 jam</b><br>Jarak dibagi kecepatan — kecepatan makin besar, waktu makin singkat!</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="callout mt"><span class="cIcon">🧭</span><div><b>Logika penentu:</b> kalau yang ditanya <b>kecepatan</b> → jarak : waktu. Kalau yang ditanya <b>waktu</b> → jarak : kecepatan. Kalau yang ditanya <b>jarak</b> → kecepatan × waktu. Jumlah dan urutan besaran yang diketahui adalah petunjuk terbaikmu!</div></div>
+    <button class="wbtn revealBtn" data-reveal="rev2" style="margin-top:14px">Buka Langkah Contoh A 👉</button>
+    <button class="wbtn revealBtn" data-reveal="rev3" style="margin-top:14px;margin-left:8px">Buka Langkah Contoh B 👉</button>
+  </div>
+</section>
+
+<!-- ============ SLIDE 18 : MESIN HITUNG VST ============ -->
+<section class="slide" data-title="Mesin Hitung v-s-t" data-icon="🧮" data-init="calcVST">
+  <div class="wrap">
+    <span class="kicker light">🧮 Bab 3 • Widget Interaktif</span>
+    <h2 class="title">Mesin Hitung Kecepatan–Jarak–Waktu</h2>
+    <div class="grid2 mt">
+      <div class="widget">
+        <h4>🎮 Panel Hitung</h4>
+        <div class="calcRow">
+          <div class="calcField"><label>Aku ingin mencari…</label>
+            <select class="numIn" id="calcWhat">
+              <option value="v">Kecepatan (v = s : t)</option>
+              <option value="s">Jarak (s = v × t)</option>
+              <option value="t">Waktu (t = s : v)</option>
+            </select>
+          </div>
+          <div class="calcField"><label id="calcA_label">Jarak (km)</label><input type="number" class="numIn" id="calcA" value="150" step="any"></div>
+          <div class="calcField"><label id="calcB_label">Waktu (jam)</label><input type="number" class="numIn" id="calcB" value="3" step="any"></div>
+        </div>
+        <button class="wbtn" id="calcGo" style="margin-top:14px">⚡ Hitung Sekarang!</button>
+        <div class="calcResult" id="calcOut"></div>
+      </div>
+      <div style="display:grid;gap:14px;align-content:start">
+        <div class="callout"><span class="cIcon">⚖️</span><div><b>Aturan emas satuan:</b> km berpasangan dengan <b>jam</b>, meter berpasangan dengan <b>detik</b>. Kalau waktunya menit, ubah dulu ke jam atau detik sebelum menghitung!</div></div>
+        <div class="card">
+          <h3>🧪 Uji Sendiri</h3>
+          <p>1️⃣ Jarak 240 km, waktu 4 jam → kecepatan?<br>2️⃣ Kecepatan 80 km/jam, waktu 2,5 jam → jarak?<br>3️⃣ Jarak 90 m, kecepatan 15 m/detik → waktu?</p>
+          <p class="mt small">Masukkan angkanya ke mesin, lalu cocokkan: 60 km/jam • 200 km • 6 detik.</p>
+        </div>
+        <div class="card accent">
+          <h3>💡 Angka Desimal Jam</h3>
+          <p>2,5 jam artinya <b>2 jam 30 menit</b> (0,5 × 60 = 30). Jadi kalau mesin menjawab 2,5 jam, ubah ke bentuk jam-menit agar mudah dibaca!</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 19 : KUIS 3 ============ -->
+<section class="slide" data-title="Kuis 3 — Rumus Kecepatan" data-icon="🧠">
+  <div class="wrap">
+    <div class="quizHead">
+      <div class="qhLeft">
+        <h3>🧠 Kuis 3 • Kecepatan, Jarak &amp; Waktu</h3>
+        <span class="chip road" style="background:#FFEFD9">10 Soal HOTS</span>
+      </div>
+      <div class="qhLeft">
+        <span class="scorechip" id="score-q3">Skor: 0/10</span>
+        <button class="wbtn ghost" data-reset-quiz="q3" style="font-size:13.5px;padding:7px 14px">Ulangi 🔄</button>
+      </div>
+    </div>
+    <p class="sub mb" style="font-size:16.5px">Gunakan segitiga rumus, perhatikan satuan yang diminta soal, dan waspadai jebakan "kecepatan rata-rata" serta "jam tiba". Kamu pasti bisa!</p>
+    <div class="quiz-root" data-quiz="q3"></div>
+  </div>
+</section>
+<!-- ============ SLIDE 20 : DIVIDER BAB 4 ============ -->
+<section class="slide" data-title="Bab 4 — Rumus Debit" data-icon="4️⃣">
+  <div class="wrap divider">
+    <span class="kicker light">Putaran 4</span>
+    <div class="babNum">04</div>
+    <h2 class="title">Mencari Debit, Volume &amp; Waktu</h2>
+    <p class="sub">Kini pindah ke lintasan air! Rumusnya persis saudara kandungnya di putaran tadi — hanya saja jaraknya diganti volume air.</p>
+    <div class="stripe mt" style="max-width:520px"></div>
+    <ul class="dividerList">
+      <li><span class="dot">🔺</span> Segitiga rumus Q-V-t</li>
+      <li><span class="dot">🚰</span> Contoh soal mencari debit</li>
+      <li><span class="dot">🪣</span> Contoh soal mencari volume &amp; waktu</li>
+      <li><span class="dot">🧪</span> Laboratorium air interaktif</li>
+      <li><span class="dot">🧠</span> Kuis 4 — 10 soal HOTS</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ SLIDE 21 : SEGITIGA RUMUS Q-V-t ============ -->
+<section class="slide" data-title="Segitiga Rumus Q-V-t" data-icon="🔺" data-init="triQVT">
+  <div class="wrap">
+    <span class="kicker light">🔺 Bab 4 • Rumus</span>
+    <h2 class="title">Segitiga Rumus Debit: Q, V, t</h2>
+    <div class="grid2 mt">
+      <div class="widget">
+        <h4>🎮 Klik untuk "menutup" besaran yang dicari</h4>
+        <div class="triArea">
+          <div class="tri" id="triQVT">
+            <div class="cell top" data-pos="Q"><span>Q</span></div>
+            <div class="cell bl" data-pos="V"><span>V</span></div>
+            <div class="cell br" data-pos="t"><span>t</span></div>
+          </div>
+          <div class="triResult" id="triQVTOut">👆 Klik bagian segitiga!</div>
+          <button class="wbtn ghost" id="triQVTReset">Tampilkan Semua Lagi 🔄</button>
+        </div>
+      </div>
+      <div style="display:grid;gap:14px;align-content:start">
+        <div class="card">
+          <h3>🔑 Arti Hurufnya</h3>
+          <p><b class="biru">Q</b> = debit (<i>quantity of flow</i>) — liter/menit atau m³/detik<br><b class="biru">V</b> = volume air — liter atau m³<br><b class="biru">t</b> = waktu aliran — menit, detik, atau jam</p>
+        </div>
+        <div class="card biru">
+          <h3>🪄 Trik Tutup yang Dicari</h3>
+          <p><b>Tutup Q</b> → <b class="biru">Q = V : t</b><br><b>Tutup V</b> → <b class="biru">V = Q × t</b><br><b>Tutup t</b> → <b class="biru">t = V : Q</b></p>
+          <p class="mt small">Pola yang sama dengan segitiga v-s-t: samping berdampingan dikali, bagian atas dibagi.</p>
+        </div>
+        <div class="callout"><span class="cIcon">🤝</span><div><b>Kembar identik!</b> Bandingkan: v = s : t dan Q = V : t. Kecepatan itu "debit jarak", dan debit itu "kecepatan air". Kalau satu sudah kamu kuasai, yang lain otomatis ikut terkuasai!</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 22 : MENCARI DEBIT ============ -->
+<section class="slide" data-title="Mencari Debit" data-icon="🚰">
+  <div class="wrap">
+    <span class="kicker light">🚰 Bab 4 • Contoh Soal</span>
+    <h2 class="title">Mencari Debit (Q = V : t)</h2>
+    <div class="grid2 mt">
+      <div class="card" style="border-color:var(--biru)">
+        <h3>❓ Soal Contoh</h3>
+        <p style="font-size:17px">Sebuah keran mengisi ember hingga berisi <b>24 liter</b> dalam waktu <b>3 menit</b>. <b>Berapa debit keran tersebut?</b></p>
+        <div class="callout mt" style="font-size:14.5px"><span class="cIcon">🚰</span><div><b>Ciri soal "mencari debit":</b> soal memberitahu VOLUME air dan WAKTUNYA, lalu menanyakan debit atau "banyak air per menit/per detik".</div></div>
+        <button class="wbtn revealBtn" data-reveal="rev4">Tampilkan Langkah Berikutnya 👉</button>
+      </div>
+      <div class="steps" id="rev4">
+        <div class="step"><span class="sTag">DIKETAHUI</span><div class="sBody">Volume (V) = 24 liter<br>Waktu (t) = 3 menit</div></div>
+        <div class="step hiddenStep"><span class="sTag">DITANYA</span><div class="sBody">Debit (Q) = … liter/menit?</div></div>
+        <div class="step hiddenStep"><span class="sTag">JAWAB</span><div class="sBody">Q = V : t = 24 : 3 = <b class="biru">8 liter/menit</b></div></div>
+        <div class="step hiddenStep jawab"><span class="sTag">MAKNANYA</span><div class="sBody">Setiap 1 menit, keran mengalirkan <b>8 liter</b>. Cek balik: 8 × 3 = 24 liter ✅</div></div>
+      </div>
+    </div>
+    <div class="callout mt"><span class="cIcon">⚠️</span><div><b>Waspada jebakan:</b> kalau satuan yang diminta <b>liter/detik</b> tetapi waktunya menit, ubah dulu waktunya (1 menit = 60 detik) sebelum membagi. Satuan wajib disesuaikan dengan permintaan soal!</div></div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 23 : MENCARI VOLUME & WAKTU ============ -->
+<section class="slide" data-title="Mencari Volume & Waktu" data-icon="🪣">
+  <div class="wrap">
+    <span class="kicker light">🪣 Bab 4 • Contoh Soal</span>
+    <h2 class="title">Mencari Volume &amp; Mencari Waktu</h2>
+    <div class="grid2 mt">
+      <div>
+        <div class="card" style="border-color:var(--oranye)">
+          <h3>🛁 Contoh A — Mencari Volume (V = Q × t)</h3>
+          <p style="font-size:16.5px">Keran bak mandi mengalirkan air dengan debit <b>15 liter/menit</b>. Jika keran dibuka selama <b>8 menit</b>, berapa volume air di bak?</p>
+        </div>
+        <div class="steps" id="rev5">
+          <div class="step"><span class="sTag">DIKETAHUI</span><div class="sBody">Debit (Q) = 15 liter/menit<br>Waktu (t) = 8 menit</div></div>
+          <div class="step hiddenStep"><span class="sTag">DITANYA</span><div class="sBody">Volume (V) = … liter?</div></div>
+          <div class="step hiddenStep jawab"><span class="sTag">JAWAB</span><div class="sBody">V = Q × t = 15 × 8 = <b class="biru">120 liter</b><br>Debit dikali waktu karena 15 liter diulang 8 kali.</div></div>
+        </div>
+      </div>
+      <div>
+        <div class="card" style="border-color:var(--hijau)">
+          <h3>⏳ Contoh B — Mencari Waktu (t = V : Q)</h3>
+          <p style="font-size:16.5px">Bak berkapasitas <b>600 liter</b> akan diisi penuh dengan keran berdebit <b>20 liter/menit</b>. Berapa lama waktu pengisiannya?</p>
+        </div>
+        <div class="steps" id="rev6">
+          <div class="step"><span class="sTag">DIKETAHUI</span><div class="sBody">Volume (V) = 600 liter<br>Debit (Q) = 20 liter/menit</div></div>
+          <div class="step hiddenStep"><span class="sTag">DITANYA</span><div class="sBody">Waktu (t) = … menit?</div></div>
+          <div class="step hiddenStep jawab"><span class="sTag">JAWAB</span><div class="sBody">t = V : Q = 600 : 20 = <b class="biru">30 menit</b><br>Volume dibagi debit — debit makin besar, bak makin cepat penuh!</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="callout mt"><span class="cIcon">🧭</span><div><b>Logika penentu:</b> ditanya <b>debit</b> → volume : waktu. Ditanya <b>volume</b> → debit × waktu. Ditanya <b>waktu</b> → volume : debit. Sama persis polanya dengan kecepatan-jarak-waktu!</div></div>
+    <button class="wbtn revealBtn" data-reveal="rev5" style="margin-top:14px">Buka Langkah Contoh A 👉</button>
+    <button class="wbtn revealBtn" data-reveal="rev6" style="margin-top:14px;margin-left:8px">Buka Langkah Contoh B 👉</button>
+  </div>
+</section>
+
+<!-- ============ SLIDE 24 : LABORATORIUM AIR ============ -->
+<section class="slide" data-title="Laboratorium Air" data-icon="🧪" data-init="lab">
+  <div class="wrap">
+    <span class="kicker light">🧪 Bab 4 • Widget Interaktif</span>
+    <h2 class="title">Laboratorium Air: Atur Debit &amp; Waktu</h2>
+    <div class="labRow mt">
+      <div class="widget">
+        <h4>🎮 Panel Eksperimen — bak kapasitas 300 liter</h4>
+        <div class="wlabel"><span>Debit keran (Q)</span><span class="val" id="labQVal">20 L/menit</span></div>
+        <input type="range" id="labQ" min="2" max="50" step="1" value="20">
+        <div class="wlabel mt"><span>Waktu keran dibuka (t)</span><span class="val" id="labTVal">5 menit</span></div>
+        <input type="range" id="labT" min="1" max="30" step="1" value="5">
+        <div style="display:flex;gap:10px;margin-top:12px;flex-wrap:wrap">
+          <button class="wbtn" id="labGo">🚰 Mulai Alirkan!</button>
+          <button class="wbtn ghost" id="labReset">Kosongkan Bak 🧹</button>
+        </div>
+        <div class="wout" id="labOut">Rumus yang dipakai: <b>V = Q × t = 20 × 5 = 100 liter</b>. Tekan "Mulai Alirkan" dan amati air mengisi bak!</div>
+      </div>
+      <div class="widget" style="text-align:center">
+        <h4>🪣 Bak Percobaan</h4>
+        <div style="display:flex;justify-content:center;padding-top:4px">
+          <div>
+            <div class="tank" style="height:240px;width:180px">
+              <div class="mark" style="bottom:33.3%"></div>
+              <div class="mark" style="bottom:66.6%"></div>
+              <div class="water" id="labWater"></div>
+            </div>
+            <div class="tankFull">100 L tiap garis putus-putus • penuh 300 L</div>
+          </div>
+        </div>
+        <div class="wout mt" id="labLevel">Bak terisi: 0 L (0%)</div>
+      </div>
+    </div>
+    <div class="grid2 mt">
+      <div class="callout"><span class="cIcon">🌊</span><div><b>Eksperimen 1:</b> atur Q = 50 dan t = 6. Berapa liter? Jalankan mesinnya! Bandingkan dengan Q = 30 dan t = 10 — sama-sama 300 L, tapi bak terisi dengan ritme berbeda.</div></div>
+      <div class="callout"><span class="cIcon">🔍</span><div><b>Eksperimen 2:</b> tetapkan Q = 25, lalu geser t dari 5 → 10. Volume naik berlipat? Itulah <b>perbandingan senilai</b>: waktu ×2 → volume ×2!</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 25 : KUIS 4 ============ -->
+<section class="slide" data-title="Kuis 4 — Rumus Debit" data-icon="🧠">
+  <div class="wrap">
+    <div class="quizHead">
+      <div class="qhLeft">
+        <h3>🧠 Kuis 4 • Debit, Volume &amp; Waktu</h3>
+        <span class="chip road" style="background:#FFEFD9">10 Soal HOTS</span>
+      </div>
+      <div class="qhLeft">
+        <span class="scorechip" id="score-q4">Skor: 0/10</span>
+        <button class="wbtn ghost" data-reset-quiz="q4" style="font-size:13.5px;padding:7px 14px">Ulangi 🔄</button>
+      </div>
+    </div>
+    <p class="sub mb" style="font-size:16.5px">Ada soal dua keran, tangki bocor, sampai pompa kuras tandon. Baca pelan-pelan, catat Diketahui-Ditanya, lalu pilih rumus yang tepat!</p>
+    <div class="quiz-root" data-quiz="q4"></div>
+  </div>
+</section>
+<!-- ============ SLIDE 26 : DIVIDER BAB 5 ============ -->
+<section class="slide" data-title="Bab 5 — Perbandingan" data-icon="5️⃣">
+  <div class="wrap divider">
+    <span class="kicker light">Putaran 5 — Putaran Final</span>
+    <div class="babNum">05</div>
+    <h2 class="title">Kecepatan &amp; Perbandingan</h2>
+    <p class="sub">Putaran final menggabungkan dua kemampuan sekaligus: rumus kecepatan/debit dan materi <b>perbandingan</b>. Ini lintasan juara!</p>
+    <div class="stripe mt" style="max-width:520px"></div>
+    <ul class="dividerList">
+      <li><span class="dot">🤝</span> Kaitan kecepatan &amp; debit dengan perbandingan</li>
+      <li><span class="dot">🏁</span> Lintasan balap perbandingan (widget)</li>
+      <li><span class="dot">🗺️</span> Contoh soal gabungan: skala peta + kecepatan</li>
+      <li><span class="dot">🧠</span> Kuis 5 — 10 soal HOTS</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ SLIDE 27 : KAITAN PERBANDINGAN ============ -->
+<section class="slide" data-title="Kaitan Perbandingan" data-icon="🤝">
+  <div class="wrap">
+    <span class="kicker light">🤝 Bab 5 • Konsep</span>
+    <h2 class="title">Kecepatan &amp; Debit Bertemu Perbandingan</h2>
+    <div class="grid2 mt">
+      <div class="card accent">
+        <h3>➕ Waktu Sama → Bandingkan Jaraknya</h3>
+        <p>Dua mobil berangkat bersama selama 2 jam. Kecepatan 60 km/jam vs 45 km/jam.</p>
+        <p class="mt">Jarak: 60×2 = <b>120 km</b> dan 45×2 = <b>90 km</b>.<br>Jadi jaraknya berbanding <b class="merah">120 : 90 = 4 : 3</b> — sama persis dengan perbandingan kecepatannya!</p>
+        <p class="mt small"><b>Kesimpulan:</b> waktu sama → perbandingan jarak = perbandingan kecepatan.</p>
+      </div>
+      <div class="card biru">
+        <h3>🔄 Jarak Sama → Kecepatan Terbalik dari Waktu</h3>
+        <p>Andi menempuh rute yang sama dalam <b>2 jam</b>, Budi dalam <b>3 jam</b>.</p>
+        <p class="mt">Waktu berbanding <b>2 : 3</b>, tetapi kecepatan berbanding <b class="merah">3 : 2</b> (terbalik!). Contoh rute 60 km: Andi 30 km/jam, Budi 20 km/jam.</p>
+        <p class="mt small"><b>Kesimpulan:</b> jarak sama → perbandingan kecepatan = <b>kebalikan</b> perbandingan waktu.</p>
+      </div>
+      <div class="card">
+        <h3>⚖️ Debit Juga Berbanding Senilai</h3>
+        <p>Debit tetap 15 L/menit → dalam 2 menit 30 L, dalam 4 menit 60 L. Volume dan waktu berbanding <b>senilai</b>: waktu ×2, volume ikut ×2.</p>
+        <p class="mt small">Sama seperti kecepatan tetap: jarak dan waktu berbanding senilai.</p>
+      </div>
+      <div class="card gelap">
+        <h3>🧮 Dua Kunci Soal Perbandingan</h3>
+        <p><b>Nilai satu bagian</b>: jika 3 bagian = 90 km, maka 1 bagian = 90 : 3 = 30 km.<br><br><b>Selisih &amp; jumlah</b>: perbandingan 2 : 5 → selisih bagian 3, jumlah bagian 7. Soal bilang "selisih 12 L/menit"? Berarti 3 bagian = 12.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 28 : LINTASAN BALAP PERBANDINGAN ============ -->
+<section class="slide" data-title="Lintasan Balap Perbandingan" data-icon="🏁" data-init="race">
+  <div class="wrap">
+    <span class="kicker light">🏁 Bab 5 • Widget Interaktif</span>
+    <h2 class="title">Lintasan Balap Perbandingan</h2>
+    <p class="sub">Atur perbandingan kecepatan Mobil A dan Mobil B, tentukan "nilai satu bagian", lalu balapkan! Perhatikan bagaimana perbandingan tetap terjaga.</p>
+    <div class="grid2 mt">
+      <div class="widget">
+        <h4>🎮 Panel Balapan</h4>
+        <div class="ratioIn">
+          <span>Kecepatan A : B =</span>
+          <input type="number" class="numIn" id="raceA" min="1" max="9" value="2"> :
+          <input type="number" class="numIn" id="raceB" min="1" max="9" value="3">
+        </div>
+        <div class="wlabel mt"><span>Nilai satu bagian (km/jam)</span><span class="val" id="raceKVal">10 km/jam</span></div>
+        <input type="range" id="raceK" min="5" max="20" step="1" value="10">
+        <button class="wbtn" id="raceGo" style="margin-top:12px">🏁 Balapkan! (10 jam)</button>
+        <div class="track mt">
+          <div class="tlane t1"></div><div class="tlane t2"></div>
+          <div class="rcar a" id="raceCarA">🚗</div>
+          <div class="rcar b" id="raceCarB">🚙</div>
+          <div class="rfinish"></div>
+        </div>
+        <div class="wout" id="raceOut">Atur perbandingan, lalu tekan <b>Balapkan!</b></div>
+      </div>
+      <div style="display:grid;gap:14px;align-content:start">
+        <div class="card">
+          <h3>📊 Cara Membaca Hasilnya</h3>
+          <p>Perbandingan <b>2 : 3</b> dengan 1 bagian = 10 km/jam berarti:<br>🚗 Mobil A: 2 × 10 = <b>20 km/jam</b><br>🚙 Mobil B: 3 × 10 = <b>30 km/jam</b></p>
+        </div>
+        <div class="card accent">
+          <h3>🔢 Rumus Jarak Setelah 10 Jam</h3>
+          <p>Jarak A = 20 × 10 = <b>200 km</b> • Jarak B = 30 × 10 = <b>300 km</b><br>Perbandingan jarak = 200 : 300 = <b class="merah">2 : 3</b> — tetap sama!</p>
+          <p class="mt small">Itulah sifat <b>perbandingan senilai</b>: waktu sama, jarak mengikuti perbandingan kecepatan.</p>
+        </div>
+        <div class="callout"><span class="cIcon">🎯</span><div><b>Tantangan:</b> atur perbandingan 5 : 3 dan 1 bagian = 15 km/jam. Siapa menang, dan berapa selisih jaraknya setelah 10 jam? (Cek: 750 − 450 = 300 km)</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 29 : CONTOH SOAL PERBANDINGAN ============ -->
+<section class="slide" data-title="Contoh Soal Perbandingan" data-icon="🗺️">
+  <div class="wrap">
+    <span class="kicker light">🗺️ Bab 5 • Contoh Soal</span>
+    <h2 class="title">Contoh Soal Gabungan: Perbandingan &amp; Kecepatan</h2>
+    <div class="grid2 mt">
+      <div>
+        <div class="card" style="border-color:var(--oranye)">
+          <h3>🏁 Contoh A — Nilai Satu Bagian</h3>
+          <p style="font-size:16.5px">Perbandingan kecepatan dua pelari adalah <b>4 : 5</b>. Kecepatan pelari yang lambat <b>48 m/menit</b>. Berapa kecepatan pelari yang cepat?</p>
+        </div>
+        <div class="steps" id="rev7">
+          <div class="step"><span class="sTag">DIKETAHUI</span><div class="sBody">Perbandingan kecepatan = 4 : 5<br>Kecepatan pelari lambat = 48 m/menit</div></div>
+          <div class="step hiddenStep"><span class="sTag">DITANYA</span><div class="sBody">Kecepatan pelari cepat?</div></div>
+          <div class="step hiddenStep"><span class="sTag">JAWAB</span><div class="sBody">Pelari lambat punya 4 bagian → 1 bagian = 48 : 4 = <b>12 m/menit</b><br>Pelari cepat = 5 × 12 = <b class="merah">60 m/menit</b></div></div>
+          <div class="step hiddenStep jawab"><span class="sTag">MAKNANYA</span><div class="sBody">Selisih mereka = 12 m/menit. Cek: 60 : 48 = 5 : 4 ✅ (sama, hanya dibalik)</div></div>
+        </div>
+      </div>
+      <div>
+        <div class="card" style="border-color:var(--biru)">
+          <h3>🗺️ Contoh B — Skala Peta + Kecepatan</h3>
+          <p style="font-size:16.5px">Skala peta <b>1 : 2.000.000</b>. Jarak dua kota di peta <b>4,5 cm</b>. Bus menempuhnya dengan kecepatan <b>60 km/jam</b>. Berapa lama perjalanan bus?</p>
+        </div>
+        <div class="steps" id="rev8">
+          <div class="step"><span class="sTag">LANGKAH 1</span><div class="sBody">Jarak sebenarnya = 4,5 × 2.000.000 = 9.000.000 cm</div></div>
+          <div class="step hiddenStep"><span class="sTag">LANGKAH 2</span><div class="sBody">Ubah ke km: 9.000.000 cm = 90 km (bagi 100.000)</div></div>
+          <div class="step hiddenStep"><span class="sTag">LANGKAH 3</span><div class="sBody">t = s : v = 90 : 60 = <b class="merah">1,5 jam = 1 jam 30 menit</b></div></div>
+          <div class="step hiddenStep jawab"><span class="sTag">MAKNANYA</span><div class="sBody">Soal rangkaian: selesaikan <b>skala dulu</b>, baru rumus kecepatan. Jangan tertukar urutannya!</div></div>
+        </div>
+      </div>
+    </div>
+    <button class="wbtn revealBtn" data-reveal="rev7" style="margin-top:14px">Buka Langkah Contoh A 👉</button>
+    <button class="wbtn revealBtn" data-reveal="rev8" style="margin-top:14px;margin-left:8px">Buka Langkah Contoh B 👉</button>
+    <div class="callout mt"><span class="cIcon">🏆</span><div><b>Strategi juara soal perbandingan:</b> 1️⃣ tulis perbandingannya, 2️⃣ tanyakan "yang diketahui ini milik berapa bagian?", 3️⃣ cari nilai satu bagian, 4️⃣ kali atau kurangkan sesuai yang ditanya. Empat langkah ini menyelesaikan hampir semua soal Kuis 5!</div></div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 30 : KUIS 5 ============ -->
+<section class="slide" data-title="Kuis 5 — Perbandingan" data-icon="🧠">
+  <div class="wrap">
+    <div class="quizHead">
+      <div class="qhLeft">
+        <h3>🧠 Kuis 5 • Kecepatan &amp; Perbandingan</h3>
+        <span class="chip road" style="background:#FFEFD9">10 Soal HOTS</span>
+      </div>
+      <div class="qhLeft">
+        <span class="scorechip" id="score-q5">Skor: 0/10</span>
+        <button class="wbtn ghost" data-reset-quiz="q5" style="font-size:13.5px;padding:7px 14px">Ulangi 🔄</button>
+      </div>
+    </div>
+    <p class="sub mb" style="font-size:16.5px">Putaran final! Ada perbandingan kecepatan, debit, waktu yang terbalik, sampai skala peta. Gunakan strategi empat langkah dan raih 3 bintang!</p>
+    <div class="quiz-root" data-quiz="q5"></div>
+  </div>
+</section>
+<!-- ============ SLIDE 31 : KESIMPULAN ============ -->
+<section class="slide" data-title="Kesimpulan" data-icon="🏆">
+  <div class="wrap">
+    <span class="kicker light">🏆 Peta Kemenangan</span>
+    <h2 class="title">Kesimpulan: Semua Rumus dalam Satu Lintasan</h2>
+    <div class="grid2 mt">
+      <div class="card accent">
+        <h3>🚗 Keluarga Kecepatan</h3>
+        <p><b>v = s : t</b> → kecepatan = jarak : waktu<br><b>s = v × t</b> → jarak = kecepatan × waktu<br><b>t = s : v</b> → waktu = jarak : kecepatan</p>
+        <p class="mt small">Satuan pasangan: km ↔ jam, meter ↔ detik.</p>
+      </div>
+      <div class="card biru">
+        <h3>🚰 Keluarga Debit</h3>
+        <p><b>Q = V : t</b> → debit = volume : waktu<br><b>V = Q × t</b> → volume = debit × waktu<br><b>t = V : Q</b> → waktu = volume : debit</p>
+        <p class="mt small">Satuan pasangan: liter ↔ menit/detik, m³ ↔ detik.</p>
+      </div>
+    </div>
+    <div class="grid3 mt">
+      <div class="card">
+        <h3>🔄 Konversi Kunci</h3>
+        <p>km/jam ↔ m/detik → angka <b class="merah">3,6</b><br>menit ↔ detik → angka <b class="merah">60</b><br>jam ↔ menit → angka <b class="merah">60</b><br>m³ ↔ liter → angka <b class="merah">1.000</b></p>
+      </div>
+      <div class="card">
+        <h3>🤝 Saudara Kembar</h3>
+        <p>Kecepatan dan debit sama-sama <b>"sesuatu dibagi waktu"</b>. Bedanya hanya: kecepatan memakai <b>jarak</b>, debit memakai <b>volume air</b>.</p>
+      </div>
+      <div class="card">
+        <h3>⚖️ Perbandingan</h3>
+        <p>Waktu sama → jarak mengikuti perbandingan kecepatan.<br>Jarak sama → kecepatan <b>kebalikan</b> perbandingan waktu.<br>Kunci soal: cari <b>nilai satu bagian</b>!</p>
+      </div>
+    </div>
+    <div class="callout mt"><span class="cIcon">🧭</span><div><b>Langkah aman mengerjakan soal apa pun:</b> 1️⃣ tulis yang diketahui, 2️⃣ tulis yang ditanya, 3️⃣ cek satuan (samakan bila perlu), 4️⃣ pilih rumus dari segitiga, 5️⃣ hitung dan baca lagi soalnya — apakah jawabanmu sudah menjawab yang ditanya?</div></div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 32 : REFLEKSI ============ -->
+<section class="slide" data-title="Refleksi" data-icon="💭" data-init="reflect">
+  <div class="wrap">
+    <span class="kicker light">💭 Refleksi</span>
+    <h2 class="title">Ceritakan Perjalananmu Hari Ini</h2>
+    <p class="sub">Refleksi membuat pembelajaranmu lengkap. Jawab dengan jujur — tidak ada jawaban yang salah di sini!</p>
+    <div class="grid2 mt">
+      <div class="widget">
+        <h4>😊 Bagaimana perasaanmu setelah belajar hari ini?</h4>
+        <div class="moodRow" id="moodRow">
+          <button class="mood" data-mood="Perlu belajar lagi 😅" title="Masih bingung">😅</button>
+          <button class="mood" data-mood="Lumayan paham 🙂" title="Lumayan">🙂</button>
+          <button class="mood" data-mood="Percaya diri 😄" title="Percaya diri">😄</button>
+          <button class="mood" data-mood="Sangat bersemangat 🤩" title="Bersemangat sekali">🤩</button>
+          <button class="mood" data-mood="Penasaran soal lanjutan 🧐" title="Penasaran">🧐</button>
+        </div>
+        <p class="small mt" id="moodInfo">Klik satu emoji yang paling menggambarkan hatimu.</p>
+      </div>
+      <div class="widget">
+        <h4>✅ Centang yang sudah kamu kuasai</h4>
+        <div style="display:grid;gap:9px">
+          <label class="checkItem"><input type="checkbox" class="refChk" value="Aku bisa menjelaskan arti kecepatan dan debit"> Aku bisa menjelaskan arti kecepatan dan debit</label>
+          <label class="checkItem"><input type="checkbox" class="refChk" value="Aku bisa mengubah satuan (3,6 • 60 • 1.000)"> Aku bisa mengubah satuan kecepatan dan debit</label>
+          <label class="checkItem"><input type="checkbox" class="refChk" value="Aku bisa memakai segitiga rumus v-s-t"> Aku bisa memakai segitiga rumus v-s-t</label>
+          <label class="checkItem"><input type="checkbox" class="refChk" value="Aku bisa memakai segitiga rumus Q-V-t"> Aku bisa memakai segitiga rumus Q-V-t</label>
+          <label class="checkItem"><input type="checkbox" class="refChk" value="Aku bisa menyelesaikan soal kecepatan + perbandingan"> Aku bisa menyelesaikan soal kecepatan + perbandingan</label>
+        </div>
+      </div>
+    </div>
+    <div class="widget mt">
+      <h4>✍️ Catatan untuk diriku (atau untuk Bu/Pak Guru)</h4>
+      <textarea class="numIn" id="refNote" rows="2" placeholder="Contoh: Aku masih perlu latihan soal skala peta…" style="resize:vertical"></textarea>
+      <button class="wbtn" id="refSave" style="margin-top:12px">🔒 Kunci Refleksiku</button>
+      <div class="reflectResult" id="refResult"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 33 : THANK YOU ============ -->
+<section class="slide" data-title="Thank You" data-icon="📣" data-init="thanks">
+  <div class="wrap">
+    <div class="coverInner">
+      <div class="checker" style="width:170px"></div>
+      <div class="coverCars" style="font-size:60px;margin-top:24px"><span>🏁</span><span>🏆</span><span>⭐</span></div>
+      <h1 class="display">THANK YOU <span class="grad">FOR TODAY!</span></h1>
+      <p class="sub">Kamu telah menyelesaikan seluruh lintasan balapan <b>Kecepatan &amp; Debit</b>: dari definisi, satuan, rumus, sampai perbandingan. Hebat sekali, juara kecil!</p>
+      <div class="card accent mt" style="max-width:640px;margin-left:auto;margin-right:auto;text-align:left">
+        <h3>📊 Rekap Perjalanan Belajarmu</h3>
+        <div id="finalRecap" style="margin-top:6px">Belum ada data — kerjakan dulu kelima kuis untuk melihat rekapmu!</div>
+      </div>
+      <div class="coverBadges">
+        <span class="coverBadge">🎯 Tetap semangat berlatih</span>
+        <span class="coverBadge">🚗 Terus memacu ilmumu</span>
+        <span class="coverBadge">💧 Sampai jumpa di materi berikutnya!</span>
+      </div>
+      <button class="navbtn primary bigstart" data-go="0">🔄 Balapan Lagi dari Awal</button>
+    </div>
+  </div>
+</section>
+
+</main>
+<script>
+/* ============================================================
+   DATA KUIS — 50 SOAL HOTS (5 kuis x 10 soal)
+   Semua pembahasan: Diketahui → Ditanya → Jawab + Tip
+   ============================================================ */
+const QUIZ = {
+q1:{
+  qs:[
+  {q:"Kalimat yang paling tepat menggambarkan makna kecepatan 60 km/jam adalah…",
+   opts:["Mobil membutuhkan 60 jam untuk sampai ke tujuan","Mobil menempuh 60 km pada setiap 1 menit","Mobil menempuh 60 km pada setiap 1 jam perjalanan","Mobil berhenti setiap menempuh 60 km"],
+   ans:2,
+   exp:"<b>Diketahui:</b> kecepatan mobil 60 km/jam.<br><b>Ditanya:</b> makna kecepatan tersebut.<br><b>Jawab:</b> Kecepatan adalah jarak yang ditempuh pada setiap satu satuan waktu. Jadi 60 km/jam berarti <b>setiap 1 jam, mobil menempuh 60 km</b>.",
+   tip:"Padankan kata 'per jam' dengan 'setiap 1 jam', bukan dengan lama seluruh perjalanan."},
+  {q:"Debit sebuah keran 12 liter/menit. Pernyataan yang benar adalah…",
+   opts:["Keran mengalirkan air selama 12 menit","Keran mengalirkan 12 liter air pada setiap 1 menit","Keran hanya berisi 12 liter air","Keran mengalirkan 12 liter air setiap 1 jam"],
+   ans:1,
+   exp:"<b>Diketahui:</b> debit keran 12 liter/menit.<br><b>Ditanya:</b> pernyataan yang benar.<br><b>Jawab:</b> Debit adalah volume air yang mengalir pada setiap satu satuan waktu. Jadi keran mengalirkan <b>12 liter pada setiap 1 menit</b>.",
+   tip:"Debit selalu memasangkan 'berapa banyak air' dengan 'berapa cepat waktunya'. Tanda '/' dibaca 'per' = 'setiap'."},
+  {q:"Rara berlari 100 meter dalam 20 detik. Sasa menempuh 100 meter dalam 25 detik. Siapa yang lebih cepat, dan mengapa?",
+   opts:["Rara, karena menempuh jarak sama dengan waktu lebih singkat","Sasa, karena waktunya lebih lama","Rara, karena dia berlari lebih lama","Sama cepat, karena jaraknya sama"],
+   ans:0,
+   exp:"<b>Diketahui:</b> jarak keduanya sama (100 m), waktu Rara 20 detik, Sasa 25 detik.<br><b>Ditanya:</b> siapa lebih cepat?<br><b>Jawab:</b> Jarak sama, pembandingnya waktu. Rara hanya 20 detik &lt; 25 detik. Jika dihitung: Rara = 100 : 20 = <b>5 m/detik</b>, Sasa = 100 : 25 = <b>4 m/detik</b>.",
+   tip:"Jarak sama → bandingkan waktunya. Waktu sama → bandingkan jaraknya. Itu trik cepat soal dua pelari!"},
+  {q:"Keran A mengisi ember 12 liter dalam 2 menit. Keran B mengisi bak 15 liter dalam 3 menit. Keran manakah yang debitnya lebih besar?",
+   opts:["Keran B, karena debitnya 5 L/menit","Keran B, karena volumenya paling besar","Keduanya sama besar","Keran A, karena debitnya 6 L/menit"],
+   ans:3,
+   exp:"<b>Diketahui:</b> Keran A: 12 liter dalam 2 menit. Keran B: 15 liter dalam 3 menit.<br><b>Ditanya:</b> debit yang lebih besar.<br><b>Jawab:</b> Q(A) = 12 : 2 = <b>6 L/menit</b>. Q(B) = 15 : 3 = <b>5 L/menit</b>. Karena 6 &gt; 5, <b>Keran A lebih besar</b>.",
+   tip:"Volume besar belum tentu debit besar! Bandingkan selalu 'volume per waktu'-nya, bukan volumenya saja."},
+  {q:"Pak Dani mengendarai mobil dengan kecepatan tetap. Setelah 1 jam ia menempuh 50 km. Jarak yang ditempuh setelah 3 jam adalah…",
+   opts:["100 km","150 km","250 km","53 km"],
+   ans:1,
+   exp:"<b>Diketahui:</b> kecepatan tetap, 1 jam = 50 km.<br><b>Ditanya:</b> jarak setelah 3 jam.<br><b>Jawab:</b> Setiap 1 jam bertambah 50 km, jadi setelah 3 jam: 50 × 3 = <b>150 km</b>.",
+   tip:"Kecepatan tetap berarti pola beraturan — gunakan perkalian, bukan menambah 50+50+50 satu per satu (walau hasilnya sama, perkalian lebih cepat!)."},
+  {q:"Air mengalir dengan debit tetap 10 liter setiap menit. Banyak air yang terkumpul setelah 4 menit adalah…",
+   opts:["14 liter","4 liter","40 liter","400 liter"],
+   ans:2,
+   exp:"<b>Diketahui:</b> debit tetap 10 liter/menit.<br><b>Ditanya:</b> volume setelah 4 menit.<br><b>Jawab:</b> Setiap 1 menit bertambah 10 liter → setelah 4 menit: 10 × 4 = <b>40 liter</b>. (Ini sama dengan V = Q × t = 10 × 4.)",
+   tip:"Sama seperti kecepatan: debit tetap berarti volume bertambah teratur pada setiap satuan waktu."},
+  {q:"Dua mobil berangkat bersama dari tempat yang sama ke arah yang sama. Mobil P melaju 60 km/jam, Mobil Q melaju 45 km/jam. Setelah 2 jam, mobil yang berada lebih jauh adalah…",
+   opts:["Mobil P, karena 120 km &gt; 90 km","Mobil Q, karena 90 km lebih jauh dari 60 km","Keduanya sama jauh karena berangkat bersama","Mobil P, karena 105 km &gt; 90 km"],
+   ans:0,
+   exp:"<b>Diketahui:</b> waktu sama (2 jam), v(P) = 60 km/jam, v(Q) = 45 km/jam.<br><b>Ditanya:</b> yang lebih jauh.<br><b>Jawab:</b> Jarak P = 60 × 2 = <b>120 km</b>. Jarak Q = 45 × 2 = <b>90 km</b>. Mobil P lebih jauh, selisihnya 30 km.",
+   tip:"Waktu sama → yang kecepatannya lebih besar pasti lebih jauh. Tetap hitung jarak masing-masing supaya aman!"},
+  {q:"Air mengalir dengan debit yang tetap. Jika waktu pengisian menjadi 2 kali lipat semula, volume air yang terkumpul menjadi…",
+   opts:["tetap sama","2 kali lipat","setengah kali lipat","4 kali lipat"],
+   ans:1,
+   exp:"<b>Diketahui:</b> debit tetap, waktu menjadi ×2.<br><b>Ditanya:</b> perubahan volume.<br><b>Jawab:</b> Debit = volume : waktu. Jika debit tetap, volume dan waktu <b>berbanding senilai</b>: waktu ×2 → volume ×2. Contoh: 10 L/menit → 1 menit = 10 L, 2 menit = 20 L.",
+   tip:"Ingat perbandingan senilai: satu besaran naik, yang lain ikut naik dengan perbandingan yang sama."},
+  {q:"Jarak yang ditempuh sebuah mobil sama. Jika waktu tempuhnya menjadi 2 kali lipat semula, kecepatannya menjadi…",
+   opts:["2 kali lipat","tetap sama","setengah kali lipat","tidak dapat ditentukan"],
+   ans:2,
+   exp:"<b>Diketahui:</b> jarak tetap, waktu menjadi ×2.<br><b>Ditanya:</b> perubahan kecepatan.<br><b>Jawab:</b> v = jarak : waktu. Jarak tetap dan waktu ×2 → hasil bagi menjadi ½ kali. Contoh: 100 km : 2 jam = 50 km/jam, tetapi 100 km : 4 jam = <b>25 km/jam</b> (setengahnya).",
+   tip:"Jarak sama → waktu dan kecepatan berbanding TERBALIK. Waktu makin lama berarti makin lambat!"},
+  {q:"Kolam berisi air sama banyak akan dikeringkan. Pompa P memindahkan 100 liter dalam 5 menit. Pompa Q memindahkan 96 liter dalam 4 menit. Pompa manakah yang bekerja lebih cepat?",
+   opts:["Pompa P, karena volumenya paling besar","Keduanya sama cepat","Pompa P, karena debitnya 25 L/menit","Pompa Q, karena debitnya 24 L/menit"],
+   ans:3,
+   exp:"<b>Diketahui:</b> P: 100 liter dalam 5 menit. Q: 96 liter dalam 4 menit.<br><b>Ditanya:</b> pompa yang lebih cepat.<br><b>Jawab:</b> Q(P) = 100 : 5 = <b>20 L/menit</b>. Q(Q) = 96 : 4 = <b>24 L/menit</b>. Pompa Q lebih cepat meskipun volumenya lebih kecil!",
+   tip:"Jangan tergihat angka volume besar. Ubah dulu semuanya menjadi debit per satuan waktu, baru bandingkan."}
+  ]
+},
+q2:{
+  qs:[
+  {q:"36 km/jam = … m/detik",
+   opts:["3,6","360","10","0,1"],
+   ans:2,
+   exp:"<b>Diketahui:</b> 36 km/jam.<br><b>Ditanya:</b> setara dalam m/detik.<br><b>Jawab:</b> km/jam → m/detik: bagi 3,6 → 36 : 3,6 = <b>10 m/detik</b>. Cek dengan cara panjang: 36 km = 36.000 m; 1 jam = 3.600 detik; 36.000 : 3.600 = 10.",
+   tip:"Hafalkan jembatan keledai: km/jam TURUN ke m/detik dibagi 3,6; m/detik NAIK ke km/jam dikali 3,6."},
+  {q:"15 m/detik = … km/jam",
+   opts:["54","45","150","5,4"],
+   ans:0,
+   exp:"<b>Diketahui:</b> 15 m/detik.<br><b>Ditanya:</b> setara dalam km/jam.<br><b>Jawab:</b> m/detik → km/jam: kali 3,6 → 15 × 3,6 = <b>54 km/jam</b>.",
+   tip:"Cek ulang dengan kebalikan: 54 : 3,6 = 15. Kalau bolak-baliknya pas, jawabanmu aman!"},
+  {q:"1.200 m/menit = … km/jam",
+   opts:["12","720","7,2","72"],
+   ans:3,
+   exp:"<b>Diketahui:</b> 1.200 m/menit.<br><b>Ditanya:</b> setara dalam km/jam.<br><b>Jawab:</b> Langkah 1: ubah ke m/jam → 1.200 × 60 = <b>72.000 m/jam</b>. Langkah 2: ubah ke km → 72.000 : 1.000 = <b>72 km/jam</b>.",
+   tip:"Untuk m/menit, naikkan dulu ke m/jam (×60), baru turunkan ke km/jam (:1.000). Dua langkah kecil!"},
+  {q:"2,5 m³ = … liter",
+   opts:["250","2.500","25","25.000"],
+   ans:1,
+   exp:"<b>Diketahui:</b> 2,5 m³.<br><b>Ditanya:</b> setara dalam liter.<br><b>Jawab:</b> 1 m³ = 1.000 liter → 2,5 × 1.000 = <b>2.500 liter</b>.",
+   tip:"m³ ke liter itu lompatan besar ×1.000, bukan ×10. Hati-hati jangan kehilangan nol!"},
+  {q:"5.000 liter = … m³",
+   opts:["50","500","0,5","5"],
+   ans:3,
+   exp:"<b>Diketahui:</b> 5.000 liter.<br><b>Ditanya:</b> setara dalam m³.<br><b>Jawab:</b> 1.000 liter = 1 m³ → 5.000 : 1.000 = <b>5 m³</b>.",
+   tip:"Kebalikan dari kali 1.000 adalah bagi 1.000. Perhatikan arah konversinya: liter ke m³ = mengecil!"},
+  {q:"Debit sebuah selang 120 liter/menit. Debit itu sama dengan … liter/detik.",
+   opts:["2","12","60","0,2"],
+   ans:0,
+   exp:"<b>Diketahui:</b> 120 liter/menit.<br><b>Ditanya:</b> setara dalam liter/detik.<br><b>Jawab:</b> 1 menit = 60 detik. Dalam 60 detik mengalir 120 liter → dalam 1 detik: 120 : 60 = <b>2 liter/detik</b>.",
+   tip:"Satuan waktu makin kecil (menit → detik) → angka debit ikut makin kecil (bagi 60)."},
+  {q:"Debit keran 3 liter/detik sama dengan … liter/menit.",
+   opts:["30","300","18","180"],
+   ans:3,
+   exp:"<b>Diketahui:</b> 3 liter/detik.<br><b>Ditanya:</b> setara dalam liter/menit.<br><b>Jawab:</b> Dalam 1 detik 3 liter → dalam 60 detik: 3 × 60 = <b>180 liter/menit</b>.",
+   tip:"Satuan waktu makin besar (detik → menit) → angka debit makin besar (kali 60). Bolak-balik aturan nomor 6!"},
+  {q:"Manakah kecepatan yang PALING besar?",
+   opts:["12 m/detik","50 km/jam","800 m/menit","Semuanya sama besar"],
+   ans:1,
+   exp:"<b>Diketahui:</b> tiga kecepatan dalam satuan berbeda.<br><b>Ditanya:</b> yang paling besar.<br><b>Jawab:</b> Samakan ke m/menit: 50 km/jam = 50.000 m : 60 menit ≈ <b>833 m/menit</b>; 12 m/detik = 12 × 60 = <b>720 m/menit</b>; 800 m/menit = <b>800 m/menit</b>. Jadi 50 km/jam paling besar.",
+   tip:"Soal 'paling besar' lintas satuan WAJIB disamakan dulu satuannya sebelum dibandingkan. Jangan bandingkan angka mentah!"},
+  {q:"Manakah debit yang PALING besar?",
+   opts:["30 liter/menit","0,6 liter/detik","3 m³/jam","100 liter setiap 5 menit"],
+   ans:2,
+   exp:"<b>Diketahui:</b> empat debit dalam satuan berbeda.<br><b>Ditanya:</b> yang paling besar.<br><b>Jawab:</b> Samakan ke liter/menit: 3 m³/jam = 3.000 L : 60 = <b>50 L/menit</b>; 30 L/menit; 0,6 L/detik = 0,6 × 60 = <b>36 L/menit</b>; 100 L : 5 = <b>20 L/menit</b>. Terbesar: <b>50 L/menit</b>.",
+   tip:"m³ harus jadi liter dulu (×1.000), lalu jam jadi menit (:60). Dua langkah kecil, satu jawaban tepat."},
+  {q:"Selang penyiram taman mengalirkan air dengan debit 15 liter/menit. Banyak air (dalam m³) yang mengalir selama 2 jam adalah…",
+   opts:["18 m³","180 m³","30 m³","1,8 m³"],
+   ans:3,
+   exp:"<b>Diketahui:</b> Q = 15 liter/menit, t = 2 jam.<br><b>Ditanya:</b> volume dalam m³.<br><b>Jawab:</b> Langkah 1: 2 jam = 120 menit. Langkah 2: V = Q × t = 15 × 120 = <b>1.800 liter</b>. Langkah 3: 1.800 : 1.000 = <b>1,8 m³</b>.",
+   tip:"Tiga pintu: samakan waktunya, hitung liternya, baru ubah ke m³. Jangan berhenti di liter karena soal minta m³!"}
+  ]
+}
+,q3:{
+  qs:[
+  {q:"Sebuah bus menempuh jarak 270 km dalam waktu 3 jam. Kecepatan rata-rata bus tersebut adalah…",
+   opts:["810 km/jam","30 km/jam","90 km/jam","93 km/jam"],
+   ans:2,
+   exp:"<b>Diketahui:</b> s = 270 km, t = 3 jam.<br><b>Ditanya:</b> v = … ?<br><b>Jawab:</b> v = s : t = 270 : 3 = <b>90 km/jam</b>.",
+   tip:"Jarak selalu dibagi waktu, bukan dikali. Cek logika: 3 jam × 90 km = 270 km. Pas!"},
+  {q:"Dina bersepeda dengan kecepatan 15 km/jam selama 2 jam 12 menit. Jarak yang ditempuh Dina adalah…",
+   opts:["33 km","30 km","3,3 km","27 km"],
+   ans:0,
+   exp:"<b>Diketahui:</b> v = 15 km/jam, t = 2 jam 12 menit.<br><b>Ditanya:</b> s = … ?<br><b>Jawab:</b> 12 menit = 12 : 60 = 0,2 jam, jadi t = 2,2 jam. s = v × t = 15 × 2,2 = <b>33 km</b>.",
+   tip:"Ubah dulu menit menjadi jam: bagi 60. Jangan langsung kalikan 15 × 2,12 — itu jebakan desimal!"},
+  {q:"Jarak kota A ke kota B adalah 180 km. Jika sebuah mobil melaju 60 km/jam, lama perjalanan mobil itu adalah…",
+   opts:["1.080 jam","3 jam","1/3 jam","30 menit"],
+   ans:1,
+   exp:"<b>Diketahui:</b> s = 180 km, v = 60 km/jam.<br><b>Ditanya:</b> t = … ?<br><b>Jawab:</b> t = s : v = 180 : 60 = <b>3 jam</b>.",
+   tip:"Mencari waktu berarti membagi jarak dengan kecepatan. Angka 1.080 itu hasil 180 × 60 — jangan tertukar operasi!"},
+  {q:"Kereta berangkat pukul 07.30 dengan kecepatan 80 km/jam menuju kota yang berjarak 200 km. Kereta tiba pukul…",
+   opts:["09.30","10.30","09.00","10.00"],
+   ans:3,
+   exp:"<b>Diketahui:</b> berangkat 07.30, v = 80 km/jam, s = 200 km.<br><b>Ditanya:</b> jam tiba.<br><b>Jawab:</b> t = s : v = 200 : 80 = 2,5 jam = <b>2 jam 30 menit</b>. Tiba = 07.30 + 2 jam 30 menit = <b>pukul 10.00</b>.",
+   tip:"0,5 jam = 30 menit, bukan 5 menit! Ini jebakan favorit soal jam tiba."},
+  {q:"Seorang pelari menempuh 1.500 meter dalam 5 menit. Kecepatan pelari tersebut adalah…",
+   opts:["300 m/detik","5 m/detik","50 m/detik","0,5 m/detik"],
+   ans:1,
+   exp:"<b>Diketahui:</b> s = 1.500 m, t = 5 menit.<br><b>Ditanya:</b> v dalam m/detik.<br><b>Jawab:</b> 5 menit = 5 × 60 = 300 detik. v = 1.500 : 300 = <b>5 m/detik</b>.",
+   tip:"Satuan yang diminta m/detik → wajib ubah menit ke detik dulu sebelum membagi!"},
+  {q:"Anton mengendarai motor 60 km pertama dengan kecepatan 60 km/jam, lalu 40 km berikutnya dengan kecepatan 40 km/jam. Kecepatan rata-rata Anton seluruh perjalanan adalah…",
+   opts:["50 km/jam","60 km/jam","45 km/jam","55 km/jam"],
+   ans:0,
+   exp:"<b>Diketahui:</b> babak 1: 60 km pada 60 km/jam; babak 2: 40 km pada 40 km/jam.<br><b>Ditanya:</b> kecepatan rata-rata.<br><b>Jawab:</b> Waktu babak 1 = 60 : 60 = 1 jam; babak 2 = 40 : 40 = 1 jam. Total jarak = 100 km, total waktu = 2 jam → 100 : 2 = <b>50 km/jam</b>.",
+   tip:"Kecepatan rata-rata = total jarak : total waktu. BUKAN (60 + 40) : 2! Itu jebakan terbesar bab ini."},
+  {q:"Biasanya ayah berkendara 40 km/jam sehingga butuh waktu 3 jam ke rumah nenek. Jika ayah berkendara 60 km/jam, lama perjalanan menjadi…",
+   opts:["1 jam","2 jam 30 menit","1 jam 30 menit","2 jam"],
+   ans:3,
+   exp:"<b>Diketahui:</b> kecepatan biasa 40 km/jam selama 3 jam; jika 60 km/jam.<br><b>Ditanya:</b> lama perjalanan yang baru.<br><b>Jawab:</b> Jarak = 40 × 3 = <b>120 km</b> (jarak tidak berubah). Lama baru = 120 : 60 = <b>2 jam</b>.",
+   tip:"Kunci soal 'biasanya… jika…': cari dulu jarak yang tetap, baru hitung ulang waktunya."},
+  {q:"Sebuah keluarga berwisata ke kota yang berjarak 240 km. Mereka berkendara 80 km/jam selama 1 jam 30 menit. Sisa jarak yang harus ditempuh adalah…",
+   opts:["160 km","120 km","110 km","240 km"],
+   ans:1,
+   exp:"<b>Diketahui:</b> total 240 km; v = 80 km/jam; t = 1 jam 30 menit.<br><b>Ditanya:</b> sisa jarak.<br><b>Jawab:</b> 1 jam 30 menit = 1,5 jam. Jarak ditempuh = 80 × 1,5 = 120 km. Sisa = 240 − 120 = <b>120 km</b>.",
+   tip:"Soal 'sisa' selalu dua langkah: hitung yang sudah ditempuh, lalu kurangkan dari total."},
+  {q:"Dua pelari mulai bersama dari garis start. Kecepatan Dodi 6 m/detik dan Rendi 4 m/detik. Setelah 30 detik, jarak keduanya adalah…",
+   opts:["20 meter","180 meter","60 meter","120 meter"],
+   ans:2,
+   exp:"<b>Diketahui:</b> v(Dodi) = 6 m/detik, v(Rendi) = 4 m/detik, t = 30 detik.<br><b>Ditanya:</b> jarak keduanya.<br><b>Jawab:</b> Dodi = 6 × 30 = 180 m; Rendi = 4 × 30 = 120 m. Jarak keduanya = 180 − 120 = <b>60 meter</b>.",
+   tip:"Cara cepat: selisih kecepatan × waktu = (6 − 4) × 30 = 60 m. Hasilnya sama saja!"},
+  {q:"Ayah berangkat dari Bandung pukul 06.45 menuju kota yang berjarak 150 km dengan kecepatan 60 km/jam. Di tengah jalan ia beristirahat 30 menit. Ayah tiba pukul…",
+   opts:["09.15","09.45","10.15","09.30"],
+   ans:1,
+   exp:"<b>Diketahui:</b> berangkat 06.45; s = 150 km; v = 60 km/jam; istirahat 30 menit.<br><b>Ditanya:</b> jam tiba.<br><b>Jawab:</b> t berkendara = 150 : 60 = 2,5 jam = 2 jam 30 menit. Total = 2 jam 30 menit + 30 menit = 3 jam. Tiba = 06.45 + 3 jam = <b>pukul 09.45</b>.",
+   tip:"Jam tiba = jam berangkat + waktu berkendara + waktu istirahat. Jangan sampai lupa istirahatnya!"}
+  ]
+},
+q4:{
+  qs:[
+  {q:"Sebuah keran mengalirkan air dengan debit 15 liter/menit. Volume air yang mengalir selama 8 menit adalah…",
+   opts:["23 liter","1,2 liter","1.200 liter","120 liter"],
+   ans:3,
+   exp:"<b>Diketahui:</b> Q = 15 liter/menit, t = 8 menit.<br><b>Ditanya:</b> V = … ?<br><b>Jawab:</b> V = Q × t = 15 × 8 = <b>120 liter</b>.",
+   tip:"Debit dikali waktu menghasilkan volume. Cek satuan: L/menit × menit = liter. Sisanya habis!"},
+  {q:"Sebuah bak berkapasitas 600 liter diisi keran dengan debit 20 liter/menit. Bak penuh setelah…",
+   opts:["120 menit","30 menit","3 menit","60 menit"],
+   ans:1,
+   exp:"<b>Diketahui:</b> V = 600 liter, Q = 20 liter/menit.<br><b>Ditanya:</b> t = … ?<br><b>Jawab:</b> t = V : Q = 600 : 20 = <b>30 menit</b>.",
+   tip:"Mencari waktu berarti volume dibagi debit. 600 × 20 = 12.000 itu jebakan perkalian!"},
+  {q:"Tandon berisi 450 liter terisi penuh dalam 15 menit. Debit air yang mengisinya adalah…",
+   opts:["30 liter/menit","45 liter/menit","300 liter/menit","6.750 liter/menit"],
+   ans:0,
+   exp:"<b>Diketahui:</b> V = 450 liter, t = 15 menit.<br><b>Ditanya:</b> Q = … ?<br><b>Jawab:</b> Q = V : t = 450 : 15 = <b>30 liter/menit</b>.",
+   tip:"Debit = volume dibagi waktu. Urutan angkanya jangan terbalik menjadi 15 : 450!"},
+  {q:"Bak berkapasitas 2.400 liter diisi dengan debit 40 liter/menit. Setelah 25 menit, bagian bak yang BELUM terisi air adalah…",
+   opts:["1.000 liter","2.400 liter","1.400 liter","1.200 liter"],
+   ans:2,
+   exp:"<b>Diketahui:</b> kapasitas 2.400 L; Q = 40 L/menit; t = 25 menit.<br><b>Ditanya:</b> bagian yang belum terisi.<br><b>Jawab:</b> Terisi = 40 × 25 = 1.000 liter. Belum terisi = 2.400 − 1.000 = <b>1.400 liter</b>.",
+   tip:"Soal 'belum terisi' = kapasitas − yang sudah terisi. Dua langkah, jangan berhenti di 1.000!"},
+  {q:"Keran A berdebit 12 liter/menit dan keran B berdebit 8 liter/menit. Jika keduanya dibuka bersamaan selama 10 menit, total air yang mengalir adalah…",
+   opts:["120 liter","200 liter","80 liter","20 liter"],
+   ans:1,
+   exp:"<b>Diketahui:</b> Q(A) = 12 L/menit, Q(B) = 8 L/menit, t = 10 menit.<br><b>Ditanya:</b> total volume.<br><b>Jawab:</b> Debit gabungan = 12 + 8 = 20 L/menit. V = 20 × 10 = <b>200 liter</b>.",
+   tip:"Keran dibuka bersamaan → jumlahkan debitnya dulu, baru dikali waktu. 120 liter hanya milik keran A!"},
+  {q:"Bak penuh berisi 900 liter air dikuras dengan debit 30 liter/menit. Setelah 12 menit, air yang masih tersisa di bak adalah…",
+   opts:["360 liter","660 liter","450 liter","540 liter"],
+   ans:3,
+   exp:"<b>Diketahui:</b> V awal = 900 liter; debit kuras = 30 L/menit; t = 12 menit.<br><b>Ditanya:</b> air tersisa.<br><b>Jawab:</b> Terbuang = 30 × 12 = 360 liter. Tersisa = 900 − 360 = <b>540 liter</b>.",
+   tip:"Menguras berarti volume BERKURANG: hitung volume yang keluar, lalu kurangi dari kapasitas awal."},
+  {q:"Tangki air bocor sehingga hilang 2 liter setiap 5 menit. Banyak air yang hilang dalam 3 jam adalah…",
+   opts:["120 liter","72 liter","36 liter","720 liter"],
+   ans:1,
+   exp:"<b>Diketahui:</b> bocor 2 liter setiap 5 menit; total waktu 3 jam.<br><b>Ditanya:</b> total air hilang.<br><b>Jawab:</b> 3 jam = 180 menit. Banyak kelipatan 5 menit = 180 : 5 = 36. Air hilang = 36 × 2 = <b>72 liter</b>.",
+   tip:"Ubah dulu jam ke menit, cari ada berapa kelipatan 5 menit, baru dikali 2 liter per kelipatan."},
+  {q:"Bak berkapasitas 500 liter diisi keran berdebit 25 liter/menit. Agar bak tinggal 100 liter lagi menuju penuh, keran harus mengalir selama…",
+   opts:["20 menit","4 menit","16 menit","15 menit"],
+   ans:2,
+   exp:"<b>Diketahui:</b> kapasitas 500 L; Q = 25 L/menit; target: tersisa 100 L lagi.<br><b>Ditanya:</b> waktu pengaliran.<br><b>Jawab:</b> Air yang harus masuk = 500 − 100 = 400 liter. t = 400 : 25 = <b>16 menit</b>.",
+   tip:"Baca cermat: yang diminta waktu untuk 'tinggal 100 liter lagi', BUKAN sampai penuh. Yang dihitung 400, bukan 500!"},
+  {q:"Sebuah ember berkapasitas 18 liter penuh terisi dalam 90 detik. Debit air tersebut jika dinyatakan dalam liter/menit adalah…",
+   opts:["0,2 liter/menit","120 liter/menit","1,2 liter/menit","12 liter/menit"],
+   ans:3,
+   exp:"<b>Diketahui:</b> V = 18 liter, t = 90 detik.<br><b>Ditanya:</b> Q dalam liter/menit.<br><b>Jawab:</b> Q = 18 : 90 = 0,2 liter/detik. Ubah ke menit: 0,2 × 60 = <b>12 liter/menit</b>.",
+   tip:"Dua pintu: hitung per detik dulu (bagi 90), lalu kali 60. Hasil akhir harus LEBIH BESAR dari 0,2!"},
+  {q:"Tandon berisi 3.000 liter akan dikuras pompa dengan debit 250 liter setiap 5 menit. Tandon kosong setelah…",
+   opts:["60 jam","6 jam","1 jam","12 jam"],
+   ans:2,
+   exp:"<b>Diketahui:</b> V = 3.000 liter; debit 250 L setiap 5 menit.<br><b>Ditanya:</b> waktu sampai kosong.<br><b>Jawab:</b> Debit per menit = 250 : 5 = 50 L/menit. t = 3.000 : 50 = 60 menit = <b>1 jam</b>.",
+   tip:"'250 setiap 5 menit' belum jadi debit per menit — rapikan dulu! Lalu bagi, dan akhiri dengan mengubah 60 menit menjadi jam."}
+  ]
+},
+q5:{
+  qs:[
+  {q:"Kecepatan sebuah motor 60 km/jam dan mobil 90 km/jam. Perbandingan kecepatan motor : mobil dalam bentuk paling sederhana adalah…",
+   opts:["3 : 2","6 : 9","2 : 3","20 : 30"],
+   ans:2,
+   exp:"<b>Diketahui:</b> kecepatan motor 60, mobil 90 km/jam.<br><b>Ditanya:</b> perbandingan paling sederhana.<br><b>Jawab:</b> 60 : 90 → bagi keduanya dengan FPB 30 → <b>2 : 3</b>. Bentuk 6 : 9 dan 20 : 30 nilainya sama tetapi belum paling sederhana.",
+   tip:"Soal minta 'paling sederhana' → bagi dengan FPB sampai tidak bisa lagi. 6 : 9 masih bisa disederhanakan menjadi 2 : 3!"},
+  {q:"Andi dan Budi menempuh jarak yang sama. Waktu Andi 2 jam, waktu Budi 3 jam. Perbandingan kecepatan Andi : Budi adalah…",
+   opts:["3 : 2","2 : 3","1 : 1","2 : 5"],
+   ans:0,
+   exp:"<b>Diketahui:</b> jarak sama; waktu 2 jam : 3 jam.<br><b>Ditanya:</b> perbandingan kecepatan.<br><b>Jawab:</b> Jarak sama → kecepatan berbanding <b>terbalik</b> dengan waktu. Waktu 2 : 3 → kecepatan <b>3 : 2</b>. Contoh rute 60 km: Andi = 60 : 2 = 30 km/jam, Budi = 60 : 3 = 20 km/jam → 30 : 20 = 3 : 2.",
+   tip:"Hafalkan: jarak sama, perbandingan kecepatan = KEBALIKAN perbandingan waktu. Yang waktunya lebih singkat justru lebih cepat!"},
+  {q:"Perbandingan kecepatan dua mobil adalah 4 : 5. Kecepatan mobil pertama 48 km/jam. Kecepatan mobil kedua adalah…",
+   opts:["40 km/jam","60 km/jam","64 km/jam","52 km/jam"],
+   ans:1,
+   exp:"<b>Diketahui:</b> perbandingan 4 : 5; mobil pertama (4 bagian) = 48 km/jam.<br><b>Ditanya:</b> kecepatan mobil kedua.<br><b>Jawab:</b> 1 bagian = 48 : 4 = 12 km/jam. Mobil kedua = 5 × 12 = <b>60 km/jam</b>.",
+   tip:"Selalu cari 'nilai satu bagian' dulu: bagi angka yang diketahui dengan bagiannya."},
+  {q:"Perbandingan jarak rumah Dina dan Dodi ke sekolah adalah 3 : 4. Jika jarak rumah Dina 900 m, jarak rumah Dodi adalah…",
+   opts:["1.800 m","675 m","300 m","1.200 m"],
+   ans:3,
+   exp:"<b>Diketahui:</b> Dina : Dodi = 3 : 4; jarak Dina = 900 m.<br><b>Ditanya:</b> jarak Dodi.<br><b>Jawab:</b> 1 bagian = 900 : 3 = 300 m. Jarak Dodi = 4 × 300 = <b>1.200 m</b>.",
+   tip:"Kenali dulu milik siapa angka yang diketahui: 900 m itu milik Dina (bagian 3), bukan Dodi!"},
+  {q:"Dua mobil berangkat bersama dari kota yang sama ke arah yang berlawanan. Perbandingan kecepatan keduanya 5 : 7. Setelah 2 jam, jarak keduanya 48 km. Kecepatan mobil yang lebih lambat adalah…",
+   opts:["84 km/jam","24 km/jam","60 km/jam","48 km/jam"],
+   ans:2,
+   exp:"<b>Diketahui:</b> perbandingan 5 : 7; setelah 2 jam jarak keduanya 48 km.<br><b>Ditanya:</b> kecepatan yang lebih lambat.<br><b>Jawab:</b> Selisih kecepatan = jarak : waktu = 48 : 2 = 24 km/jam. Selisih bagian = 7 − 5 = 2 → 1 bagian = 12 km/jam. Kecepatan lambat = 5 × 12 = <b>60 km/jam</b> (yang cepat 84 km/jam).",
+   tip:"Selisih jarak : waktu = selisih kecepatan. Dari situ turunkan nilai satu bagian, lalu kalikan bagian masing-masing."},
+  {q:"Perbandingan debit keran P dan keran Q adalah 3 : 5. Selisih debit keduanya 12 liter/menit. Debit keran P adalah…",
+   opts:["30 liter/menit","12 liter/menit","6 liter/menit","18 liter/menit"],
+   ans:3,
+   exp:"<b>Diketahui:</b> P : Q = 3 : 5; selisih debit 12 L/menit.<br><b>Ditanya:</b> debit P.<br><b>Jawab:</b> Selisih bagian = 5 − 3 = 2 → 2 bagian = 12 → 1 bagian = 6. Debit P = 3 × 6 = <b>18 liter/menit</b> (Q = 30 liter/menit).",
+   tip:"Selisih 12 itu milik 2 bagian (5−3), bukan 1 bagian! Ini jebakan paling sering muncul."},
+  {q:"Sebuah bak diisi dua keran dengan perbandingan debit 2 : 3. Jumlah debit keduanya 45 liter/menit. Debit keran pertama adalah…",
+   opts:["18 liter/menit","27 liter/menit","9 liter/menit","45 liter/menit"],
+   ans:0,
+   exp:"<b>Diketahui:</b> perbandingan 2 : 3; jumlah debit 45 L/menit.<br><b>Ditanya:</b> debit keran pertama.<br><b>Jawab:</b> Jumlah bagian = 2 + 3 = 5 → 5 bagian = 45 → 1 bagian = 9. Keran pertama = 2 × 9 = <b>18 liter/menit</b> (keran kedua 27).",
+   tip:"Soal 'jumlah' pakai jumlah bagian (2+3), soal 'selisih' pakai selisih bagian (3−2). Jangan tertukar!"},
+  {q:"Skala sebuah peta 1 : 2.000.000. Jarak dua kota pada peta 4,5 cm. Sebuah bus menempuhnya dengan kecepatan 60 km/jam. Lama perjalanan bus adalah…",
+   opts:["90 jam","15 jam","3 jam","1,5 jam"],
+   ans:3,
+   exp:"<b>Diketahui:</b> skala 1 : 2.000.000; jarak peta 4,5 cm; v = 60 km/jam.<br><b>Ditanya:</b> lama perjalanan.<br><b>Jawab:</b> Jarak sebenarnya = 4,5 × 2.000.000 = 9.000.000 cm = <b>90 km</b> (bagi 100.000). t = s : v = 90 : 60 = <b>1,5 jam = 1 jam 30 menit</b>.",
+   tip:"Soal rangkaian: selesaikan SKALA dulu → dapat jarak sebenarnya → baru pakai rumus kecepatan. cm harus diubah ke km!"},
+  {q:"Bima dan Cakra berlari menempuh jarak yang sama. Perbandingan waktu lari Bima : Cakra adalah 4 : 5. Perbandingan kecepatan lari Bima : Cakra adalah…",
+   opts:["4 : 5","5 : 4","4 : 4","5 : 5"],
+   ans:1,
+   exp:"<b>Diketahui:</b> jarak sama; waktu Bima : Cakra = 4 : 5.<br><b>Ditanya:</b> perbandingan kecepatan.<br><b>Jawab:</b> Jarak sama → kecepatan berbanding terbalik dengan waktu. Waktu 4 : 5 → kecepatan <b>5 : 4</b>. Bima lebih cepat karena waktunya lebih singkat!",
+   tip:"Cek logika: waktu 4 lebih singkat dari 5 → Bima HARUS lebih cepat. Kalau jawabanmu membuat Bima lebih lambat, berarti terbalik!"},
+  {q:"Perbandingan kecepatan becak dan sepeda adalah 2 : 5. Jika kecepatan becak ditambah 21 km/jam, kecepatannya sama dengan sepeda. Kecepatan sepeda adalah…",
+   opts:["14 km/jam","21 km/jam","35 km/jam","42 km/jam"],
+   ans:2,
+   exp:"<b>Diketahui:</b> becak : sepeda = 2 : 5; becak + 21 = sepeda.<br><b>Ditanya:</b> kecepatan sepeda.<br><b>Jawab:</b> Selisih bagian = 5 − 2 = 3. Angka 21 harus menutup selisih 3 bagian → 1 bagian = 7. Kecepatan sepeda = 5 × 7 = <b>35 km/jam</b> (becak 14; cek: 14 + 21 = 35 ✓).",
+   tip:"'Ditambah 21 hingga sama' artinya 21 adalah jembatan penutup SELISIH 3 bagian — bukan 2 bagian, bukan juga milik satu bagian!"}
+  ]
+}
+};
+</script>
+<script>
+/* ============================================================
+   MESIN APLIKASI — navigasi, kuis, skor, suara, confetti, widget
+   ============================================================ */
+const $ = s => document.querySelector(s);
+const $$ = s => Array.from(document.querySelectorAll(s));
+function fmt(x){
+  if(typeof x !== "number" || !isFinite(x)) return String(x);
+  const r = Math.round(x*100)/100;
+  return r.toLocaleString("id-ID",{maximumFractionDigits:2});
+}
+
+/* ---------- Navigasi Slide ---------- */
+const slides = $$(".slide");
+const total = slides.length;
+let cur = 0;
+const progressBar = $("#progressBar"), counterEl = $("#slideCounter");
+const prevBtn = $("#prevBtn"), nextBtn = $("#nextBtn");
+const INIT_MAP = {car:initCar, tap:initTap, conv:initConv, triVST:initTriVST, triQVT:initTriQVT, calcVST:initCalcVST, lab:initLab, race:initRace, reflect:initReflect, thanks:openThanks};
+const doneInit = new Set();
+
+function goTo(i){
+  i = Math.max(0, Math.min(total-1, i));
+  cur = i;
+  slides.forEach((s,idx)=>{
+    s.classList.toggle("active", idx===i);
+    s.classList.toggle("leave", idx<i);
+  });
+  progressBar.style.width = ((i+1)/total*100)+"%";
+  counterEl.textContent = (i+1)+" / "+total;
+  prevBtn.disabled = i===0;
+  nextBtn.disabled = i===total-1;
+  slides[i].scrollTop = 0;
+  closeToc();
+  const name = slides[i].dataset.init;
+  if(name && INIT_MAP[name] && !doneInit.has(name)){
+    doneInit.add(name);
+    try{ INIT_MAP[name](); }catch(e){ console.error("Widget error:", e); }
+  }
+}
+function next(){ goTo(cur+1); }
+function prev(){ goTo(cur-1); }
+prevBtn.onclick = prev;
+nextBtn.onclick = next;
+
+document.addEventListener("keydown", e=>{
+  const t = e.target;
+  if(t && (t.tagName==="INPUT" || t.tagName==="SELECT" || t.tagName==="TEXTAREA")) return;
+  if(e.key==="ArrowRight" || e.key==="PageDown"){ next(); e.preventDefault(); }
+  else if(e.key==="ArrowLeft" || e.key==="PageUp"){ prev(); e.preventDefault(); }
+  else if(e.key==="Home"){ goTo(0); e.preventDefault(); }
+  else if(e.key==="End"){ goTo(total-1); e.preventDefault(); }
+  else if(e.key.toLowerCase()==="m"){ toggleToc(); }
+  else if(e.key==="Escape"){ closeToc(); }
+});
+
+/* ---------- Daftar Isi (Overlay) ---------- */
+const tocOverlay = $("#tocOverlay"), tocGrid = $("#tocGrid");
+function buildToc(){
+  tocGrid.innerHTML = "";
+  slides.forEach((s,i)=>{
+    if(i===1) return; /* jangan tampilkan slide daftar isi itu sendiri */
+    const b = document.createElement("button");
+    b.className = "tocItem";
+    b.innerHTML = '<div class="tNum">SLIDE '+(i+1)+'</div><div class="tName">'+(s.dataset.icon||"📄")+" "+(s.dataset.title||"Slide")+'</div>';
+    b.onclick = ()=>goTo(i);
+    tocGrid.appendChild(b);
+  });
+}
+function toggleToc(){ tocOverlay.classList.toggle("open"); }
+function closeToc(){ tocOverlay.classList.remove("open"); }
+$("#menuBtn").onclick = toggleToc;
+$("#tocClose").onclick = closeToc;
+tocOverlay.addEventListener("click", e=>{ if(e.target===tocOverlay) closeToc(); });
+
+/* Delegasi klik global: lompat slide, reset kuis, reveal langkah */
+document.addEventListener("click", e=>{
+  const j = e.target.closest("[data-go]");
+  if(j){ goTo(+j.dataset.go); return; }
+  const r = e.target.closest("[data-reset-quiz]");
+  if(r){ resetQuiz(r.dataset.resetQuiz); return; }
+  const rv = e.target.closest("[data-reveal]");
+  if(rv){ revealStep(rv.dataset.reveal, rv); return; }
+});
+
+/* ---------- Reveal langkah bertahap ---------- */
+function revealStep(id, btn){
+  const parent = document.getElementById(id);
+  if(!parent) return;
+  const hidden = parent.querySelector(".hiddenStep");
+  if(hidden) hidden.classList.remove("hiddenStep");
+  const left = parent.querySelectorAll(".hiddenStep").length;
+  if(left===0 && btn){ btn.textContent = "Semua langkah sudah tampil ✔"; btn.disabled = true; }
+}
+
+/* ---------- Efek Suara (Web Audio, tanpa file) ---------- */
+let audioCtx = null;
+let muted = (localStorage.getItem("kd_muted")==="1");
+const soundBtn = $("#soundBtn");
+function updSoundBtn(){ soundBtn.textContent = muted ? "🔇" : "🔊"; }
+updSoundBtn();
+soundBtn.onclick = ()=>{
+  muted = !muted;
+  localStorage.setItem("kd_muted", muted?"1":"0");
+  updSoundBtn();
+  if(!muted) ding(true);
+};
+function actx(){
+  if(!audioCtx){ try{ audioCtx = new (window.AudioContext||window.webkitAudioContext)(); }catch(e){} }
+  return audioCtx;
+}
+function tone(freq, dur, gain, delay, type){
+  const c = actx(); if(!c || muted) return;
+  const t0 = c.currentTime + (delay||0);
+  const o = c.createOscillator(), g = c.createGain();
+  o.type = type||"sine"; o.frequency.value = freq;
+  g.gain.setValueAtTime(0.0001, t0);
+  g.gain.exponentialRampToValueAtTime(gain||.2, t0+.02);
+  g.gain.exponentialRampToValueAtTime(0.0001, t0+dur);
+  o.connect(g); g.connect(c.destination);
+  o.start(t0); o.stop(t0+dur+.05);
+}
+function ding(soft){ tone(784,.12,.2,0); tone(1046,.25,.2,.09); if(soft)return; }
+function buzz(){ tone(220,.2,.16,0,"triangle"); tone(180,.25,.14,.08,"triangle"); }
+
+/* ---------- Confetti (canvas) ---------- */
+const cv = $("#confettiCv"), cctx = cv.getContext("2d");
+let parts = [], rafId = null;
+function resizeCv(){ cv.width = innerWidth; cv.height = innerHeight; }
+addEventListener("resize", resizeCv); resizeCv();
+const CCOLORS = ["#E8331A","#FF7A00","#FFC531","#2FA8D5","#FFFFFF","#27A55B"];
+function burst(x, y, n){
+  for(let i=0;i<(n||60);i++){
+    parts.push({x:x, y:y, vx:(Math.random()-.5)*9, vy:-Math.random()*9-3, g:.28+Math.random()*.2,
+      s:4+Math.random()*6, c:CCOLORS[i%CCOLORS.length], r:Math.random()*Math.PI, vr:(Math.random()-.5)*.3,
+      life:70+Math.random()*40});
+  }
+  if(!rafId) loopC();
+}
+function rain(){
+  for(let i=0;i<150;i++){
+    parts.push({x:Math.random()*cv.width, y:-20-Math.random()*180, vx:(Math.random()-.5)*2, vy:2+Math.random()*4, g:.05,
+      s:5+Math.random()*7, c:CCOLORS[i%CCOLORS.length], r:Math.random()*Math.PI, vr:(Math.random()-.5)*.25,
+      life:170+Math.random()*90});
+  }
+  if(!rafId) loopC();
+}
+function loopC(){
+  rafId = requestAnimationFrame(loopC2);
+}
+function loopC2(){
+  cctx.clearRect(0,0,cv.width,cv.height);
+  parts = parts.filter(p=>p.life>0 && p.y<cv.height+40);
+  parts.forEach(p=>{
+    p.x+=p.vx; p.y+=p.vy; p.vy+=p.g; p.r+=p.vr; p.life--;
+    cctx.save(); cctx.translate(p.x,p.y); cctx.rotate(p.r);
+    cctx.fillStyle = p.c; cctx.fillRect(-p.s/2,-p.s/2,p.s,p.s*.62);
+    cctx.restore();
+  });
+  if(parts.length){ rafId = requestAnimationFrame(loopC2); }
+  else { rafId = null; cctx.clearRect(0,0,cv.width,cv.height); }
+}
+
+/* ---------- Mesin Kuis ---------- */
+const SCORE = {q1:{ok:0,done:0}, q2:{ok:0,done:0}, q3:{ok:0,done:0}, q4:{ok:0,done:0}, q5:{ok:0,done:0}};
+function stars(n, max){
+  max = max||10;
+  const p = n/max*100;
+  if(p>=90) return "⭐⭐⭐";
+  if(p>=70) return "⭐⭐";
+  if(p>=50) return "⭐";
+  return "☆";
+}
+function renderQuiz(key){
+  const root = document.querySelector('.quiz-root[data-quiz="'+key+'"]');
+  if(!root) return;
+  root.innerHTML = "";
+  SCORE[key] = {ok:0, done:0};
+  updScore(key);
+  const data = QUIZ[key];
+  const levels = ["Analyze","Apply","Evaluate"];
+  data.qs.forEach((item,i)=>{
+    const card = document.createElement("div");
+    card.className = "qcard"; card.id = key+"-"+i;
+    const opts = item.opts.map((o,oi)=>
+      '<button class="opt" data-oi="'+oi+'"><span class="letter">'+String.fromCharCode(65+oi)+'</span><span class="oval">'+o+'</span></button>'
+    ).join("");
+    card.innerHTML =
+      '<div class="qtop"><span class="qnum">Soal '+(i+1)+'</span><span class="qlevel">HOTS • '+levels[i%3]+'</span></div>'+
+      '<div class="qtext">'+item.q+'</div>'+
+      '<div class="qopts">'+opts+'</div>'+
+      '<div class="qactions"><button class="checkbtn" disabled>🔍 Cek Jawaban</button><span class="feedback"></span></div>'+
+      '<div class="qexp"><span class="expTitle">💡 Pembahasan:</span><br>'+item.exp+'</div>'+
+      '<div class="qtip"><span class="tipTitle">🎯 Tip Anti Jebakan:</span> '+item.tip+'</div>';
+    root.appendChild(card);
+    let picked = -1, checked = false;
+    card.querySelectorAll(".opt").forEach(b=>{
+      b.onclick = ()=>{
+        if(checked) return;
+        picked = +b.dataset.oi;
+        card.querySelectorAll(".opt").forEach(x=>x.classList.remove("picked"));
+        b.classList.add("picked");
+        card.querySelector(".checkbtn").disabled = false;
+      };
+    });
+    card.querySelector(".checkbtn").onclick = function(ev){
+      if(checked || picked<0) return;
+      checked = true;
+      const btn = ev.currentTarget;
+      btn.disabled = true;
+      card.querySelectorAll(".opt").forEach(x=>{
+        x.classList.add("locked");
+        x.classList.remove("picked");
+      });
+      const correct = card.querySelector('.opt[data-oi="'+item.ans+'"]');
+      correct.classList.add("correct");
+      const fb = card.querySelector(".feedback");
+      const ok = picked===item.ans;
+      if(ok){
+        card.classList.add("doneOk");
+        fb.innerHTML = '<span class="badge ok">✅ Benar! Mantap!</span>';
+        SCORE[key].ok++; ding();
+        const r = btn.getBoundingClientRect();
+        burst(r.left + r.width/2, r.top, 65);
+      }else{
+        card.classList.add("doneNo");
+        const wrong = card.querySelector('.opt[data-oi="'+picked+'"]');
+        if(wrong) wrong.classList.add("wrong");
+        fb.innerHTML = '<span class="badge no">❌ Belum tepat. Jawaban benar: '+String.fromCharCode(65+item.ans)+'</span>';
+        card.classList.add("shake");
+        setTimeout(()=>card.classList.remove("shake"), 500);
+        buzz();
+      }
+      card.querySelector(".qexp").classList.add("show");
+      card.querySelector(".qtip").classList.add("show");
+      SCORE[key].done++;
+      updScore(key);
+      if(SCORE[key].done === data.qs.length){
+        let div = root.querySelector(".quizSummary");
+        if(!div){ div = document.createElement("div"); div.className = "quizSummary"; root.appendChild(div); }
+        const sc = SCORE[key].ok;
+        const msg = sc>=9 ? "Luar biasa! Kamu juara lintasan ini! 🏆"
+                  : sc>=7 ? "Hebat! Sedikit lagi menuju sempurna! 🥇"
+                  : sc>=5 ? "Bagus! Ulangi bagian yang masih goyah, ya 💪"
+                  : "Jangan menyerah! Baca lagi materinya lalu tekan Ulangi 🔄";
+        div.innerHTML = '<div class="starRow">'+stars(sc)+'</div>'+
+          '<div class="sumText">Kuis selesai! Skor akhir: '+sc+'/10</div>'+
+          '<div style="font-size:15px;font-weight:700;margin-top:4px">'+msg+'</div>';
+        div.classList.add("show");
+        rain();
+      }
+    };
+  });
+}
+function updScore(key){
+  const el = $("#score-"+key);
+  if(el){
+    const s = SCORE[key];
+    el.textContent = "Skor: "+s.ok+"/10" + (s.done===10 ? "  "+stars(s.ok) : "");
+  }
+}
+function resetQuiz(key){ renderQuiz(key); }
+
+/* ---------- Widget: Mobil & Slider Kecepatan ---------- */
+function initCar(){
+  const slider = $("#carSpeed"), val = $("#carVal"), out = $("#carOut"), road = $("#roadBox"), go = $("#carGo");
+  if(!slider) return;
+  let dur = 4;
+  function upd(){
+    const v = +slider.value;
+    val.textContent = v+" km/jam";
+    dur = Math.max(1.3, 8 - v/18);
+    out.innerHTML = "Dengan kecepatan <b>"+v+" km/jam</b>, setiap <b>1 jam</b> mobil menempuh <b>"+v+" km</b>. Semakin besar angkanya, semakin cepat mobil menyusuri lintasan!";
+  }
+  slider.oninput = upd;
+  go.onclick = ()=>{
+    road.classList.remove("running");
+    road.style.setProperty("--dur", dur+"s");
+    void road.offsetWidth;
+    road.classList.add("running");
+  };
+  upd();
+}
+
+/* ---------- Widget: Keran & Ember ---------- */
+function initTap(){
+  const rate = $("#tapRate"), val = $("#tapVal"), stage = $("#flowStage"), water = $("#tapWater"),
+        out = $("#tapOut"), go = $("#tapGo"), reset = $("#tapReset");
+  if(!rate) return;
+  let timer = null;
+  function upd(){
+    const q = +rate.value;
+    val.textContent = q+" liter/menit";
+    out.innerHTML = "Keran dengan debit <b>"+q+" liter/menit</b> mengalirkan <b>"+q+" liter</b> pada setiap 1 menit. Tekan <b>Alirkan Air</b> dan perhatikan ember terisi!";
+  }
+  rate.oninput = upd;
+  go.onclick = ()=>{
+    if(timer) clearInterval(timer);
+    const q = +rate.value;
+    stage.classList.add("on");
+    let liters = 0;
+    water.style.height = "0%";
+    const target = Math.min(q, 20);
+    const perTick = target/60;
+    let tick = 0;
+    timer = setInterval(()=>{
+      tick++; liters += perTick;
+      if(liters >= 20){ liters = 20; }
+      water.style.height = (liters/20*100)+"%";
+      if(liters >= 20 || tick >= 60){
+        clearInterval(timer); timer = null;
+        stage.classList.remove("on");
+        out.innerHTML = "Demo selesai! Debit <b>"+q+" liter/menit</b> berarti dalam 1 menit keran mengalirkan <b>"+q+" liter</b>"+(q>=20?" — ember 20 liternya penuh hampir meluap! 🌊":". Ember terisi "+q+" liter, belum penuh.")+" Coba besarkan debitnya!";
+      }
+    }, 50);
+  };
+  reset.onclick = ()=>{
+    if(timer) clearInterval(timer); timer = null;
+    stage.classList.remove("on");
+    water.style.height = "0%";
+    upd();
+  };
+  upd();
+}
+
+/* ---------- Widget: Segitiga Rumus ---------- */
+function makeTri(triId, outId, resetId, map){
+  const tri = $("#"+triId), out = $("#"+outId), reset = $("#"+resetId);
+  if(!tri) return;
+  const cells = tri.querySelectorAll(".cell");
+  function show(){
+    const gone = Array.from(cells).filter(c=>c.classList.contains("gone"));
+    if(gone.length===1) out.textContent = map[gone[0].dataset.pos] || "";
+  }
+  cells.forEach(c=>{
+    c.onclick = ()=>{
+      cells.forEach(x=>x.classList.remove("gone"));
+      c.classList.add("gone");
+      show();
+    };
+  });
+  reset.onclick = ()=>{
+    cells.forEach(x=>x.classList.remove("gone"));
+    out.textContent = "👆 Klik bagian segitiga!";
+  };
+}
+function initTriVST(){ makeTri("triVST","triVSTOut","triVSTReset",{v:"v = s : t", s:"s = v × t", t:"t = s : v"}); }
+function initTriQVT(){ makeTri("triQVT","triQVTOut","triQVTReset",{Q:"Q = V : t", V:"V = Q × t", t:"t = V : Q"}); }
+
+/* ---------- Widget: Mesin Konverter ---------- */
+const VUNITS = {"km/jam":1, "m/detik":1/3.6, "m/menit":1/60};            /* dasar: km/jam */
+const QUNITS = {"liter/detik":60, "liter/menit":1, "liter/jam":1/60, "m³/menit":1000, "m³/detik":60000}; /* dasar: liter/menit */
+function initConv(){
+  const kind = $("#convKind"), from = $("#convFrom"), to = $("#convTo"),
+        val = $("#convVal"), out = $("#convOut"), go = $("#convGo"), swap = $("#convSwap");
+  if(!kind) return;
+  function units(){ return kind.value==="v" ? VUNITS : QUNITS; }
+  function fill(){
+    const keys = Object.keys(units());
+    from.innerHTML = keys.map(k=>'<option value="'+k+'">'+k+'</option>').join("");
+    to.innerHTML = keys.map(k=>'<option value="'+k+'">'+k+'</option>').join("");
+    from.selectedIndex = 0;
+    to.selectedIndex = Math.min(1, keys.length-1);
+  }
+  kind.onchange = fill;
+  fill();
+  go.onclick = ()=>{
+    const U = units();
+    const v = parseFloat(val.value);
+    out.className = "calcResult show";
+    if(isNaN(v)){ out.innerHTML = "⚠️ Masukkan angka yang valid dulu, ya!"; return; }
+    const res = v / U[from.value] * U[to.value];
+    out.innerHTML = "🔄 <b>"+fmt(v)+" "+from.value+"</b> = <span class='big'>"+fmt(res)+" "+to.value+"</span><br>"+
+      "<span style='font-size:14px'>Cara: ubah dulu ke satuan dasar ("+(kind.value==="v"?"km/jam":"liter/menit")+"), lalu ke satuan tujuan. Cek ulang dengan tombol ⇄ untuk membalik arah — hasilnya harus kembali ke angka semula!</span>";
+  };
+  swap.onclick = ()=>{ const a = from.value; from.value = to.value; to.value = a; };
+}
+
+/* ---------- Widget: Mesin Hitung v-s-t ---------- */
+function initCalcVST(){
+  const what = $("#calcWhat"), A = $("#calcA"), B = $("#calcB"),
+        aL = $("#calcA_label"), bL = $("#calcB_label"), out = $("#calcOut"), go = $("#calcGo");
+  if(!what) return;
+  const CFG = {
+    v:{a:"Jarak (km)", b:"Waktu (jam)", aDef:150, bDef:3, calc:(a,b)=>a/b, unit:"km/jam", f:"v = s : t"},
+    s:{a:"Kecepatan (km/jam)", b:"Waktu (jam)", aDef:80, bDef:2, calc:(a,b)=>a*b, unit:"km", f:"s = v × t"},
+    t:{a:"Jarak (km)", b:"Kecepatan (km/jam)", aDef:180, bDef:60, calc:(a,b)=>a/b, unit:"jam", f:"t = s : v"}
+  };
+  function sync(){
+    const c = CFG[what.value];
+    aL.textContent = c.a; bL.textContent = c.b;
+    A.value = c.aDef; B.value = c.bDef;
+    out.className = "calcResult";
+  }
+  what.onchange = sync;
+  sync();
+  go.onclick = ()=>{
+    const c = CFG[what.value];
+    const a = parseFloat(A.value), b = parseFloat(B.value);
+    out.className = "calcResult show";
+    if(isNaN(a) || isNaN(b) || b===0){
+      out.innerHTML = "⚠️ Lengkapi kedua angka (dan pembagi tidak boleh 0)!";
+      return;
+    }
+    const r = c.calc(a,b);
+    out.innerHTML = "⚡ Rumus: <b>"+c.f+"</b> → <span class='big'>"+fmt(r)+" "+c.unit+"</span><br>"+
+      "<span style='font-size:14px'>Hitungan: menggunakan "+fmt(a)+" dan "+fmt(b)+". Jika hasilnya jam desimal, ubah ke jam-menit (contoh: 2,5 jam = 2 jam 30 menit)!</span>";
+  };
+}
+
+/* ---------- Widget: Laboratorium Air ---------- */
+function initLab(){
+  const Q = $("#labQ"), T = $("#labT"), qv = $("#labQVal"), tv = $("#labTVal"),
+        water = $("#labWater"), out = $("#labOut"), lvl = $("#labLevel"),
+        go = $("#labGo"), reset = $("#labReset");
+  if(!Q) return;
+  const CAP = 300;
+  let timer = null;
+  function calc(){
+    const q = +Q.value, t = +T.value;
+    qv.textContent = q+" L/menit";
+    tv.textContent = t+" menit";
+    const v = q*t;
+    out.innerHTML = "Rumus yang dipakai: <b>V = Q × t = "+q+" × "+t+" = "+fmt(v)+" liter</b>"+
+      (v>CAP ? " — waduh, lebih besar dari kapasitas bak ("+CAP+" L)! 🌊 Akan meluap!" : "")+
+      " Tekan <b>Mulai Alirkan</b> dan amati air mengisi bak!";
+    return v;
+  }
+  function updLevel(liters){
+    const pct = Math.min(liters/CAP*100, 100);
+    water.style.height = pct+"%";
+    lvl.innerHTML = "Bak terisi: <b>"+Math.round(liters)+" L ("+Math.round(pct)+"%)</b>"+(liters>=CAP ? " — PENUH! 🏆" : "");
+  }
+  Q.oninput = calc; T.oninput = calc;
+  go.onclick = ()=>{
+    if(timer) clearInterval(timer);
+    const target = Math.min(+Q.value * +T.value, CAP);
+    let c0 = 0;
+    water.style.height = "0%";
+    updLevel(0);
+    timer = setInterval(()=>{
+      c0 += 2;
+      if(c0 >= target){ c0 = target; clearInterval(timer); timer = null; }
+      updLevel(c0);
+    }, 50);
+  };
+  reset.onclick = ()=>{ if(timer) clearInterval(timer); timer = null; updLevel(0); };
+  calc(); updLevel(0);
+}
+
+/* ---------- Widget: Lintasan Balap Perbandingan ---------- */
+function initRace(){
+  const A = $("#raceA"), B = $("#raceB"), K = $("#raceK"), kVal = $("#raceKVal"),
+        go = $("#raceGo"), out = $("#raceOut"), carA = $("#raceCarA"), carB = $("#raceCarB");
+  if(!A) return;
+  function upd(){ kVal.textContent = K.value+" km/jam"; }
+  K.oninput = upd; upd();
+  go.onclick = ()=>{
+    let a = Math.max(1, Math.min(9, +A.value||1));
+    let b = Math.max(1, Math.min(9, +B.value||1));
+    A.value = a; B.value = b;
+    if(a===b){
+      out.innerHTML = "⚠️ Perbandingan "+a+" : "+b+" artinya keduanya sama kuat — mobil berjajar terus! Coba perbandingan yang berbeda.";
+      return;
+    }
+    const k = +K.value;
+    const vA = a*k, vB = b*k;
+    const dA = vA*10, dB = vB*10;
+    const max = Math.max(dA, dB);
+    carA.style.left = "6px"; carB.style.left = "6px";
+    void carA.offsetWidth;
+    carA.style.left = (dA/max*90)+"%";
+    carB.style.left = (dB/max*90)+"%";
+    const winner = dA>dB ? "🚗 Mobil A" : (dB>dA ? "🚙 Mobil B" : "");
+    out.innerHTML = "Kecepatan: A = "+a+" × "+k+" = <b>"+fmt(vA)+" km/jam</b> • B = "+b+" × "+k+" = <b>"+fmt(vB)+" km/jam</b><br>"+
+      "Setelah 10 jam: A = <b>"+fmt(dA)+" km</b> • B = <b>"+fmt(dB)+" km</b> • Selisih = <b>"+fmt(Math.abs(dA-dB))+" km</b><br>"+
+      "Pemenangnya <b>"+winner+"</b> — dan perbandingan jaraknya tetap "+a+" : "+b+"! 🏁";
+    ding();
+  };
+}
+
+/* ---------- Widget: Refleksi ---------- */
+function initReflect(){
+  const moodRow = $("#moodRow");
+  if(!moodRow) return;
+  let refMood = null;
+  moodRow.querySelectorAll(".mood").forEach(m=>{
+    m.onclick = ()=>{
+      moodRow.querySelectorAll(".mood").forEach(x=>x.classList.remove("picked"));
+      m.classList.add("picked");
+      refMood = m.dataset.mood;
+      $("#moodInfo").innerHTML = "Perasaanmu: <b>"+refMood+"</b> — terima kasih sudah jujur! 💙";
+    };
+  });
+  $$(".refChk").forEach(c=>{
+    c.onchange = ()=>{ c.closest(".checkItem").classList.toggle("done", c.checked); };
+  });
+  $("#refSave").onclick = ()=>{
+    const mastered = $$(".refChk").filter(c=>c.checked).length;
+    const note = $("#refNote").value.trim();
+    $("#refResult").className = "reflectResult show";
+    $("#refResult").innerHTML =
+      '<div class="card accent"><h3>🔒 Refleksimu Tersimpan!</h3>'+
+      '<p>😊 <b>Perasaan:</b> '+(refMood||"belum dipilih")+'<br>'+
+      '✅ <b>Kemampuan yang kamu centang:</b> '+mastered+' dari 5<br>'+
+      '✍️ <b>Catatanmu:</b> '+(note?note:"(belum menulis catatan)")+'</p>'+
+      '<p class="mt small">'+(mastered>=4 ? "Luar biasa! Kamu siap naik ke materi berikutnya. 🚀"
+        : mastered>=2 ? "Bagus! Ulangi bagian yang belum tercentang lewat menu ☰. 💪"
+        : "Tidak apa-apa! Balik lagi ke Bab 1 dan jalani pelan-pelan. Kamu pasti bisa! 🌱")+'</p></div>';
+    rain();
+  };
+}
+
+/* ---------- Slide Terakhir: Rekap Skor ---------- */
+function openThanks(){
+  const box = $("#finalRecap");
+  if(!box) return;
+  let totalOk = 0, totalDone = 0;
+  const chips = Object.keys(QUIZ).map(k=>{
+    const s = SCORE[k];
+    totalOk += s.ok; totalDone += s.done;
+    return '<span class="chip" style="background:#FFF3E3">Kuis '+k.slice(1)+': '+s.ok+'/10</span>';
+  }).join("");
+  if(totalDone===0){
+    box.innerHTML = "Belum ada data — kerjakan dulu kelima kuis untuk melihat rekapmu!";
+  }else{
+    const p = Math.round(totalOk/totalDone*100);
+    const msg = totalOk>=40 ? "🏆 JUARA DUNIA! Kamu menguasai materi ini luar biasa!"
+              : totalOk>=30 ? "🥇 HEBAT! Pemahamanmu sangat baik, pertahankan!"
+              : totalOk>=20 ? "🥈 KEREN! Terus asah dengan mengulang soal yang keliru."
+              : "💪 TERUS BERLATIH! Baca ulang bab yang masih goyah, lalu ulangi kuisnya.";
+    box.innerHTML = '<div class="starRow" style="font-size:30px;letter-spacing:4px">'+stars(totalOk,50)+'</div>'+
+      '<p><b>Total skor kuis: '+totalOk+' dari 50 soal</b> ('+p+'%)</p>'+
+      '<div style="margin:8px 0">'+chips+'</div>'+
+      '<p>'+msg+'</p>';
+  }
+  rain();
+}
+
+/* ---------- Inisialisasi ---------- */
+buildToc();
+Object.keys(QUIZ).forEach(renderQuiz);
+goTo(0);
+</script>
+</body>
+</html>
