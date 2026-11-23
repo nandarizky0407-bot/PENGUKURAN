@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Latihan 50 Soal Konversi Satuan Panjang &amp; Berat — Kelas 4 SD</title>
+<meta name="description" content="Latihan interaktif 50 soal pilihan ganda konversi satuan panjang dan berat untuk kelas 4 SD: konversi dasar, koma, membandingkan, jumlah-kurang, soal cerita, timer 2 menit per soal, pembahasan, dan skor otomatis.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  font-family:'Nunito','Segoe UI',Arial,sans-serif;
+  background:linear-gradient(160deg,#e3f2fd 0%,#fff8e1 55%,#fce4ec 100%);
+  background-attachment:fixed;color:#2c3e50;overflow-x:hidden;min-height:100vh;
+}
+h1,h2,h3,.btn,.score-pill,.timer,.part-badge,.qbig,.badge,.kicker,.stitle,.addbtn,.opt,.letter{font-family:'Baloo 2','Nunito',Arial,sans-serif}
+.wrap{max-width:880px;margin:0 auto;padding:26px 18px 90px}
+.center{text-align:center}
+.mt{margin-top:14px}
+.hidden{display:none!important}
+
+/* dekorasi */
+#fx{position:fixed;inset:0;pointer-events:none;z-index:50}
+.deco{position:fixed;font-size:40px;opacity:.16;animation:floaty 7s ease-in-out infinite;z-index:0;pointer-events:none}
+@keyframes floaty{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-16px) rotate(6deg)}}
+
+/* layar */
+.screen{display:none;position:relative;z-index:1;min-height:100vh}
+.screen.active{display:block}
+
+/* ===== umum ===== */
+.card{background:#fff;border-radius:18px;padding:18px 20px;box-shadow:0 6px 18px rgba(74,100,150,.12);text-align:left}
+.badge{display:inline-block;background:#fff;border:2px dashed #ff7043;color:#e64a19;border-radius:999px;padding:5px 16px;font-weight:800;font-size:14px;letter-spacing:1px}
+.kicker{display:inline-block;background:#fff3e0;color:#e65100;font-weight:800;font-size:13px;padding:4px 14px;border-radius:999px;letter-spacing:.5px}
+.stitle{font-size:clamp(24px,5vw,36px);font-weight:800;color:#26334d;margin:8px 0 4px}
+.grad{background:linear-gradient(90deg,#ff7043,#f4b400,#26c6da);-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{color:#5a6b8c;font-weight:700;font-size:clamp(15px,3vw,19px)}
+.note{color:#5a6b8c;font-size:14px;font-weight:600}
+.big-emoji{font-size:46px;line-height:1}
+.emoji-big{font-size:clamp(56px,12vw,84px);line-height:1.1}
+.btn{border:none;border-radius:999px;background:linear-gradient(135deg,#ff7043,#f4511e);color:#fff;font-size:17px;font-weight:800;padding:12px 26px;cursor:pointer;box-shadow:0 5px 14px rgba(244,81,30,.35);transition:transform .15s,box-shadow .15s,opacity .15s}
+.btn:hover:not(:disabled){transform:translateY(-2px)}
+.btn:disabled{opacity:.45;cursor:not-allowed;box-shadow:none}
+.btn.teal{background:linear-gradient(135deg,#26c6da,#00838f);box-shadow:0 5px 14px rgba(0,131,143,.3)}
+.btn.ghost{background:#fff;color:#37474f;border:2px solid #b0bec5;box-shadow:none}
+.btn.ghost.danger{color:#c62828;border-color:#ef9a9a}
+.btn.danger2{background:linear-gradient(135deg,#ef5350,#c62828);box-shadow:0 5px 14px rgba(198,40,40,.35)}
+.btn.small{font-size:14px;padding:8px 16px}
+.score-pill{background:#fff;border:2px solid #f4b400;color:#7a4b12;border-radius:999px;padding:6px 14px;font-weight:800;font-size:14px;display:inline-flex;align-items:center;gap:6px}
+.chip{background:#fff;border:2px solid #90caf9;color:#1565c0;border-radius:999px;padding:6px 14px;font-weight:800;font-size:13.5px;display:inline-block}
+
+/* ===== cover ===== */
+#scr-cover .wrap{padding-top:7vh}
+.covercard{max-width:430px;margin:22px auto 0;text-align:center}
+.nameinput{width:100%;max-width:340px;font-family:'Nunito';font-size:18px;font-weight:800;color:#26334d;text-align:center;padding:13px 18px;border:3px solid #90caf9;border-radius:14px;outline:none;background:#f5faff;transition:border-color .2s,box-shadow .2s}
+.nameinput:focus{border-color:#ff7043;box-shadow:0 0 0 4px rgba(255,112,67,.15)}
+.nameinput.shake{animation:shake .4s}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+.err{color:#c62828;font-weight:800;font-size:14px;margin-top:10px}
+.infochips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:18px}
+
+/* ===== quiz ===== */
+.qtop{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.qtop .left{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.qtop .right{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.who{background:#e1f5fe;border:2px solid #4fc3f7;color:#01579b;border-radius:999px;padding:6px 14px;font-weight:800;font-size:14px}
+.part-badge{background:#ede7f6;border:2px solid #b39ddb;color:#4527a0;border-radius:999px;padding:6px 14px;font-weight:800;font-size:13px}
+.timer{background:#26334d;color:#fff;border-radius:999px;padding:7px 16px;font-weight:800;font-size:17px;min-width:104px;text-align:center;letter-spacing:1px;transition:background .3s}
+.timer.warn{background:#ef6c00}
+.timer.danger{background:#c62828;animation:pulse 1s infinite}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+.addbtn{border:2px dashed #f4b400;background:#fff8e1;color:#7a4b12;border-radius:999px;padding:7px 14px;font-weight:800;font-size:15px;cursor:pointer;transition:transform .12s}
+.addbtn:hover:not(:disabled){background:#ffe08a}
+.addbtn:disabled{opacity:.4;cursor:not-allowed}
+.addbtn.pop{animation:pop .35s}
+@keyframes pop{0%{transform:scale(1)}40%{transform:scale(1.25);background:#ffe08a}100%{transform:scale(1)}}
+.addcount{font-size:11px;color:#8d6e63;font-weight:800}
+.progwrap{height:12px;background:#fff;border-radius:999px;overflow:hidden;box-shadow:inset 0 1px 3px rgba(0,0,0,.12)}
+#qBar{height:100%;width:0%;background:linear-gradient(90deg,#ff7043,#f4b400,#26c6da);border-radius:999px;transition:width .3s}
+.qcard{margin-top:16px}
+.qbig{font-size:clamp(18px,3.4vw,23px);font-weight:800;color:#26334d;line-height:1.5}
+.qbig .qemoji{font-size:1.25em;margin-right:6px}
+.optlist{display:flex;flex-direction:column;gap:10px;margin-top:16px}
+.opt{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:#f7f9ff;border:2.5px solid #d6e2ff;border-radius:14px;padding:12px 14px;font-size:16.5px;font-weight:800;color:#37474f;cursor:pointer;transition:border-color .15s,background .15s,transform .1s}
+.opt:hover:not(:disabled){border-color:#7c9cff;background:#eef3ff}
+.opt:disabled{cursor:default;opacity:.92}
+.opt .letter{flex:0 0 34px;height:34px;border-radius:50%;background:#d6e2ff;color:#39579a;display:inline-flex;align-items:center;justify-content:center;font-weight:800;font-size:16px}
+.opt.selected{border-color:#7c9cff;background:#e3ecff;box-shadow:0 0 0 3px rgba(124,156,255,.25)}
+.opt.correct{border-color:#43a047;background:#e8f5e9;box-shadow:0 0 0 3px rgba(67,160,71,.25)}
+.opt.correct .letter{background:#43a047;color:#fff}
+.opt.wrong{border-color:#e53935;background:#ffebee;box-shadow:0 0 0 3px rgba(229,57,53,.2)}
+.opt.wrong .letter{background:#e53935;color:#fff}
+.opt.dim{opacity:.55}
+.fb{border-radius:14px;padding:12px 16px;font-weight:800;font-size:15.5px}
+.fb.good{background:#e8f5e9;border:2px solid #43a047;color:#1b5e20}
+.fb.bad{background:#ffebee;border:2px solid #e53935;color:#b71c1c}
+.fb.info{background:#e3f2fd;border:2px solid #42a5f5;color:#0d47a1}
+.fb.warn{background:#fff8e1;border:2px solid #f4b400;color:#7a4b12}
+.bah{background:#f3e5f5;border:2px dashed #ab47bc;border-radius:14px;padding:12px 16px;font-weight:700;font-size:15px;color:#4a148c}
+.bah .bahtag{font-weight:800}
+.actrow{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:16px}
+.actrow .spacer{flex:1}
+
+/* ===== hasil ===== */
+.scorecircle{width:170px;height:170px;border-radius:50%;margin:18px auto 8px;background:linear-gradient(135deg,#26c6da,#43a047);display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;box-shadow:0 10px 26px rgba(67,160,71,.35)}
+.scorecircle #rScore{font-family:'Baloo 2';font-size:52px;font-weight:800;line-height:1}
+.scorecircle small{font-weight:800;letter-spacing:2px;font-size:13px;opacity:.9}
+.statgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px}
+.stat{background:#fff;border-radius:16px;padding:14px 10px;text-align:center;box-shadow:0 5px 14px rgba(74,100,150,.12)}
+.stat .sv{font-family:'Baloo 2';font-size:30px;font-weight:800;line-height:1.1}
+.stat .sl{font-size:13px;font-weight:800;color:#5a6b8c;margin-top:3px}
+.stat.g .sv{color:#2e7d32}.stat.r .sv{color:#c62828}.stat.b .sv{color:#1565c0}.stat.o .sv{color:#e65100}.stat.p .sv{color:#6a1b9a}
+table.parts{width:100%;border-collapse:collapse;margin-top:10px;font-size:14.5px}
+table.parts th{background:#ede7f6;color:#4527a0;padding:8px 10px;text-align:left;font-family:'Baloo 2'}
+table.parts td{padding:8px 10px;border-bottom:1px solid #eee;font-weight:700}
+table.parts tr:last-child td{border-bottom:none}
+.qmap{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.qmap span{width:36px;height:36px;border-radius:10px;display:inline-flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;border:2px solid transparent}
+.qmap .benar{background:#c8e6c9;color:#1b5e20;border-color:#43a047}
+.qmap .salah{background:#ffcdd2;color:#b71c1c;border-color:#e53935}
+.qmap .skip{background:#eceff1;color:#455a64;border-color:#90a4ae}
+.qmap .timeout{background:#ffe0b2;color:#e65100;border-color:#fb8c00}
+.qmap .pending{background:#fafafa;color:#9e9e9e;border-style:dashed;border-color:#bdbdbd}
+.legend{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px;font-size:12.5px;font-weight:800;color:#5a6b8c}
+.legend i{font-style:normal;margin-right:4px}
+
+/* ===== modal ===== */
+.modal{position:fixed;inset:0;background:rgba(38,50,77,.55);display:none;align-items:center;justify-content:center;z-index:100;padding:18px}
+.modal.open{display:flex}
+.modal .panel{background:#fff;border-radius:20px;padding:26px 24px;max-width:420px;width:100%;text-align:center;box-shadow:0 18px 50px rgba(0,0,0,.3);animation:zoomin .22s}
+@keyframes zoomin{from{transform:scale(.85);opacity:0}to{transform:scale(1);opacity:1}}
+.modal h3{font-size:22px;color:#26334d;margin-bottom:8px}
+.modal p{color:#5a6b8c;font-weight:700;margin-bottom:18px}
+
+/* responsif */
+@media (max-width:640px){
+  .statgrid{grid-template-columns:repeat(2,1fr)}
+  .qtop{flex-direction:column;align-items:stretch}
+  .qtop .right{justify-content:space-between}
+  .actrow .btn{flex:1}
+  .actrow .spacer{display:none}
+  .wrap{padding-bottom:70px}
+}
+</style>
+</head>
+<body>
+<canvas id="fx"></canvas>
+<span class="deco" style="top:12%;left:4%">📏</span>
+<span class="deco" style="top:70%;left:6%;animation-delay:1.4s">⚖️</span>
+<span class="deco" style="top:18%;right:5%;animation-delay:.7s">✏️</span>
+<span class="deco" style="top:74%;right:7%;animation-delay:2.1s">🍉</span>
+<span class="deco" style="top:45%;left:47%;animation-delay:2.8s">⭐</span>
+
+<!-- ============ COVER ============ -->
+<section id="scr-cover" class="screen center active">
+  <div class="wrap">
+    <div class="emoji-big">📏⚖️</div>
+    <div class="badge">MATEMATIKA · KELAS 4 SD</div>
+    <h1 style="font-size:clamp(34px,8vw,58px);font-weight:800;margin:10px 0 4px"><span class="grad">Latihan 50 Soal</span></h1>
+    <p class="sub">Konversi Satuan Panjang &amp; Berat 🎯</p>
+    <div class="card covercard">
+      <p style="font-weight:800;font-size:17px">📝 Tulis namamu dulu, ya!</p>
+      <div class="mt"><input id="inpName" class="nameinput" placeholder="Nama siswa" maxlength="30" autocomplete="off"></div>
+      <p class="err hidden" id="nameErr">⚠️ Nama belum ditulis! Isi dulu ya 😊</p>
+      <div class="mt"><button class="btn" id="btnStart" style="font-size:19px;padding:13px 30px">🚀 Mulai Latihan!</button></div>
+    </div>
+    <div class="infochips">
+      <span class="chip">📝 50 soal pilihan ganda</span>
+      <span class="chip">⏱️ 2 menit per soal</span>
+      <span class="chip">⏡ tombol +15 detik</span>
+      <span class="chip">✅ pembahasan langsung</span>
+      <span class="chip">🏆 skor otomatis</span>
+    </div>
+    <p class="note mt">5 bagian: konversi dasar · konversi koma · membandingkan · jumlah &amp; kurang · soal cerita</p>
+  </div>
+</section>
+
+<!-- ============ SOAL ============ -->
+<section id="scr-quiz" class="screen">
+  <div class="wrap">
+    <div class="qtop">
+      <div class="left">
+        <span class="who" id="whoName">👤 —</span>
+        <span class="score-pill" id="qProg">Soal 1 / 50</span>
+      </div>
+      <div class="right">
+        <span class="part-badge" id="partBadge">Bagian 1 · Konversi Dasar</span>
+        <span class="timer" id="timerChip">⏱️ 02:00</span>
+        <button class="addbtn" id="btnAdd15" title="Tambah waktu 15 detik">⏡ +15 dtk</button>
+        <span class="addcount" id="addCount"></span>
+      </div>
+    </div>
+    <div class="progwrap"><div id="qBar"></div></div>
+    <div class="card qcard">
+      <div class="qbig" id="qText">…</div>
+      <div id="opts" class="optlist"></div>
+      <div class="actrow">
+        <button class="btn" id="btnCheck" disabled>✅ Cek Jawaban</button>
+        <button class="btn ghost" id="btnSkip">⏭ Lewati</button>
+        <span class="spacer"></span>
+        <button class="btn ghost danger" id="btnEnd">🏁 Akhiri Latihan</button>
+      </div>
+      <div class="fb mt hidden" id="fb"></div>
+      <div class="bah mt hidden" id="bah"></div>
+      <div class="actrow hidden" id="nextRow" style="justify-content:center">
+        <button class="btn teal" id="btnNext">Soal Berikutnya ⏭</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ HASIL ============ -->
+<section id="scr-result" class="screen">
+  <div class="wrap">
+    <div class="center">
+      <span class="kicker">Hasil Latihan</span>
+      <h2 class="stitle">🏆 Hebat, <span id="rName">—</span>!</h2>
+      <p class="sub">Ini rekap pengerjaan latihanmu:</p>
+    </div>
+    <div class="scorecircle"><div id="rScore">0</div><small>SKOR</small></div>
+    <p class="note center" id="rFormula">Skor = benar ÷ terjawab × 100</p>
+    <div class="statgrid">
+      <div class="stat g"><div class="sv" id="rBenar">0</div><div class="sl">✅ Jawaban Benar</div></div>
+      <div class="stat r"><div class="sv" id="rSalah">0</div><div class="sl">❌ Jawaban Salah</div></div>
+      <div class="stat b"><div class="sv" id="rJawab">0</div><div class="sl">📝 Soal Terjawab</div></div>
+      <div class="stat o"><div class="sv" id="rBelum">0</div><div class="sl">⬜ Belum Dijawab</div></div>
+      <div class="stat p"><div class="sv" id="rAvg">—</div><div class="sl">⏱️ Rata-rata Waktu</div></div>
+      <div class="stat"><div class="sv">50</div><div class="sl">📚 Total Soal</div></div>
+    </div>
+    <div class="card mt">
+      <h3 style="color:#4527a0">📊 Rincian per Bagian</h3>
+      <table class="parts" id="rParts"></table>
+    </div>
+    <div class="card mt">
+      <h3 style="color:#4527a0">🗺️ Peta Jawaban</h3>
+      <div class="qmap" id="rMap"></div>
+      <div class="legend">
+        <span><i>🟩</i>benar</span><span><i>🟥</i>salah</span><span><i>⬜</i>dilewati</span><span><i>🟧</i>waktu habis</span><span><i>▢</i>belum dijangkau</span>
+      </div>
+    </div>
+    <div class="center mt"><button class="btn" id="btnRestart">🔄 Ulangi Latihan</button></div>
+  </div>
+</section>
+
+<!-- ============ MODAL AKHIRI ============ -->
+<div id="modal" class="modal">
+  <div class="panel">
+    <h3>🏁 Akhiri Latihan Sekarang?</h3>
+    <p>Soal yang belum dijawab akan dihitung <b>belum dijawab</b>, dan kamu langsung melihat hasilnya.</p>
+    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+      <button class="btn ghost" id="mCancel">↩️ Lanjut Kerjakan</button>
+      <button class="btn danger2" id="mYes">🏁 Ya, Akhiri</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const QUESTIONS=[{"bagian": 1, "emoji": "📏", "t": "3 km = … m", "opts": ["30 m", "300 m", "30.000 m", "3.000 m"], "a": 3, "bah": "km → m turun 3 tangga, artinya ×1.000. Jadi 3 × 1.000 = <b>3.000 m</b>."}, {"bagian": 1, "emoji": "✏️", "t": "5 m = … cm", "opts": ["50 cm", "5.000 cm", "500 cm", "50.000 cm"], "a": 2, "bah": "m → cm turun 2 tangga = ×100. Jadi 5 × 100 = <b>500 cm</b>."}, {"bagian": 1, "emoji": "⚖️", "t": "8 kg = … g", "opts": ["8.000 g", "800 g", "80 g", "80.000 g"], "a": 0, "bah": "kg → g = ×1.000. Jadi 8 × 1.000 = <b>8.000 g</b>."}, {"bagian": 1, "emoji": "📐", "t": "12 m = … dm", "opts": ["1,2 dm", "12 dm", "1.200 dm", "120 dm"], "a": 3, "bah": "m → dm turun 1 tangga = ×10. Jadi 12 × 10 = <b>120 dm</b>."}, {"bagian": 1, "emoji": "🚛", "t": "6 ton = … kg", "opts": ["60 kg", "600 kg", "60.000 kg", "6.000 kg"], "a": 3, "bah": "1 ton = 1.000 kg. Jadi 6 × 1.000 = <b>6.000 kg</b>."}, {"bagian": 1, "emoji": "🦴", "t": "500 cm = … m", "opts": ["0,5 m", "500 m", "50 m", "5 m"], "a": 3, "bah": "cm → m naik 2 tangga = ÷100. Jadi 500 ÷ 100 = <b>5 m</b>."}, {"bagian": 1, "emoji": "🌾", "t": "4 kuintal = … kg", "opts": ["400 kg", "40 kg", "4.000 kg", "40.000 kg"], "a": 0, "bah": "1 kuintal = 100 kg. Jadi 4 × 100 = <b>400 kg</b>."}, {"bagian": 1, "emoji": "🍬", "t": "2.000 g = … kg", "opts": ["200 kg", "20 kg", "2 kg", "2.000 kg"], "a": 2, "bah": "g → kg = ÷1.000. Jadi 2.000 ÷ 1.000 = <b>2 kg</b>."}, {"bagian": 1, "emoji": "🛣️", "t": "7 km = … dam", "opts": ["7 dam", "700 dam", "70 dam", "7.000 dam"], "a": 1, "bah": "km → dam turun 2 tangga = ×100. Jadi 7 × 100 = <b>700 dam</b>."}, {"bagian": 1, "emoji": "🧅", "t": "60 ons = … kg", "opts": ["6 kg", "0,6 kg", "60 kg", "600 kg"], "a": 0, "bah": "1 kg = 10 ons, jadi kg → ons naik. 60 ÷ 10 = <b>6 kg</b>."}, {"bagian": 2, "emoji": "🚴", "t": "2,5 km = … m", "opts": ["250 m", "2.500 m", "25.000 m", "250.000 m"], "a": 1, "bah": "km → m = ×1.000. Jadi 2,5 × 1.000 = <b>2.500 m</b>."}, {"bagian": 2, "emoji": "🍚", "t": "3,4 kg = … g", "opts": ["34 g", "340 g", "34.000 g", "3.400 g"], "a": 3, "bah": "kg → g = ×1.000. Jadi 3,4 × 1.000 = <b>3.400 g</b>."}, {"bagian": 2, "emoji": "🐘", "t": "1,5 ton = … kg", "opts": ["1.500 kg", "150 kg", "15 kg", "15.000 kg"], "a": 0, "bah": "ton → kg = ×1.000. Jadi 1,5 × 1.000 = <b>1.500 kg</b>."}, {"bagian": 2, "emoji": "🪢", "t": "4,5 m = … cm", "opts": ["45 cm", "45.000 cm", "4.500 cm", "450 cm"], "a": 3, "bah": "m → cm = ×100. Jadi 4,5 × 100 = <b>450 cm</b>."}, {"bagian": 2, "emoji": "🏃", "t": "0,8 km = … m", "opts": ["8 m", "80 m", "8.000 m", "800 m"], "a": 3, "bah": "km → m = ×1.000. Jadi 0,8 × 1.000 = <b>800 m</b>."}, {"bagian": 2, "emoji": "🍫", "t": "250 g = … kg", "opts": ["0,025 kg", "2,5 kg", "0,25 kg", "25 kg"], "a": 2, "bah": "g → kg = ÷1.000. Jadi 250 ÷ 1.000 = <b>0,25 kg</b>."}, {"bagian": 2, "emoji": "📐", "t": "3,6 dam = … dm", "opts": ["36 dm", "0,36 dm", "3.600 dm", "360 dm"], "a": 3, "bah": "dam → dm turun 2 tangga = ×100. Jadi 3,6 × 100 = <b>360 dm</b>."}, {"bagian": 2, "emoji": "✏️", "t": "12,5 cm = … mm", "opts": ["125 mm", "12,5 mm", "1,25 mm", "1.250 mm"], "a": 0, "bah": "cm → mm turun 1 tangga = ×10. Jadi 12,5 × 10 = <b>125 mm</b>."}, {"bagian": 2, "emoji": "🌾", "t": "1,2 kuintal = … kg", "opts": ["120 kg", "12 kg", "1.200 kg", "0,12 kg"], "a": 0, "bah": "kuintal → kg = ×100. Jadi 1,2 × 100 = <b>120 kg</b>."}, {"bagian": 2, "emoji": "🚗", "t": "750 m = … km", "opts": ["0,075 km", "75 km", "7,5 km", "0,75 km"], "a": 3, "bah": "m → km = ÷1.000. Jadi 750 ÷ 1.000 = <b>0,75 km</b>."}, {"bagian": 3, "emoji": "🆚", "t": "Mana yang lebih <b>panjang</b>?<br><small>(A) 🚶 Jalan kaki 2,5 km &nbsp;·&nbsp; (B) 🚌 Berkendara 2.300 m</small>", "opts": ["A lebih panjang", "B lebih panjang", "Sama panjang"], "a": 0, "bah": "2,5 km = 2.500 m, dan 2.500 m &gt; 2.300 m. Jadi <b>jalan kaki (A) lebih panjang</b>."}, {"bagian": 3, "emoji": "🆚", "t": "Mana yang lebih <b>panjang</b>?<br><small>(A) 🪢 Tali merah 3,4 m &nbsp;·&nbsp; (B) 🪢 Tali biru 340 cm</small>", "opts": ["A lebih panjang", "B lebih panjang", "Sama panjang"], "a": 2, "bah": "3,4 m = 340 cm → keduanya <b>sama panjang</b>! 🤝"}, {"bagian": 3, "emoji": "🆚", "t": "Mana yang lebih <b>berat</b>?<br><small>(A) 🦛 Kuda nil 3.800 kg &nbsp;·&nbsp; (B) 🐘 Gajah 4,5 ton</small>", "opts": ["A lebih berat", "B lebih berat", "Sama berat"], "a": 1, "bah": "4,5 ton = 4.500 kg, dan 4.500 kg &gt; 3.800 kg. Jadi <b>gajah (B) lebih berat</b>."}, {"bagian": 3, "emoji": "🆚", "t": "Mana yang lebih <b>panjang</b>?<br><small>(A) 📏 Pensil Ani 17 cm &nbsp;·&nbsp; (B) ✏️ Pensil Budi 165 mm</small>", "opts": ["A lebih panjang", "B lebih panjang", "Sama panjang"], "a": 0, "bah": "17 cm = 170 mm, dan 170 mm &gt; 165 mm. Jadi <b>pensil Ani (A) lebih panjang</b>."}, {"bagian": 3, "emoji": "🆚", "t": "Mana yang lebih <b>berat</b>?<br><small>(A) 🎃 Labu 6.200 g &nbsp;·&nbsp; (B) 🍉 Semangka 6,5 kg</small>", "opts": ["A lebih berat", "B lebih berat", "Sama berat"], "a": 1, "bah": "6,5 kg = 6.500 g, dan 6.500 g &gt; 6.200 g. Jadi <b>semangka (B) lebih berat</b>."}, {"bagian": 3, "emoji": "🆚", "t": "Mana yang lebih <b>panjang</b>?<br><small>(A) 🏃 Lari 1,2 km &nbsp;·&nbsp; (B) 🚶 Jalan 1.150 m</small>", "opts": ["A lebih panjang", "B lebih panjang", "Sama panjang"], "a": 0, "bah": "1,2 km = 1.200 m, dan 1.200 m &gt; 1.150 m. Jadi <b>lari (A) lebih panjang</b>."}, {"bagian": 3, "emoji": "🆚", "t": "Mana yang lebih <b>berat</b>?<br><small>(A) 🧺 Beras 25 ons &nbsp;·&nbsp; (B) 🍚 Terigu 2,5 kg</small>", "opts": ["A lebih berat", "B lebih berat", "Sama berat"], "a": 2, "bah": "2,5 kg = 25 ons → keduanya <b>sama berat</b>! 🤝"}, {"bagian": 3, "emoji": "🆚", "t": "Mana yang lebih <b>berat</b>?<br><small>(A) 🚐 Bemo 1.450 kg &nbsp;·&nbsp; (B) 🚗 Mobil 1,5 ton</small>", "opts": ["A lebih berat", "B lebih berat", "Sama berat"], "a": 1, "bah": "1,5 ton = 1.500 kg, dan 1.500 kg &gt; 1.450 kg. Jadi <b>mobil (B) lebih berat</b>."}, {"bagian": 3, "emoji": "🆚", "t": "Mana yang lebih <b>panjang</b>?<br><small>(A) 🦒 Jerapah 5,3 m &nbsp;·&nbsp; (B) 🌴 Pohon kelapa 550 cm</small>", "opts": ["A lebih panjang", "B lebih panjang", "Sama panjang"], "a": 1, "bah": "5,3 m = 530 cm, dan 550 cm &gt; 530 cm. Jadi <b>pohon kelapa (B) lebih panjang/tinggi</b>."}, {"bagian": 3, "emoji": "🆚", "t": "Mana yang lebih <b>berat</b>?<br><small>(A) 🏋️ Dumbbell 4 pon &nbsp;·&nbsp; (B) 🏀 Bola basket 2 kg</small>", "opts": ["A lebih berat", "B lebih berat", "Sama berat"], "a": 2, "bah": "4 pon = 4 × 500 g = 2.000 g = 2 kg → keduanya <b>sama berat</b>! 🤝"}, {"bagian": 4, "emoji": "➕", "t": "2 km + 500 m = … m", "opts": ["700 m", "2.050 m", "2.500 m", "25.000 m"], "a": 2, "bah": "2 km = 2.000 m. Jadi 2.000 + 500 = <b>2.500 m</b>."}, {"bagian": 4, "emoji": "✏️", "t": "3 m 45 cm + 1 m 30 cm = … cm", "opts": ["485 cm", "475 cm", "375 cm", "4.750 cm"], "a": 1, "bah": "3 m 45 cm = 345 cm dan 1 m 30 cm = 130 cm. Jadi 345 + 130 = <b>475 cm</b>."}, {"bagian": 4, "emoji": "🍚", "t": "5 kg + 750 g = … g", "opts": ["7.550 g", "1.250 g", "5.075 g", "5.750 g"], "a": 3, "bah": "5 kg = 5.000 g. Jadi 5.000 + 750 = <b>5.750 g</b>."}, {"bagian": 4, "emoji": "➖", "t": "6 km − 2.500 m = … m", "opts": ["350 m", "3.500 m", "4.500 m", "2.500 m"], "a": 1, "bah": "6 km = 6.000 m. Jadi 6.000 − 2.500 = <b>3.500 m</b>."}, {"bagian": 4, "emoji": "📏", "t": "4 m 20 cm − 150 cm = … cm", "opts": ["370 cm", "270 cm", "420 cm", "255 cm"], "a": 1, "bah": "4 m 20 cm = 420 cm. Jadi 420 − 150 = <b>270 cm</b>."}, {"bagian": 4, "emoji": "⚖️", "t": "2 kg 500 g − 750 g = … g", "opts": ["1.250 g", "1.750 g", "2.250 g", "1.500 g"], "a": 1, "bah": "2 kg 500 g = 2.500 g. Jadi 2.500 − 750 = <b>1.750 g</b>."}, {"bagian": 4, "emoji": "🚛", "t": "1 ton + 500 kg = … kg", "opts": ["1.500 kg", "1.050 kg", "600 kg", "15.000 kg"], "a": 0, "bah": "1 ton = 1.000 kg. Jadi 1.000 + 500 = <b>1.500 kg</b>."}, {"bagian": 4, "emoji": "🛣️", "t": "8 km 500 m − 3 km 700 m = … m", "opts": ["5.200 m", "5.800 m", "4.800 m", "4.080 m"], "a": 2, "bah": "8 km 500 m = 8.500 m dan 3 km 700 m = 3.700 m. Jadi 8.500 − 3.700 = <b>4.800 m</b>."}, {"bagian": 4, "emoji": "⚖️", "t": "3 ons + 700 g = … g", "opts": ["730 g", "1.000 g", "3.700 g", "7.300 g"], "a": 1, "bah": "3 ons = 3 × 100 g = 300 g. Jadi 300 + 700 = <b>1.000 g</b>."}, {"bagian": 4, "emoji": "🌾", "t": "2 kuintal + 300 kg = … kg", "opts": ["230 kg", "320 kg", "500 kg", "2.300 kg"], "a": 2, "bah": "2 kuintal = 2 × 100 = 200 kg. Jadi 200 + 300 = <b>500 kg</b>."}, {"bagian": 5, "emoji": "🚶", "t": "Ani berjalan 1.250 m ke toko, lalu berjalan 750 m lagi ke rumah temannya. Total jalan Ani adalah … km.", "opts": ["2,5 km", "1,25 km", "1,75 km", "2 km"], "a": 3, "bah": "Total jalan = 1.250 + 750 = 2.000 m. Karena 1 km = 1.000 m, maka 2.000 ÷ 1.000 = <b>2 km</b>."}, {"bagian": 5, "emoji": "🍬", "t": "Ibu membeli 2 kg gula, lalu menambah 500 g lagi. Jumlah gula Ibu sekarang adalah … kg.", "opts": ["7 kg", "2,5 kg", "0,25 kg", "25 kg"], "a": 1, "bah": "500 g = 0,5 kg. Jadi 2 + 0,5 = <b>2,5 kg</b>."}, {"bagian": 5, "emoji": "📏", "t": "Tinggi Budi 132 cm, sedangkan tinggi Adi 1 m 25 cm. Selisih tinggi mereka adalah … cm.", "opts": ["17 cm", "107 cm", "7 cm", "70 cm"], "a": 2, "bah": "1 m 25 cm = 125 cm. Selisih = 132 − 125 = <b>7 cm</b>."}, {"bagian": 5, "emoji": "🚛", "t": "Sebuah truk membawa 3 ton pasir. Di rumah Bu Tini, 750 kg pasir diturunkan. Sisa pasir di truk adalah … kg.", "opts": ["2.250 kg", "2.750 kg", "2.500 kg", "2.925 kg"], "a": 0, "bah": "3 ton = 3.000 kg. Sisa = 3.000 − 750 = <b>2.250 kg</b>."}, {"bagian": 5, "emoji": "✂️", "t": "Tali sepanjang 3 m 50 cm dipotong 1 m 75 cm. Sisa tali adalah … cm.", "opts": ["125 cm", "275 cm", "175 cm", "185 cm"], "a": 2, "bah": "3 m 50 cm = 350 cm dan 1 m 75 cm = 175 cm. Sisa = 350 − 175 = <b>175 cm</b>."}, {"bagian": 5, "emoji": "⚖️", "t": "Berat badan Ayah 65 kg, sedangkan berat badan Paman 65.500 g. Siapa yang lebih berat, dan berapa selisihnya?", "opts": ["Paman, selisih 500 g", "Ayah, selisih 50 g", "Ayah, selisih 500 g", "Sama berat"], "a": 0, "bah": "65 kg = 65.000 g. Selisih = 65.500 − 65.000 = <b>500 g</b>, jadi <b>Paman lebih berat</b>."}, {"bagian": 5, "emoji": "🏃", "t": "Angga berlari mengelilingi lapangan 4 putaran. Satu putaran lapangan 400 m. Total lari Angga adalah … km.", "opts": ["160 km", "16 km", "1,4 km", "1,6 km"], "a": 3, "bah": "Total = 4 × 400 = 1.600 m. Karena 1.000 m = 1 km, maka 1.600 ÷ 1.000 = <b>1,6 km</b>."}, {"bagian": 5, "emoji": "🌶️", "t": "Ibu membeli 1,5 kg cabai dan 750 g bawang. Total berat belanjaan itu adalah … kg.", "opts": ["2,5 kg", "2,25 kg", "2,75 kg", "1,575 kg"], "a": 1, "bah": "750 g = 0,75 kg. Jadi 1,5 + 0,75 = <b>2,25 kg</b>."}, {"bagian": 5, "emoji": "🔌", "t": "Kabel sepanjang 12 m dipotong menjadi 4 bagian sama panjang. Panjang tiap bagian adalah … cm.", "opts": ["3 cm", "300 cm", "30 cm", "3.000 cm"], "a": 1, "bah": "12 ÷ 4 = 3 m per bagian. Karena 1 m = 100 cm, maka 3 × 100 = <b>300 cm</b>."}, {"bagian": 5, "emoji": "🚂", "t": "Gerbong kereta memuat 8 ton beras. Setelah 6.500 kg dijual, sisa beras adalah … kuintal.", "opts": ["1.500 kuintal", "150 kuintal", "1,5 kuintal", "15 kuintal"], "a": 3, "bah": "8 ton = 8.000 kg. Sisa = 8.000 − 6.500 = 1.500 kg. Karena 1 kuintal = 100 kg, maka 1.500 ÷ 100 = <b>15 kuintal</b>."}];
+(function(){
+'use strict';
+var $=function(s){return document.querySelector(s)};
+var $$=function(s){return Array.prototype.slice.call(document.querySelectorAll(s))};
+var Q=QUESTIONS, N=Q.length;
+var PARTS=[
+  {n:'Bagian 1 · Konversi Dasar',from:1,to:10},
+  {n:'Bagian 2 · Konversi dengan Koma',from:11,to:20},
+  {n:'Bagian 3 · Membandingkan',from:21,to:30},
+  {n:'Bagian 4 · Jumlah & Kurang',from:31,to:40},
+  {n:'Bagian 5 · Soal Cerita',from:41,to:50}
+];
+var LETTERS=['A','B','C','D'];
+var BASE_TIME=120;
+
+/* ================= SUARA ================= */
+var actx=null, soundOn=true;
+function tone(f,d,type,vol,delay){
+  if(!soundOn) return;
+  try{
+    actx=actx||new (window.AudioContext||window.webkitAudioContext)();
+    var t=actx.currentTime+(delay||0);
+    var o=actx.createOscillator(), g=actx.createGain();
+    o.type=type||'sine'; o.frequency.value=f;
+    g.gain.setValueAtTime(vol||.15,t);
+    g.gain.exponentialRampToValueAtTime(.001,t+d);
+    o.connect(g); g.connect(actx.destination);
+    o.start(t); o.stop(t+d);
+  }catch(e){}
+}
+function sClick(){ tone(620,.08,'triangle',.12); }
+function sGood(){ tone(660,.12,'triangle',.15); tone(880,.16,'triangle',.15,.09); }
+function sBad(){ tone(220,.22,'sawtooth',.12); }
+function sTick(){ tone(900,.05,'square',.06); }
+function sWin(){ [523,659,784,1046].forEach(function(f,i){ tone(f,.18,'triangle',.16,i*.11); }); }
+
+/* ================= KONFETI ================= */
+var fx=$('#fx'), fctx=fx.getContext('2d'), parts=[], fxOn=false;
+function fxSize(){ fx.width=innerWidth; fx.height=innerHeight; }
+fxSize(); addEventListener('resize',fxSize);
+function burst(n){
+  var colors=['#ff7043','#ffd54f','#26c6da','#66bb6a','#ab47bc','#ef5350'];
+  for(var i=0;i<(n||60);i++){
+    parts.push({x:innerWidth/2+(Math.random()-.5)*220,y:innerHeight*.3,vx:(Math.random()-.5)*9,vy:-Math.random()*10-4,g:.32,s:Math.random()*7+4,c:colors[i%6],r:Math.random()*Math.PI,vr:(Math.random()-.5)*.3,life:70+Math.random()*40});
+  }
+  fxRun();
+}
+function fxRun(){
+  if(fxOn) return; fxOn=true;
+  (function loop(){
+    fctx.clearRect(0,0,fx.width,fx.height);
+    parts=parts.filter(function(p){ return p.life-->0 && p.y<fx.height+30; });
+    parts.forEach(function(p){
+      p.x+=p.vx; p.y+=p.vy; p.vy+=p.g; p.r+=p.vr;
+      fctx.save(); fctx.translate(p.x,p.y); fctx.rotate(p.r);
+      fctx.fillStyle=p.c; fctx.fillRect(-p.s/2,-p.s/2,p.s,p.s*.6);
+      fctx.restore();
+    });
+    if(parts.length){ requestAnimationFrame(loop); }
+    else{ fxOn=false; fctx.clearRect(0,0,fx.width,fx.height); }
+  })();
+}
+
+/* ================= STATE ================= */
+var state={
+  name:'', idx:0, remaining:BASE_TIME, timer:null,
+  qStart:0, pausedAt:0, locked:false, chosen:null,
+  add15:0, rec:[]   // rec[i] = {status:'benar'|'salah'|'skip'|'timeout', elapsed:detik|null, chosen:idx|null}
+};
+for(var i=0;i<N;i++) state.rec.push({status:null,elapsed:null,chosen:null});
+
+function showScreen(id){
+  $$('.screen').forEach(function(s){ s.classList.remove('active'); });
+  $('#'+id).classList.add('active');
+  scrollTo(0,0);
+}
+function partOf(n){ // n = nomor soal mulai 1
+  for(var i=0;i<PARTS.length;i++){
+    if(n>=PARTS[i].from && n<=PARTS[i].to) return PARTS[i];
+  }
+  return PARTS[PARTS.length-1];
+}
+function fmtClock(sec){
+  sec=Math.max(0,sec);
+  var m=Math.floor(sec/60), s=sec%60;
+  return (m<10?'0':'')+m+':'+(s<10?'0':'')+s;
+}
+function fmtAvg(sec){
+  if(sec==null) return '—';
+  sec=Math.round(sec);
+  if(sec<60) return sec+' dtk';
+  return Math.floor(sec/60)+' m '+(sec%60)+' dtk';
+}
+
+/* ================= TIMER ================= */
+function renderTimer(){
+  var chip=$('#timerChip');
+  chip.textContent='⏱️ '+fmtClock(state.remaining);
+  chip.classList.toggle('warn',state.remaining<=30&&state.remaining>10);
+  chip.classList.toggle('danger',state.remaining<=10);
+}
+function startTimer(){
+  stopTimer();
+  state.timer=setInterval(tick,1000);
+}
+function stopTimer(){
+  if(state.timer){ clearInterval(state.timer); state.timer=null; }
+}
+function tick(){
+  state.remaining--;
+  renderTimer();
+  if(state.remaining<=10&&state.remaining>0) sTick();
+  if(state.remaining<=0){ state.remaining=0; renderTimer(); onTimeout(); }
+}
+function onTimeout(){
+  stopTimer();
+  if(state.locked) return;
+  state.locked=true;
+  state.rec[state.idx]={status:'timeout',elapsed:null,chosen:null};
+  lockOptions(true);            // tampilkan kunci sebagai pembelajaran
+  showFb('warn','⏰ <b>Waktu habis!</b> (2 menit sudah lewat — tombol +15 dtk bisa menyelamatkanmu 😄)');
+  showBah();
+  afterAnswerUI('Soal Berikutnya ⏭');
+  sBad();
+}
+
+/* ================= RENDER SOAL ================= */
+function load(i){
+  stopTimer();
+  state.idx=i; state.locked=false; state.chosen=null; state.add15=0;
+  state.remaining=BASE_TIME;
+  var q=Q[i], p=partOf(i+1);
+  $('#whoName').textContent='👤 '+state.name;
+  $('#qProg').textContent='Soal '+(i+1)+' / '+N;
+  $('#partBadge').textContent=p.n;
+  $('#qBar').style.width=((i)/N*100)+'%';
+  $('#qText').innerHTML='<span class="qemoji">'+q.emoji+'</span>'+q.t;
+  var box=$('#opts'); box.innerHTML='';
+  q.opts.forEach(function(o,k){
+    var b=document.createElement('button');
+    b.className='opt'; b.dataset.k=k;
+    b.innerHTML='<span class="letter">'+LETTERS[k]+'</span><span>'+o+'</span>';
+    b.addEventListener('click',function(){
+      if(state.locked) return;
+      $$('#opts .opt').forEach(function(x){ x.classList.remove('selected'); });
+      b.classList.add('selected'); sClick();
+      state.chosen=k;
+      $('#btnCheck').disabled=false;
+    });
+    box.appendChild(b);
+  });
+  $('#btnCheck').disabled=true;
+  $('#btnCheck').textContent='✅ Cek Jawaban';
+  $('#fb').className='fb mt hidden'; $('#fb').textContent='';
+  $('#bah').className='bah mt hidden'; $('#bah').innerHTML='';
+  $('#nextRow').classList.add('hidden');
+  $('#btnSkip').disabled=false; $('#btnEnd').disabled=false;
+  $('#btnAdd15').disabled=false;
+  $('#addCount').textContent='';
+  renderTimer();
+  state.qStart=Date.now();
+  startTimer();
+}
+function lockOptions(revealKey){
+  var q=Q[state.idx];
+  $$('#opts .opt').forEach(function(b){
+    var k=+b.dataset.k;
+    b.disabled=true;
+    b.classList.remove('selected');
+    if(k===q.a){ b.classList.add('correct'); }
+    else if(!revealKey && k===state.chosen){ b.classList.add('wrong'); }
+    else if(revealKey && state.chosen!==null && k===state.chosen){ b.classList.add('wrong'); }
+    else{ b.classList.add('dim'); }
+  });
+}
+function showFb(cls,html){ $('#fb').className='fb mt '+cls; $('#fb').innerHTML=html; }
+function showBah(){
+  $('#bah').className='bah mt';
+  $('#bah').innerHTML='<span class="bahtag">📖 Pembahasan:</span><br>'+Q[state.idx].bah;
+}
+function afterAnswerUI(nextLabel){
+  $('#btnSkip').disabled=true;
+  $('#btnAdd15').disabled=true;
+  $('#btnCheck').disabled=true;
+  $('#nextRow').classList.remove('hidden');
+  $('#btnNext').textContent=nextLabel;
+}
+
+/* ================= AKSI ================= */
+$('#btnAdd15').addEventListener('click',function(){
+  if(state.locked||state.timer===null) return;
+  state.remaining+=15; state.add15++;
+  renderTimer();
+  var b=$('#btnAdd15'); b.classList.remove('pop'); void b.offsetWidth; b.classList.add('pop');
+  $('#addCount').textContent='+15 ×'+state.add15;
+  sClick();
+});
+$('#btnCheck').addEventListener('click',function(){
+  if(state.locked) return;
+  if(state.chosen===null){ return; }
+  stopTimer();
+  state.locked=true;
+  var q=Q[state.idx];
+  var elapsed=Math.round((Date.now()-state.qStart)/1000);
+  var ok=(state.chosen===q.a);
+  state.rec[state.idx]={status:ok?'benar':'salah',elapsed:elapsed,chosen:state.chosen};
+  lockOptions(false);
+  if(ok){
+    showFb('good','🎉 <b>Benar!</b> Jawabanmu tepat: <b>'+q.opts[q.a]+'</b>'+(elapsed<=20?' — cepat juga! ⚡':''));
+    sGood(); burst(45);
+  }else{
+    showFb('bad','❌ <b>Belum tepat.</b> Jawabanmu: <b>'+q.opts[state.chosen]+'</b> · Jawaban benar: <b>'+q.opts[q.a]+'</b>');
+    sBad();
+  }
+  showBah();
+  afterAnswerUI(state.idx+1<N?'Soal Berikutnya ⏭':'🏁 Lihat Hasil');
+});
+$('#btnSkip').addEventListener('click',function(){
+  if(state.locked) return;
+  stopTimer();
+  state.locked=true;
+  state.rec[state.idx]={status:'skip',elapsed:null,chosen:null};
+  lockOptions(true);
+  showFb('info','⏭ <b>Dilewati.</b> Tidak apa-apa — baca pembahasannya, siapa tahu keluar lagi nanti! 😉');
+  showBah();
+  afterAnswerUI(state.idx+1<N?'Soal Berikutnya ⏭':'🏁 Lihat Hasil');
+  sClick();
+});
+$('#btnNext').addEventListener('click',function(){
+  sClick();
+  if(state.idx+1<N) load(state.idx+1);
+  else finish();
+});
+$('#btnEnd').addEventListener('click',function(){
+  sClick();
+  $('#modal').classList.add('open');
+  state.pausedAt=Date.now();
+  stopTimer(); // jeda waktu saat modal terbuka
+});
+$('#mCancel').addEventListener('click',function(){
+  $('#modal').classList.remove('open');
+  if(!state.locked){
+    state.qStart+=Date.now()-state.pausedAt; // waktu jeda tidak dihitung
+    startTimer();
+  }
+  sClick();
+});
+$('#mYes').addEventListener('click',function(){
+  $('#modal').classList.remove('open');
+  finish();
+});
+$('#btnRestart').addEventListener('click',function(){ sClick(); location.reload(); });
+$('#inpName').addEventListener('keydown',function(e){ if(e.key==='Enter') $('#btnStart').click(); });
+$('#btnStart').addEventListener('click',function(){
+  var nm=$('#inpName').value.trim();
+  if(!nm){
+    $('#nameErr').classList.remove('hidden');
+    var inp=$('#inpName');
+    inp.classList.remove('shake'); void inp.offsetWidth; inp.classList.add('shake');
+    inp.focus();
+    sBad();
+    return;
+  }
+  $('#nameErr').classList.add('hidden');
+  state.name=nm;
+  sGood();
+  showScreen('scr-quiz');
+  load(0);
+});
+
+/* ================= HASIL ================= */
+function fmtScore(v){
+  return (Math.round(v*10)/10).toLocaleString('id-ID');
+}
+function finish(){
+  stopTimer();
+  var benar=0,salah=0,jawab=0,totalE=0,nE=0;
+  state.rec.forEach(function(r){
+    if(r.status==='benar'||r.status==='salah'){
+      jawab++;
+      if(r.status==='benar') benar++; else salah++;
+      if(r.elapsed!=null){ totalE+=r.elapsed; nE++; }
+    }
+  });
+  var belum=N-jawab;
+  var skor=jawab>0?benar/jawab*100:0;
+  var avg=nE>0?totalE/nE:null;
+
+  $('#rName').textContent=state.name;
+  $('#rScore').textContent=fmtScore(skor);
+  $('#rBenar').textContent=benar;
+  $('#rSalah').textContent=salah;
+  $('#rJawab').textContent=jawab;
+  $('#rBelum').textContent=belum;
+  $('#rAvg').textContent=fmtAvg(avg);
+  $('#rFormula').textContent='Skor = '+benar+' benar ÷ '+jawab+' terjawab × 100 = '+fmtScore(skor);
+
+  // rincian per bagian
+  var tb=$('#rParts'); tb.innerHTML='';
+  tb.innerHTML='<tr><th>Bagian</th><th>Soal</th><th>Terjawab</th><th>Benar</th></tr>';
+  PARTS.forEach(function(p){
+    var j=0,b=0,tot=p.to-p.from+1;
+    for(var k=p.from-1;k<p.to;k++){
+      var st=state.rec[k].status;
+      if(st==='benar'||st==='salah'){ j++; if(st==='benar') b++; }
+    }
+    tb.innerHTML+='<tr><td>'+p.n.replace(' · ',': ')+'</td><td>'+p.from+'–'+p.to+'</td><td>'+j+' / '+tot+'</td><td>✅ '+b+'</td></tr>';
+  });
+
+  // peta jawaban
+  var map=$('#rMap'); map.innerHTML='';
+  state.rec.forEach(function(r,i){
+    var sp=document.createElement('span');
+    var cls={benar:'benar',salah:'salah',skip:'skip',timeout:'timeout'}[r.status]||'pending';
+    var mark={benar:'✓',salah:'✗',skip:'⏭',timeout:'⏰',null:'·'}[r.status]||'·';
+    sp.className=cls;
+    sp.textContent=(i+1)+' '+mark;
+    sp.title='Soal '+(i+1)+': '+({benar:'benar',salah:'salah',skip:'dilewati',timeout:'waktu habis'}[r.status]||'belum dijangkau');
+    map.appendChild(sp);
+  });
+
+  showScreen('scr-result');
+  sWin(); burst(160);
+}
+
+/* hook kecil untuk pengujian otomatis (tidak mengubah perilaku normal) */
+window.__quiz={
+  get remaining(){ return state.remaining; },
+  set remaining(v){ state.remaining=v; renderTimer(); },
+  rec:function(){ return state.rec; },
+  idx:function(){ return state.idx; }
+};
+})();
+</script>
+</body>
+</html>
